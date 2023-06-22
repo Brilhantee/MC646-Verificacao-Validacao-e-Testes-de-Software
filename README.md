@@ -1,3 +1,3 @@
 # MC646-Verificacao Validacao e Testes de Software
 
-Repositorio dedicado a guadar o projeto desenvolvido pela minha equipe na matéria de MC646. O objetivo é fazer um estudo de caso de tres classes diferentes presentes na biblioteca GraphStream( https://graphstream-project.org/). Foram desenvolvidos diversos testes a fim de garantir a integridade do código além de colocar o conhecimento desenvolvido na disciplina em prática.
+Este repositório foi criado para armazenar o projeto desenvolvido pela minha equipe durante a disciplina de MC646. Nosso objetivo foi realizar um estudo de caso de três classes diferentes presentes na biblioteca GraphStream (https://graphstream-project.org/). Durante o projeto, dedicamos-nos a desenvolver uma série de testes para garantir a integridade do código e aplicar os conhecimentos adquiridos na disciplina de forma prática.
