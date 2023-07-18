@@ -1,0 +1,472 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Point3</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.geom</a>
+</div>
+
+<h1>Coverage Summary for Class: Point3 (org.graphstream.ui.geom)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Point3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/31)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/106)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-12-22
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.geom;
+&nbsp;
+&nbsp;/**
+&nbsp; * 3D point.
+&nbsp; * 
+&nbsp; * A Point3 is a 3D location in an affine space described by three values along
+&nbsp; * the X, the Y and the Z axis. Note the difference with Vector3 wich is defined
+&nbsp; * as an array and ensures that the three coordinates X, Y and Z are consecutive
+&nbsp; * in memory. Here there are three separate attributes. Further, a point has no
+&nbsp; * vector arithmetic bound to it (to points cannot be added, this would have no
+&nbsp; * mathematical meaning).
+&nbsp; * 
+&nbsp; * @author Antoine Dutot
+&nbsp; * @since 19990829
+&nbsp; * @version 0.1
+&nbsp; */
+&nbsp;public class Point3 extends Point2 implements java.io.Serializable {
+&nbsp;	// Attributes
+&nbsp;
+&nbsp;	private static final long serialVersionUID = 5971336344439693816L;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Z axis value.
+&nbsp;	 */
+&nbsp;	public double z;
+&nbsp;
+&nbsp;	// Attributes -- Shared
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Specific point at (0,0,0).
+&nbsp;	 */
+<b class="nc">&nbsp;	public static final Point3 NULL_POINT3 = new Point3(0, 0, 0);</b>
+&nbsp;
+&nbsp;	// Constructors
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New 3D point at(0,0,0).
+&nbsp;	 */
+<b class="nc">&nbsp;	public Point3() {</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New 3D point at (x,y,0).
+&nbsp;	 */
+<b class="nc">&nbsp;	public Point3(double x, double y) {</b>
+<b class="nc">&nbsp;		set(x, y, 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New 3D point at(x,y,z).
+&nbsp;	 */
+<b class="nc">&nbsp;	public Point3(double x, double y, double z) {</b>
+<b class="nc">&nbsp;		set(x, y, z);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New copy of other.
+&nbsp;	 */
+<b class="nc">&nbsp;	public Point3(Point3 other) {</b>
+<b class="nc">&nbsp;		copy(other);</b>
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	public Point3(Vector3 vec) {</b>
+<b class="nc">&nbsp;		copy(vec);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Point3(float data[]) {
+<b class="nc">&nbsp;		this(0, data);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Point3(double data[]) {
+<b class="nc">&nbsp;		this(0, data);</b>
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	public Point3(int start, float data[]) {</b>
+<b class="nc">&nbsp;		if (data != null) {</b>
+<b class="nc">&nbsp;			if (data.length &gt; start + 0)</b>
+<b class="nc">&nbsp;				x = data[start + 0];</b>
+<b class="nc">&nbsp;			if (data.length &gt; start + 1)</b>
+<b class="nc">&nbsp;				y = data[start + 1];</b>
+<b class="nc">&nbsp;			if (data.length &gt; start + 2)</b>
+<b class="nc">&nbsp;				z = data[start + 2];</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	public Point3(int start, double data[]) {</b>
+<b class="nc">&nbsp;		if (data != null) {</b>
+<b class="nc">&nbsp;			if (data.length &gt; start + 0)</b>
+<b class="nc">&nbsp;				x = data[start + 0];</b>
+<b class="nc">&nbsp;			if (data.length &gt; start + 1)</b>
+<b class="nc">&nbsp;				y = data[start + 1];</b>
+<b class="nc">&nbsp;			if (data.length &gt; start + 2)</b>
+<b class="nc">&nbsp;				z = data[start + 2];</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Predicates
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Are all components to zero?.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public boolean isZero() {
+<b class="nc">&nbsp;		return (x == 0 &amp;&amp; y == 0 &amp;&amp; z == 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// /**
+&nbsp;	// * Is other equal to this ?
+&nbsp;	// */
+&nbsp;	// public boolean
+&nbsp;	// equals( const Point3 &lt; double &gt; &amp; other ) const
+&nbsp;	// {
+&nbsp;	// return( x == other.x
+&nbsp;	// and y == other.y
+&nbsp;	// and z == other.z );
+&nbsp;	// }
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a new point linear interpolation of this and &lt;code&gt;other&lt;/code&gt;. The
+&nbsp;	 * new point is located between this and &lt;code&gt;other&lt;/code&gt; if
+&nbsp;	 * &lt;code&gt;factor&lt;/code&gt; is between 0 and 1 (0 yields this point, 1 yields the
+&nbsp;	 * &lt;code&gt;other&lt;/code&gt; point).
+&nbsp;	 */
+&nbsp;	public Point3 interpolate(Point3 other, double factor) {
+<b class="nc">&nbsp;		Point3 p = new Point3(x + ((other.x - x) * factor), y + ((other.y - y) * factor), z + ((other.z - z) * factor));</b>
+&nbsp;
+<b class="nc">&nbsp;		return p;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Distance between this and &lt;code&gt;other&lt;/code&gt;.
+&nbsp;	 */
+&nbsp;	public double distance(Point3 other) {
+<b class="nc">&nbsp;		double xx = other.x - x;</b>
+<b class="nc">&nbsp;		double yy = other.y - y;</b>
+<b class="nc">&nbsp;		double zz = other.z - z;</b>
+<b class="nc">&nbsp;		return Math.abs(Math.sqrt((xx * xx) + (yy * yy) + (zz * zz)));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Distance between this and point (x,y,z).
+&nbsp;	 */
+&nbsp;	public double distance(double x, double y, double z) {
+<b class="nc">&nbsp;		double xx = x - this.x;</b>
+<b class="nc">&nbsp;		double yy = y - this.y;</b>
+<b class="nc">&nbsp;		double zz = z - this.z;</b>
+<b class="nc">&nbsp;		return Math.abs(Math.sqrt((xx * xx) + (yy * yy) + (zz * zz)));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Commands
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Make this a copy of other.
+&nbsp;	 */
+&nbsp;	public void copy(Point3 other) {
+<b class="nc">&nbsp;		x = other.x;</b>
+<b class="nc">&nbsp;		y = other.y;</b>
+<b class="nc">&nbsp;		z = other.z;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void copy(Vector3 vec) {
+<b class="nc">&nbsp;		x = vec.data[0];</b>
+<b class="nc">&nbsp;		y = vec.data[1];</b>
+<b class="nc">&nbsp;		z = vec.data[2];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like #moveTo().
+&nbsp;	 */
+&nbsp;	public void set(double x, double y, double z) {
+<b class="nc">&nbsp;		this.x = x;</b>
+<b class="nc">&nbsp;		this.y = y;</b>
+<b class="nc">&nbsp;		this.z = z;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Commands -- moving
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Move to absolute position (x,y,z).
+&nbsp;	 */
+&nbsp;	public void moveTo(double x, double y, double z) {
+<b class="nc">&nbsp;		this.x = x;</b>
+<b class="nc">&nbsp;		this.y = y;</b>
+<b class="nc">&nbsp;		this.z = z;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Move of given vector(dx,dy,dz).
+&nbsp;	 */
+&nbsp;	public void move(double dx, double dy, double dz) {
+<b class="nc">&nbsp;		this.x += dx;</b>
+<b class="nc">&nbsp;		this.y += dy;</b>
+<b class="nc">&nbsp;		this.z += dz;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Move of given point &lt;code&gt;p&lt;/code&gt;.
+&nbsp;	 */
+&nbsp;	public void move(Point3 p) {
+<b class="nc">&nbsp;		this.x += p.x;</b>
+<b class="nc">&nbsp;		this.y += p.y;</b>
+<b class="nc">&nbsp;		this.z += p.z;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Move of given vector d.
+&nbsp;	 */
+&nbsp;	public void move(Vector3 d) {
+<b class="nc">&nbsp;		this.x += d.data[0];</b>
+<b class="nc">&nbsp;		this.y += d.data[1];</b>
+<b class="nc">&nbsp;		this.z += d.data[2];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Move in depth of dz.
+&nbsp;	 */
+&nbsp;	public void moveZ(double dz) {
+<b class="nc">&nbsp;		z += dz;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Scale of factor (sx,sy,sz).
+&nbsp;	 */
+&nbsp;	public void scale(double sx, double sy, double sz) {
+<b class="nc">&nbsp;		x *= sx;</b>
+<b class="nc">&nbsp;		y *= sy;</b>
+<b class="nc">&nbsp;		z *= sz;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Scale by factor s.
+&nbsp;	 */
+&nbsp;	public void scale(Point3 s) {
+<b class="nc">&nbsp;		x *= s.x;</b>
+<b class="nc">&nbsp;		y *= s.y;</b>
+<b class="nc">&nbsp;		z *= s.z;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Scale by factor s.
+&nbsp;	 */
+&nbsp;	public void scale(Vector3 s) {
+<b class="nc">&nbsp;		x *= s.data[0];</b>
+<b class="nc">&nbsp;		y *= s.data[1];</b>
+<b class="nc">&nbsp;		z *= s.data[2];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Scale by a given scalar.
+&nbsp;	 * 
+&nbsp;	 * @param scalar
+&nbsp;	 *            The multiplier.
+&nbsp;	 */
+&nbsp;	public void scale(double scalar) {
+<b class="nc">&nbsp;		x *= scalar;</b>
+<b class="nc">&nbsp;		y *= scalar;</b>
+<b class="nc">&nbsp;		z *= scalar;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Change only depth at absolute coordinate z.
+&nbsp;	 */
+&nbsp;	public void setZ(double z) {
+<b class="nc">&nbsp;		this.z = z;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Exchange the values of this and other.
+&nbsp;	 */
+&nbsp;	public void swap(Point3 other) {
+&nbsp;		double t;
+&nbsp;
+<b class="nc">&nbsp;		if (other != this) {</b>
+<b class="nc">&nbsp;			t = this.x;</b>
+<b class="nc">&nbsp;			this.x = other.x;</b>
+<b class="nc">&nbsp;			other.x = t;</b>
+&nbsp;
+<b class="nc">&nbsp;			t = this.y;</b>
+<b class="nc">&nbsp;			this.y = other.y;</b>
+<b class="nc">&nbsp;			other.y = t;</b>
+&nbsp;
+<b class="nc">&nbsp;			t = this.z;</b>
+<b class="nc">&nbsp;			this.z = other.z;</b>
+<b class="nc">&nbsp;			other.z = t;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Commands -- misc.
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+&nbsp;		StringBuffer buf;
+&nbsp;
+<b class="nc">&nbsp;		buf = new StringBuffer(&quot;Point3[&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		buf.append(x);</b>
+<b class="nc">&nbsp;		buf.append(&#39;|&#39;);</b>
+<b class="nc">&nbsp;		buf.append(y);</b>
+<b class="nc">&nbsp;		buf.append(&#39;|&#39;);</b>
+<b class="nc">&nbsp;		buf.append(z);</b>
+<b class="nc">&nbsp;		buf.append(&quot;]&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		return buf.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean equals(Object o) {
+<b class="nc">&nbsp;		if (this == o) {</b>
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (o == null || getClass() != o.getClass()) {</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (!super.equals(o)) {</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		Point3 point3 = (Point3) o;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (Double.compare(point3.z, z) != 0) {</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int hashCode() {
+<b class="nc">&nbsp;		int result = super.hashCode();</b>
+&nbsp;		long temp;
+<b class="nc">&nbsp;		temp = Double.doubleToLongBits(z);</b>
+<b class="nc">&nbsp;		result = 31 * result + (int) (temp ^ (temp &gt;&gt;&gt; 32));</b>
+<b class="nc">&nbsp;		return result;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,541 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Equivalence_Tests</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.mbtroads</a>
+</div>
+
+<h1>Coverage Summary for Class: Equivalence_Tests (com.mbtroads)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Equivalence_Tests</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/231)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.mbtroads;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.graph.Path;
+&nbsp;import org.graphstream.graph.implementations.MultiGraph;
+&nbsp;import org.graphstream.graph.implementations.SingleGraph;
+&nbsp;import org.junit.jupiter.api.DisplayName;
+&nbsp;import org.junit.jupiter.api.Test;
+&nbsp;import static org.junit.jupiter.api.Assertions.assertEquals;
+&nbsp;
+<b class="nc">&nbsp;public class Equivalence_Tests {</b>
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;SingleGraph TC1&quot;)
+&nbsp;    public void SingleGraph_TC1(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        boolean isAutoCreationEnabled = false;</b>
+<b class="nc">&nbsp;        boolean isStrictModeEnabled = true;</b>
+<b class="nc">&nbsp;        int initialEdgeCapacity = 12;</b>
+<b class="nc">&nbsp;        int initialNodeCapacity = 13;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, isStrictModeEnabled, isAutoCreationEnabled, initialNodeCapacity, initialEdgeCapacity);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(graphId, graph.getId());</b>
+<b class="nc">&nbsp;        assertEquals(isAutoCreationEnabled, graph.isAutoCreationEnabled());</b>
+<b class="nc">&nbsp;        assertEquals(isStrictModeEnabled, graph.isStrict());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;SingleGraph TC2&quot;)
+&nbsp;    public void SingleGraph_T2(){
+<b class="nc">&nbsp;        String graphId = &quot;&quot;;</b>
+<b class="nc">&nbsp;        boolean isAutoCreationEnabled = true;</b>
+<b class="nc">&nbsp;        boolean isStrictModeEnabled = false;</b>
+<b class="nc">&nbsp;        int initialEdgeCapacity = 50;</b>
+<b class="nc">&nbsp;        int initialNodeCapacity = 100;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, isStrictModeEnabled, isAutoCreationEnabled, initialNodeCapacity, initialEdgeCapacity);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(graphId, graph.getId());</b>
+<b class="nc">&nbsp;        assertEquals(isAutoCreationEnabled, graph.isAutoCreationEnabled());</b>
+<b class="nc">&nbsp;        assertEquals(isStrictModeEnabled, graph.isStrict());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;SingleGraph TC3&quot;)
+&nbsp;    public void SingleGraph_TC3(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        boolean isAutoCreationEnabled = false;</b>
+<b class="nc">&nbsp;        boolean isStrictModeEnabled = true;</b>
+<b class="nc">&nbsp;        int initialEdgeCapacity = -10;</b>
+<b class="nc">&nbsp;        int initialNodeCapacity = 13;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, isStrictModeEnabled, isAutoCreationEnabled, initialNodeCapacity, initialEdgeCapacity);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(graphId, graph.getId());</b>
+<b class="nc">&nbsp;        assertEquals(isAutoCreationEnabled, graph.isAutoCreationEnabled());</b>
+<b class="nc">&nbsp;        assertEquals(isStrictModeEnabled, graph.isStrict());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;SingleGraph TC4&quot;)
+&nbsp;    public void SingleGraph_TC4(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        boolean isAutoCreationEnabled = false;</b>
+<b class="nc">&nbsp;        boolean isStrictModeEnabled = false;</b>
+<b class="nc">&nbsp;        int initialEdgeCapacity = 50;</b>
+<b class="nc">&nbsp;        int initialNodeCapacity = -10;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, isStrictModeEnabled, isAutoCreationEnabled, initialNodeCapacity, initialEdgeCapacity);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(graphId, graph.getId());</b>
+<b class="nc">&nbsp;        assertEquals(isAutoCreationEnabled, graph.isAutoCreationEnabled());</b>
+<b class="nc">&nbsp;        assertEquals(isStrictModeEnabled, graph.isStrict());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddNote TC1&quot;)
+&nbsp;    public void AddNote_TC1(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId = &quot;Node 1&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId);</b>
+<b class="nc">&nbsp;        assertEquals(1,graph.nodes().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddNote TC2&quot;)
+&nbsp;    public void AddNote_TC2(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId = &quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.nodes().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddNote TC3&quot;)
+&nbsp;    public void AddNote_TC3(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 1&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.nodes().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddEdge TC1&quot;)
+&nbsp;    public void AddEdge_TC1(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+<b class="nc">&nbsp;        String edge = &quot;Edge 1&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+<b class="nc">&nbsp;        graph.addEdge(edge,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddEdge TC2&quot;)
+&nbsp;    public void AddEdge_TC2(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+<b class="nc">&nbsp;        String edge = &quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+<b class="nc">&nbsp;        graph.addEdge(edge,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddEdge TC3&quot;)
+&nbsp;    public void AddEdge_TC3(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+<b class="nc">&nbsp;        String nodeId3 = &quot;Node 3&quot;;</b>
+<b class="nc">&nbsp;        String nodeId4 = &quot;Node 4&quot;;</b>
+<b class="nc">&nbsp;        String edge1 = &quot;Edge 1&quot;;</b>
+<b class="nc">&nbsp;        String edge2 = &quot;Edge 1&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId3);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId4);</b>
+<b class="nc">&nbsp;        graph.addEdge(edge1,nodeId1, nodeId2);</b>
+<b class="nc">&nbsp;        graph.addEdge(edge2,nodeId3, nodeId4);</b>
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddEdge TC4&quot;)
+&nbsp;    public void AddEdge_TC4(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        String edge1 = &quot;Edge 1&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addEdge(edge1,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddEdge TC5&quot;)
+&nbsp;    public void AddEdge_TC5(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        String edge1 = &quot;Edge 1&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addEdge(edge1,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(0,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddEdge TC6&quot;)
+&nbsp;    public void AddEdge_TC6(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        String edge1 = &quot;Edge 1&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addEdge(edge1,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;AddEdge TC7&quot;)
+&nbsp;    public void AddEdge_TC7(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        String edge1 = &quot;Edge 1&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addEdge(edge1,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(0,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;RemoveEdge TC1&quot;)
+&nbsp;    public void RemoveEdge_TC1(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+<b class="nc">&nbsp;        String edge1 = &quot;Edge 1&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addEdge(edge1,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.removeEdge(edge1);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(0,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;RemoveEdge TC2&quot;)
+&nbsp;    public void RemoveEdge_TC2(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+<b class="nc">&nbsp;        String edge1 = &quot;Edge 1&quot;;</b>
+<b class="nc">&nbsp;        String edge2 = &quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addEdge(edge1,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.removeEdge(edge2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;RemoveEdge TC3&quot;)
+&nbsp;    public void RemoveEdge_TC3(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+<b class="nc">&nbsp;        String edge1 = &quot;Edge 1&quot;;</b>
+<b class="nc">&nbsp;        String edge2 = &quot;Edge 2&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addEdge(edge1,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.removeEdge(edge2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.edges().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;RemoveNode TC1&quot;)
+&nbsp;    public void RemoveNode_TC1(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(2,graph.nodes().count());</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.removeNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.nodes().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;RemoveNode TC2&quot;)
+&nbsp;    public void RemoveNode_TC2(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.nodes().count());</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.removeNode(nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.nodes().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;RemoveNode TC3&quot;)
+&nbsp;    public void RemoveNode_TC3(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.addNode(nodeId1);</b>
+<b class="nc">&nbsp;        graph.addNode(nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(2,graph.nodes().count());</b>
+&nbsp;
+<b class="nc">&nbsp;        graph.removeNode(nodeId1);</b>
+<b class="nc">&nbsp;        graph.removeNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,graph.nodes().count());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;MultiGraph TC1&quot;)
+&nbsp;    public void MultiGraph_TC1(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        boolean isAutoCreationEnabled = false;</b>
+<b class="nc">&nbsp;        boolean isStrictModeEnabled = true;</b>
+<b class="nc">&nbsp;        int initialEdgeCapacity = 12;</b>
+<b class="nc">&nbsp;        int initialNodeCapacity = 13;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new MultiGraph(graphId, isStrictModeEnabled, isAutoCreationEnabled, initialNodeCapacity, initialEdgeCapacity);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(graphId, graph.getId());</b>
+<b class="nc">&nbsp;        assertEquals(isAutoCreationEnabled, graph.isAutoCreationEnabled());</b>
+<b class="nc">&nbsp;        assertEquals(isStrictModeEnabled, graph.isStrict());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;MultiGraph TC2&quot;)
+&nbsp;    public void MultiGraph_TC2(){
+<b class="nc">&nbsp;        String graphId = &quot;&quot;;</b>
+<b class="nc">&nbsp;        boolean isAutoCreationEnabled = true;</b>
+<b class="nc">&nbsp;        boolean isStrictModeEnabled = false;</b>
+<b class="nc">&nbsp;        int initialEdgeCapacity = 50;</b>
+<b class="nc">&nbsp;        int initialNodeCapacity = 100;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new MultiGraph(graphId, isStrictModeEnabled, isAutoCreationEnabled, initialNodeCapacity, initialEdgeCapacity);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(graphId, graph.getId());</b>
+<b class="nc">&nbsp;        assertEquals(isAutoCreationEnabled, graph.isAutoCreationEnabled());</b>
+<b class="nc">&nbsp;        assertEquals(isStrictModeEnabled, graph.isStrict());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;MultiGraph TC3&quot;)
+&nbsp;    public void MultiGraph_TC3(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        boolean isAutoCreationEnabled = false;</b>
+<b class="nc">&nbsp;        boolean isStrictModeEnabled = true;</b>
+<b class="nc">&nbsp;        int initialEdgeCapacity = -10;</b>
+<b class="nc">&nbsp;        int initialNodeCapacity = 13;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new MultiGraph(graphId, isStrictModeEnabled, isAutoCreationEnabled, initialNodeCapacity, initialEdgeCapacity);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(graphId, graph.getId());</b>
+<b class="nc">&nbsp;        assertEquals(isAutoCreationEnabled, graph.isAutoCreationEnabled());</b>
+<b class="nc">&nbsp;        assertEquals(isStrictModeEnabled, graph.isStrict());</b>
+&nbsp;    }
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;MultiGraph TC4&quot;)
+&nbsp;    public void MultiGraph_TC4(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        boolean isAutoCreationEnabled = false;</b>
+<b class="nc">&nbsp;        boolean isStrictModeEnabled = false;</b>
+<b class="nc">&nbsp;        int initialEdgeCapacity = 50;</b>
+<b class="nc">&nbsp;        int initialNodeCapacity = -10;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new MultiGraph(graphId, isStrictModeEnabled, isAutoCreationEnabled, initialNodeCapacity, initialEdgeCapacity);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(graphId, graph.getId());</b>
+<b class="nc">&nbsp;        assertEquals(isAutoCreationEnabled, graph.isAutoCreationEnabled());</b>
+<b class="nc">&nbsp;        assertEquals(isStrictModeEnabled, graph.isStrict());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Test
+&nbsp;    @DisplayName(&quot;add TC1&quot;)
+&nbsp;    public void add_TC1(){
+<b class="nc">&nbsp;        String graphId = &quot;Graph 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId1 = &quot;Node 1&quot;;</b>
+<b class="nc">&nbsp;        String nodeId2 = &quot;Node 2&quot;;</b>
+<b class="nc">&nbsp;        String edge1 = &quot;Edge 1&quot;;</b>
+<b class="nc">&nbsp;        String edge2 = &quot;Edge 2&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        Graph graph = new SingleGraph(graphId, false, false);</b>
+&nbsp;
+<b class="nc">&nbsp;        Node node1 = graph.addNode(nodeId2);</b>
+<b class="nc">&nbsp;        Node node2= graph.addNode(nodeId1);</b>
+&nbsp;
+<b class="nc">&nbsp;        Edge edge = graph.addEdge(edge1,nodeId1, nodeId2);</b>
+&nbsp;
+<b class="nc">&nbsp;        Path path = new Path();</b>
+&nbsp;
+<b class="nc">&nbsp;        path.add(node1, edge);</b>
+&nbsp;
+<b class="nc">&nbsp;        assertEquals(1,path.edges().count());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

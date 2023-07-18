@@ -1,0 +1,426 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GraphicElement</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.graphicGraph</a>
+</div>
+
+<h1>Coverage Summary for Class: GraphicElement (org.graphstream.ui.graphicGraph)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GraphicElement</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/77)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GraphicElement$SwingElementRenderer</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/77)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-07-05
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Stefan Balev &lt;stefan.balev@graphstream-project.org&gt;
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.graphicGraph;
+&nbsp;
+&nbsp;import org.graphstream.graph.implementations.AbstractElement;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Selector;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants;
+&nbsp;
+&nbsp;import java.util.logging.Level;
+&nbsp;import java.util.logging.Logger;
+&nbsp;import java.util.regex.Matcher;
+&nbsp;import java.util.regex.Pattern;
+&nbsp;
+&nbsp;/**
+&nbsp; * Super class of all graphic node, edge, and sprite elements.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Each graphic element references a style, a graphic graph and has a label.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The element also defines the basic behaviour to reload the style when needed,
+&nbsp; * defines abstract methods to set and get the position and bounds in spaces of
+&nbsp; * the element, and to do appropriate actions when specific predefined
+&nbsp; * attributes change (most of them starting with the prefix &quot;ui.&quot;).
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The graphic element has the ability to store attributes like any other graph
+&nbsp; * element, however the attributes stored by the graphic element are restricted.
+&nbsp; * There is a filter on the attribute adding methods that let pass only :
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;All attributes starting with &quot;ui.&quot;.&lt;/li&gt;
+&nbsp; * &lt;li&gt;The &quot;x&quot;, &quot;y&quot;, &quot;z&quot;, &quot;xy&quot; and &quot;xyz&quot; attributes.&lt;/li&gt;
+&nbsp; * &lt;li&gt;The &quot;stylesheet&quot; attribute.&lt;/li&gt;
+&nbsp; * &lt;li&gt;The &quot;label&quot; attribute.&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * All other attributes are filtered and not stored. The result is that if the
+&nbsp; * graphic graph is used as an input (a source of graph events) some attributes
+&nbsp; * will not pass through the filter.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public abstract class GraphicElement extends AbstractElement {
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * class level logger
+&nbsp;	 */
+<b class="nc">&nbsp;	private static final Logger logger = Logger.getLogger(GraphicElement.class.getSimpleName());</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Interface for renderers registered in each style group.
+&nbsp;	 */
+&nbsp;	public interface SwingElementRenderer {
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Graph containing this element.
+&nbsp;	 */
+&nbsp;	protected GraphicGraph mygraph;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The label or null if not specified.
+&nbsp;	 */
+&nbsp;	public String label;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The node style.
+&nbsp;	 */
+&nbsp;	public StyleGroup style;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Associated GUI component.
+&nbsp;	 */
+&nbsp;	public Object component;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Do not show.
+&nbsp;	 */
+<b class="nc">&nbsp;	public boolean hidden = false;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New element.
+&nbsp;	 */
+&nbsp;	public GraphicElement(String id, GraphicGraph graph) {
+<b class="nc">&nbsp;		super(id);</b>
+<b class="nc">&nbsp;		this.mygraph = graph;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public GraphicGraph myGraph() {
+<b class="nc">&nbsp;		return mygraph;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Type of selector for the graphic element (Node, Edge, Sprite ?).
+&nbsp;	 */
+&nbsp;	public abstract Selector.Type getSelectorType();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Style group. An style group may reference several elements.
+&nbsp;	 * 
+&nbsp;	 * @return The style group corresponding to this element.
+&nbsp;	 */
+&nbsp;	public StyleGroup getStyle() {
+<b class="nc">&nbsp;		return style;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Label or null if not set.
+&nbsp;	 */
+&nbsp;	public String getLabel() {
+<b class="nc">&nbsp;		return label;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Abscissa of the element, always in GU (graph units). For edges this is the X
+&nbsp;	 * of the &quot;from&quot; node.
+&nbsp;	 */
+&nbsp;	public abstract double getX();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Ordinate of the element, always in GU (graph units). For edges this is the Y
+&nbsp;	 * of the &quot;from&quot; node.
+&nbsp;	 */
+&nbsp;	public abstract double getY();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Depth of the element, always in GU (graph units). For edges this is the Z of
+&nbsp;	 * the &quot;from&quot; node.
+&nbsp;	 */
+&nbsp;	public abstract double getZ();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The associated GUI component.
+&nbsp;	 * 
+&nbsp;	 * @return An object.
+&nbsp;	 */
+&nbsp;	public Object getComponent() {
+<b class="nc">&nbsp;		return component;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Commands
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The graphic element was removed from the graphic graph, clean up.
+&nbsp;	 */
+&nbsp;	protected abstract void removed();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Try to force the element to move at the give location in graph units (GU).
+&nbsp;	 * For edges, this may move the two attached nodes.
+&nbsp;	 * 
+&nbsp;	 * @param x
+&nbsp;	 *            The new X.
+&nbsp;	 * @param y
+&nbsp;	 *            The new Y.
+&nbsp;	 * @param z
+&nbsp;	 *            the new Z.
+&nbsp;	 */
+&nbsp;	public abstract void move(double x, double y, double z);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the GUI component of this element.
+&nbsp;	 * 
+&nbsp;	 * @param component
+&nbsp;	 *            The component.
+&nbsp;	 */
+&nbsp;	public void setComponent(Object component) {
+<b class="nc">&nbsp;		this.component = component;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Handle the &quot;ui.class&quot;, &quot;label&quot;, &quot;ui.style&quot;, etc. attributes.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	protected void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue, Object newValue) {
+<b class="nc">&nbsp;		if (event == AttributeChangeEvent.ADD || event == AttributeChangeEvent.CHANGE) {</b>
+<b class="nc">&nbsp;			if (attribute.charAt(0) == &#39;u&#39; &amp;&amp; attribute.charAt(1) == &#39;i&#39;) {</b>
+<b class="nc">&nbsp;				if (attribute.equals(&quot;ui.class&quot;)) {</b>
+<b class="nc">&nbsp;					mygraph.styleGroups.checkElementStyleGroup(this);</b>
+&nbsp;					// mygraph.styleGroups.removeElement( tis );
+&nbsp;					// mygraph.styleGroups.addElement( this );
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.label&quot;)) {</b>
+<b class="nc">&nbsp;					label = StyleConstants.convertLabel(newValue);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.style&quot;)) {</b>
+&nbsp;					// Cascade the new style in the style sheet.
+&nbsp;
+<b class="nc">&nbsp;					if (newValue instanceof String) {</b>
+&nbsp;						try {
+<b class="nc">&nbsp;							mygraph.styleSheet.parseStyleFromString(new Selector(getSelectorType(), getId(), null),</b>
+&nbsp;									(String) newValue);
+<b class="nc">&nbsp;						} catch (Exception e) {</b>
+<b class="nc">&nbsp;							logger.log(Level.WARNING, String.format(&quot;Error while parsing style for %S &#39;%s&#39; :&quot;,</b>
+<b class="nc">&nbsp;									getSelectorType(), getId()), e);</b>
+<b class="nc">&nbsp;						}</b>
+<b class="nc">&nbsp;						mygraph.graphChanged = true;</b>
+&nbsp;					} else {
+<b class="nc">&nbsp;						logger.warning(&quot;Unknown value for style [&quot; + newValue + &quot;].&quot;);</b>
+&nbsp;					}
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.hide&quot;)) {</b>
+<b class="nc">&nbsp;					hidden = true;</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.clicked&quot;)) {</b>
+<b class="nc">&nbsp;					style.pushEventFor(this, &quot;clicked&quot;);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.selected&quot;)) {</b>
+<b class="nc">&nbsp;					style.pushEventFor(this, &quot;selected&quot;);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.color&quot;)) {</b>
+<b class="nc">&nbsp;					style.pushElementAsDynamic(this);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.size&quot;)) {</b>
+<b class="nc">&nbsp;					style.pushElementAsDynamic(this);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.icon&quot;)) {</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+&nbsp;				}
+&nbsp;				// else if( attribute.equals( &quot;ui.state&quot; ) )
+&nbsp;				// {
+&nbsp;				// if( newValue == null )
+&nbsp;				// state = null;
+&nbsp;				// else if( newValue instanceof String )
+&nbsp;				// state = (String) newValue;
+&nbsp;				// }
+<b class="nc">&nbsp;			} else if (attribute.equals(&quot;label&quot;)) {</b>
+<b class="nc">&nbsp;				label = StyleConstants.convertLabel(newValue);</b>
+<b class="nc">&nbsp;				mygraph.graphChanged = true;</b>
+&nbsp;			}
+&nbsp;		} else // REMOVE
+&nbsp;		{
+<b class="nc">&nbsp;			if (attribute.charAt(0) == &#39;u&#39; &amp;&amp; attribute.charAt(1) == &#39;i&#39;) {</b>
+<b class="nc">&nbsp;				if (attribute.equals(&quot;ui.class&quot;)) {</b>
+<b class="nc">&nbsp;					Object o = attributes.remove(&quot;ui.class&quot;); // Not yet removed</b>
+&nbsp;																// at
+&nbsp;																// this point !
+<b class="nc">&nbsp;					mygraph.styleGroups.checkElementStyleGroup(this);</b>
+<b class="nc">&nbsp;					attributes.put(&quot;ui.class&quot;, o);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.label&quot;)) {</b>
+<b class="nc">&nbsp;					label = &quot;&quot;;</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.hide&quot;)) {</b>
+<b class="nc">&nbsp;					hidden = false;</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.clicked&quot;)) {</b>
+<b class="nc">&nbsp;					style.popEventFor(this, &quot;clicked&quot;);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.selected&quot;)) {</b>
+<b class="nc">&nbsp;					style.popEventFor(this, &quot;selected&quot;);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.color&quot;)) {</b>
+<b class="nc">&nbsp;					style.popElementAsDynamic(this);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;				} else if (attribute.equals(&quot;ui.size&quot;)) {</b>
+<b class="nc">&nbsp;					style.popElementAsDynamic(this);</b>
+<b class="nc">&nbsp;					mygraph.graphChanged = true;</b>
+&nbsp;				}
+<b class="nc">&nbsp;			} else if (attribute.equals(&quot;label&quot;)) {</b>
+<b class="nc">&nbsp;				label = &quot;&quot;;</b>
+<b class="nc">&nbsp;				mygraph.graphChanged = true;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Overriding of standard attribute changing to filter them.
+&nbsp;
+&nbsp;	protected static Pattern acceptedAttribute;
+&nbsp;
+&nbsp;	static {
+<b class="nc">&nbsp;		acceptedAttribute = Pattern.compile(&quot;(ui[.].*)|(layout[.].*)|x|y|z|xy|xyz|label|stylesheet&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void setAttribute(String attribute, Object... values) {
+<b class="nc">&nbsp;		Matcher matcher = acceptedAttribute.matcher(attribute);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (matcher.matches())</b>
+<b class="nc">&nbsp;			super.setAttribute(attribute, values);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

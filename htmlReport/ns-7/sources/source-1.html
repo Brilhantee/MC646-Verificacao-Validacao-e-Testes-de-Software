@@ -1,0 +1,937 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DGSParser</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file.dgs</a>
+</div>
+
+<h1>Coverage Summary for Class: DGSParser (org.graphstream.stream.file.dgs)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DGSParser</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/333)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DGSParser$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">DGSParser$Token</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/336)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-10-04
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file.dgs;
+&nbsp;
+&nbsp;import java.awt.Color;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.Reader;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.LinkedList;
+&nbsp;
+&nbsp;import org.graphstream.graph.implementations.AbstractElement.AttributeChangeEvent;
+&nbsp;import org.graphstream.stream.SourceBase.ElementType;
+&nbsp;import org.graphstream.stream.file.FileSourceDGS;
+&nbsp;import org.graphstream.util.parser.ParseException;
+&nbsp;import org.graphstream.util.parser.Parser;
+&nbsp;
+&nbsp;// import org.graphstream.util.time.ISODateIO;
+&nbsp;
+&nbsp;public class DGSParser implements Parser {
+<b class="nc">&nbsp;	static enum Token {</b>
+<b class="nc">&nbsp;		AN, CN, DN, AE, CE, DE, CG, ST, CL, TF, EOF</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static final int BUFFER_SIZE = 4096;
+&nbsp;
+&nbsp;	public static final int ARRAY_OPEN = &#39;{&#39;;
+&nbsp;	public static final int ARRAY_CLOSE = &#39;}&#39;;
+&nbsp;
+&nbsp;	public static final int MAP_OPEN = &#39;[&#39;;
+&nbsp;	public static final int MAP_CLOSE = &#39;]&#39;;
+&nbsp;
+&nbsp;	Reader reader;
+&nbsp;	int line, column;
+&nbsp;	int bufferCapacity, bufferPosition;
+&nbsp;	char[] buffer;
+&nbsp;	int[] pushback;
+&nbsp;	int pushbackOffset;
+&nbsp;	FileSourceDGS dgs;
+&nbsp;	String sourceId;
+&nbsp;	Token lastDirective;
+&nbsp;
+&nbsp;	// ISODateIO dateIO;
+&nbsp;
+<b class="nc">&nbsp;	public DGSParser(FileSourceDGS dgs, Reader reader) {</b>
+<b class="nc">&nbsp;		this.dgs = dgs;</b>
+<b class="nc">&nbsp;		this.reader = reader;</b>
+<b class="nc">&nbsp;		bufferCapacity = 0;</b>
+<b class="nc">&nbsp;		buffer = new char[BUFFER_SIZE];</b>
+<b class="nc">&nbsp;		pushback = new int[10];</b>
+<b class="nc">&nbsp;		pushbackOffset = -1;</b>
+<b class="nc">&nbsp;		this.sourceId = String.format(&quot;&lt;DGS stream %x&gt;&quot;, System.nanoTime());</b>
+&nbsp;
+&nbsp;		// try {
+&nbsp;		// dateIO = new ISODateIO();
+&nbsp;		// } catch (Exception e) {
+&nbsp;		// e.printStackTrace();
+&nbsp;		// }
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.util.parser.Parser#close()
+&nbsp;	 */
+&nbsp;	public void close() throws IOException {
+<b class="nc">&nbsp;		reader.close();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.util.parser.Parser#open()
+&nbsp;	 */
+&nbsp;	public void open() throws IOException, ParseException {
+<b class="nc">&nbsp;		header();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.util.parser.Parser#all()
+&nbsp;	 */
+&nbsp;	public void all() throws IOException, ParseException {
+<b class="nc">&nbsp;		header();</b>
+&nbsp;
+<b class="nc">&nbsp;		while (next())</b>
+<b class="nc">&nbsp;			;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected int nextChar() throws IOException {
+&nbsp;		int c;
+&nbsp;
+<b class="nc">&nbsp;		if (pushbackOffset &gt;= 0)</b>
+<b class="nc">&nbsp;			return pushback[pushbackOffset--];</b>
+&nbsp;
+<b class="nc">&nbsp;		if (bufferCapacity == 0 || bufferPosition &gt;= bufferCapacity) {</b>
+<b class="nc">&nbsp;			bufferCapacity = reader.read(buffer, 0, BUFFER_SIZE);</b>
+<b class="nc">&nbsp;			bufferPosition = 0;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (bufferCapacity &lt;= 0)</b>
+<b class="nc">&nbsp;			return -1;</b>
+&nbsp;
+<b class="nc">&nbsp;		c = buffer[bufferPosition++];</b>
+&nbsp;
+&nbsp;		//
+&nbsp;		// Handle special EOL
+&nbsp;		// - LF
+&nbsp;		// - CR
+&nbsp;		// - CR+LF
+&nbsp;		//
+<b class="nc">&nbsp;		if (c == &#39;\r&#39;) {</b>
+<b class="nc">&nbsp;			if (bufferPosition &lt; bufferCapacity) {</b>
+<b class="nc">&nbsp;				if (buffer[bufferPosition] == &#39;\n&#39;)</b>
+<b class="nc">&nbsp;					bufferPosition++;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (c != &#39;\n&#39;)</b>
+<b class="nc">&nbsp;					pushback(c);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			c = &#39;\n&#39;;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (c == &#39;\n&#39;) {</b>
+<b class="nc">&nbsp;			line++;</b>
+<b class="nc">&nbsp;			column = 0;</b>
+&nbsp;		} else
+<b class="nc">&nbsp;			column++;</b>
+&nbsp;
+<b class="nc">&nbsp;		return c;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void pushback(int c) throws IOException {
+<b class="nc">&nbsp;		if (c &lt; 0)</b>
+&nbsp;			return;
+&nbsp;
+<b class="nc">&nbsp;		if (pushbackOffset + 1 &gt;= pushback.length)</b>
+<b class="nc">&nbsp;			throw new IOException(&quot;pushback buffer overflow&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		pushback[++pushbackOffset] = c;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void skipLine() throws IOException {
+&nbsp;		int c;
+&nbsp;
+<b class="nc">&nbsp;		while ((c = nextChar()) != &#39;\n&#39; &amp;&amp; c &gt;= 0)</b>
+<b class="nc">&nbsp;			;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void skipWhitespaces() throws IOException {
+&nbsp;		int c;
+&nbsp;
+<b class="nc">&nbsp;		while ((c = nextChar()) == &#39; &#39; || c == &#39;\t&#39;)</b>
+<b class="nc">&nbsp;			;</b>
+&nbsp;
+<b class="nc">&nbsp;		pushback(c);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void header() throws IOException, ParseException {
+<b class="nc">&nbsp;		int[] dgs = new int[6];</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 6; i++)</b>
+<b class="nc">&nbsp;			dgs[i] = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (dgs[0] != &#39;D&#39; || dgs[1] != &#39;G&#39; || dgs[2] != &#39;S&#39;)</b>
+<b class="nc">&nbsp;			throw parseException(</b>
+<b class="nc">&nbsp;					String.format(&quot;bad magic header, &#39;DGS&#39; expected, got &#39;%c%c%c&#39;&quot;, dgs[0], dgs[1], dgs[2]));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (dgs[3] != &#39;0&#39; || dgs[4] != &#39;0&#39; || dgs[5] &lt; &#39;0&#39; || dgs[5] &gt; &#39;5&#39;)</b>
+<b class="nc">&nbsp;			throw parseException(String.format(&quot;bad version \&quot;%c%c%c\&quot;&quot;, dgs[0], dgs[1], dgs[2]));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (nextChar() != &#39;\n&#39;)</b>
+<b class="nc">&nbsp;			throw parseException(&quot;end-of-line is missing&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		skipLine();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.util.parser.Parser#next()
+&nbsp;	 */
+&nbsp;	public boolean next() throws IOException, ParseException {
+&nbsp;		int c;
+&nbsp;		String nodeId;
+&nbsp;		String edgeId, source, target;
+&nbsp;
+<b class="nc">&nbsp;		lastDirective = directive();</b>
+&nbsp;
+<b class="nc">&nbsp;		switch (lastDirective) {</b>
+&nbsp;		case AN:
+<b class="nc">&nbsp;			nodeId = id();</b>
+<b class="nc">&nbsp;			dgs.sendNodeAdded(sourceId, nodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;			attributes(ElementType.NODE, nodeId);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case CN:
+<b class="nc">&nbsp;			nodeId = id();</b>
+<b class="nc">&nbsp;			attributes(ElementType.NODE, nodeId);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case DN:
+<b class="nc">&nbsp;			nodeId = id();</b>
+<b class="nc">&nbsp;			dgs.sendNodeRemoved(sourceId, nodeId);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case AE:
+<b class="nc">&nbsp;			edgeId = id();</b>
+<b class="nc">&nbsp;			source = id();</b>
+&nbsp;
+<b class="nc">&nbsp;			skipWhitespaces();</b>
+<b class="nc">&nbsp;			c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (c != &#39;&lt;&#39; &amp;&amp; c != &#39;&gt;&#39;)</b>
+<b class="nc">&nbsp;				pushback(c);</b>
+&nbsp;
+<b class="nc">&nbsp;			target = id();</b>
+&nbsp;
+<b class="nc">&nbsp;			switch (c) {</b>
+&nbsp;			case &#39;&gt;&#39;:
+<b class="nc">&nbsp;				dgs.sendEdgeAdded(sourceId, edgeId, source, target, true);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case &#39;&lt;&#39;:
+<b class="nc">&nbsp;				dgs.sendEdgeAdded(sourceId, edgeId, target, source, true);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				dgs.sendEdgeAdded(sourceId, edgeId, source, target, false);</b>
+&nbsp;				break;
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			attributes(ElementType.EDGE, edgeId);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case CE:
+<b class="nc">&nbsp;			edgeId = id();</b>
+<b class="nc">&nbsp;			attributes(ElementType.EDGE, edgeId);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case DE:
+<b class="nc">&nbsp;			edgeId = id();</b>
+<b class="nc">&nbsp;			dgs.sendEdgeRemoved(sourceId, edgeId);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case CG:
+<b class="nc">&nbsp;			attributes(ElementType.GRAPH, null);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case ST:
+&nbsp;			// TODO release 1.2 : read timestamp
+&nbsp;			// Version for 1.2 :
+&nbsp;			// --------------------------------
+&nbsp;			// long step;
+&nbsp;			// step = timestamp();
+&nbsp;			// sendStepBegins(sourceId, ste);
+&nbsp;
+&nbsp;			double step;
+&nbsp;
+<b class="nc">&nbsp;			step = Double.valueOf(id());</b>
+<b class="nc">&nbsp;			dgs.sendStepBegins(sourceId, step);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case CL:
+<b class="nc">&nbsp;			dgs.sendGraphCleared(sourceId);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case TF:
+&nbsp;			// TODO for release 1.2
+&nbsp;			// String tf;
+&nbsp;			// tf = string();
+&nbsp;
+&nbsp;			// try {
+&nbsp;			// dateIO.setFormat(tf);
+&nbsp;			// } catch (Exception e) {
+&nbsp;			// throw parseException(&quot;invalid time format \&quot;%s\&quot;&quot;, tf);
+&nbsp;			// }
+&nbsp;
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case EOF:
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		skipWhitespaces();</b>
+<b class="nc">&nbsp;		c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c == &#39;#&#39;) {</b>
+<b class="nc">&nbsp;			skipLine();</b>
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (c &lt; 0)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c != &#39;\n&#39;)</b>
+<b class="nc">&nbsp;			throw parseException(&quot;eol expected, got &#39;%c&#39;&quot;, c);</b>
+&nbsp;
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean nextStep() throws IOException, ParseException {
+&nbsp;		boolean r;
+&nbsp;		Token next;
+&nbsp;
+&nbsp;		do {
+<b class="nc">&nbsp;			r = next();</b>
+<b class="nc">&nbsp;			next = directive();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (next != Token.EOF) {</b>
+<b class="nc">&nbsp;				pushback(next.name().charAt(1));</b>
+<b class="nc">&nbsp;				pushback(next.name().charAt(0));</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} while (next != Token.ST &amp;&amp; next != Token.EOF);</b>
+&nbsp;
+<b class="nc">&nbsp;		return r;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void attributes(ElementType type, String id) throws IOException, ParseException {
+&nbsp;		int c;
+&nbsp;
+<b class="nc">&nbsp;		skipWhitespaces();</b>
+&nbsp;
+<b class="nc">&nbsp;		while ((c = nextChar()) != &#39;\n&#39; &amp;&amp; c != &#39;#&#39; &amp;&amp; c &gt;= 0) {</b>
+<b class="nc">&nbsp;			pushback(c);</b>
+<b class="nc">&nbsp;			attribute(type, id);</b>
+<b class="nc">&nbsp;			skipWhitespaces();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		pushback(c);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void attribute(ElementType type, String elementId) throws IOException, ParseException {
+&nbsp;		String key;
+<b class="nc">&nbsp;		Object value = null;</b>
+&nbsp;		int c;
+<b class="nc">&nbsp;		AttributeChangeEvent ch = AttributeChangeEvent.CHANGE;</b>
+&nbsp;
+<b class="nc">&nbsp;		skipWhitespaces();</b>
+<b class="nc">&nbsp;		c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c == &#39;+&#39;)</b>
+<b class="nc">&nbsp;			ch = AttributeChangeEvent.ADD;</b>
+<b class="nc">&nbsp;		else if (c == &#39;-&#39;)</b>
+<b class="nc">&nbsp;			ch = AttributeChangeEvent.REMOVE;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			pushback(c);</b>
+&nbsp;
+<b class="nc">&nbsp;		key = id();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (key == null)</b>
+<b class="nc">&nbsp;			throw parseException(&quot;attribute key expected&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (ch != AttributeChangeEvent.REMOVE) {</b>
+&nbsp;
+<b class="nc">&nbsp;			skipWhitespaces();</b>
+<b class="nc">&nbsp;			c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (c == &#39;=&#39; || c == &#39;:&#39;) {</b>
+<b class="nc">&nbsp;				skipWhitespaces();</b>
+<b class="nc">&nbsp;				value = value(true);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				value = Boolean.TRUE;</b>
+<b class="nc">&nbsp;				pushback(c);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		dgs.sendAttributeChangedEvent(sourceId, elementId, type, key, ch, null, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Object value(boolean array) throws IOException, ParseException {
+&nbsp;		int c;
+<b class="nc">&nbsp;		LinkedList&lt;Object&gt; l = null;</b>
+&nbsp;		Object o;
+&nbsp;
+&nbsp;		do {
+<b class="nc">&nbsp;			skipWhitespaces();</b>
+<b class="nc">&nbsp;			c = nextChar();</b>
+<b class="nc">&nbsp;			pushback(c);</b>
+&nbsp;
+<b class="nc">&nbsp;			switch (c) {</b>
+&nbsp;			case &#39;\&#39;&#39;:
+&nbsp;			case &#39;\&quot;&#39;:
+<b class="nc">&nbsp;				o = string();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case &#39;#&#39;:
+<b class="nc">&nbsp;				o = color();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case ARRAY_OPEN:
+&nbsp;				//
+&nbsp;				// Skip ARRAY_OPEN
+<b class="nc">&nbsp;				nextChar();</b>
+&nbsp;				//
+&nbsp;
+<b class="nc">&nbsp;				skipWhitespaces();</b>
+<b class="nc">&nbsp;				o = value(true);</b>
+<b class="nc">&nbsp;				skipWhitespaces();</b>
+&nbsp;
+&nbsp;				//
+&nbsp;				// Check if next char is ARRAY_CLOSE
+<b class="nc">&nbsp;				if (nextChar() != ARRAY_CLOSE)</b>
+<b class="nc">&nbsp;					throw parseException(&quot;&#39;%c&#39; expected&quot;, ARRAY_CLOSE);</b>
+&nbsp;				//
+&nbsp;
+<b class="nc">&nbsp;				if (!o.getClass().isArray())</b>
+<b class="nc">&nbsp;					o = new Object[] { o };</b>
+&nbsp;
+&nbsp;				break;
+&nbsp;			case MAP_OPEN:
+<b class="nc">&nbsp;				o = map();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default: {
+<b class="nc">&nbsp;				String word = id();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (word == null)</b>
+<b class="nc">&nbsp;					throw parseException(&quot;missing value&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;				if ((c &gt;= &#39;0&#39; &amp;&amp; c &lt;= &#39;9&#39;) || c == &#39;-&#39;) {</b>
+&nbsp;					try {
+<b class="nc">&nbsp;						if (word.indexOf(&#39;.&#39;) &gt; 0)</b>
+<b class="nc">&nbsp;							o = Double.valueOf(word);</b>
+&nbsp;						else {
+&nbsp;							try {
+<b class="nc">&nbsp;								o = Integer.valueOf(word);</b>
+<b class="nc">&nbsp;							} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;								o = Long.valueOf(word);</b>
+<b class="nc">&nbsp;							}</b>
+&nbsp;						}
+<b class="nc">&nbsp;					} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;						throw parseException(&quot;invalid number format &#39;%s&#39;&quot;, word);</b>
+<b class="nc">&nbsp;					}</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					if (word.equalsIgnoreCase(&quot;true&quot;))</b>
+<b class="nc">&nbsp;						o = Boolean.TRUE;</b>
+<b class="nc">&nbsp;					else if (word.equalsIgnoreCase(&quot;false&quot;))</b>
+<b class="nc">&nbsp;						o = Boolean.FALSE;</b>
+&nbsp;					else
+<b class="nc">&nbsp;						o = word;</b>
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			}
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (l == null &amp;&amp; array &amp;&amp; c == &#39;,&#39;) {</b>
+<b class="nc">&nbsp;				l = new LinkedList&lt;Object&gt;();</b>
+<b class="nc">&nbsp;				l.add(o);</b>
+<b class="nc">&nbsp;			} else if (l != null)</b>
+<b class="nc">&nbsp;				l.add(o);</b>
+<b class="nc">&nbsp;		} while (array &amp;&amp; c == &#39;,&#39;);</b>
+&nbsp;
+<b class="nc">&nbsp;		pushback(c);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (l == null)</b>
+<b class="nc">&nbsp;			return o;</b>
+&nbsp;
+<b class="nc">&nbsp;		return l.toArray();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Color color() throws IOException, ParseException {
+&nbsp;		int c;
+&nbsp;		int r, g, b, a;
+<b class="nc">&nbsp;		StringBuilder hexa = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;		c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c != &#39;#&#39;)</b>
+<b class="nc">&nbsp;			throw parseException(&quot;&#39;#&#39; expected&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 6; i++) {</b>
+<b class="nc">&nbsp;			c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;			if ((c &gt;= 0 &amp;&amp; c &lt;= &#39;9&#39;) || (c &gt;= &#39;a&#39; &amp;&amp; c &lt;= &#39;f&#39;) || (c &gt;= &#39;A&#39; &amp;&amp; c &lt;= &#39;F&#39;))</b>
+<b class="nc">&nbsp;				hexa.appendCodePoint(c);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				throw parseException(&quot;hexadecimal value expected&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		r = Integer.parseInt(hexa.substring(0, 2), 16);</b>
+<b class="nc">&nbsp;		g = Integer.parseInt(hexa.substring(2, 4), 16);</b>
+<b class="nc">&nbsp;		b = Integer.parseInt(hexa.substring(4, 6), 16);</b>
+&nbsp;
+<b class="nc">&nbsp;		c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		if ((c &gt;= &#39;0&#39; &amp;&amp; c &lt;= &#39;9&#39;) || (c &gt;= &#39;a&#39; &amp;&amp; c &lt;= &#39;f&#39;) || (c &gt;= &#39;A&#39; &amp;&amp; c &lt;= &#39;F&#39;)) {</b>
+<b class="nc">&nbsp;			hexa.appendCodePoint(c);</b>
+&nbsp;
+<b class="nc">&nbsp;			c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;			if ((c &gt;= 0 &amp;&amp; c &lt;= &#39;9&#39;) || (c &gt;= &#39;a&#39; &amp;&amp; c &lt;= &#39;f&#39;) || (c &gt;= &#39;A&#39; &amp;&amp; c &lt;= &#39;F&#39;))</b>
+<b class="nc">&nbsp;				hexa.appendCodePoint(c);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				throw parseException(&quot;hexadecimal value expected&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			a = Integer.parseInt(hexa.substring(6, 8), 16);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			a = 255;</b>
+<b class="nc">&nbsp;			pushback(c);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return new Color(r, g, b, a);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Object array() throws IOException, ParseException {
+&nbsp;		int c;
+<b class="nc">&nbsp;		LinkedList&lt;Object&gt; array = new LinkedList&lt;Object&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c != ARRAY_OPEN)</b>
+<b class="nc">&nbsp;			throw parseException(&quot;&#39;%c&#39; expected&quot;, ARRAY_OPEN);</b>
+&nbsp;
+<b class="nc">&nbsp;		skipWhitespaces();</b>
+<b class="nc">&nbsp;		c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		while (c != ARRAY_CLOSE) {</b>
+<b class="nc">&nbsp;			pushback(c);</b>
+<b class="nc">&nbsp;			array.add(value(false));</b>
+&nbsp;
+<b class="nc">&nbsp;			skipWhitespaces();</b>
+<b class="nc">&nbsp;			c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (c != ARRAY_CLOSE &amp;&amp; c != &#39;,&#39;)</b>
+<b class="nc">&nbsp;				throw parseException(&quot;&#39;%c&#39; or &#39;,&#39; expected, got &#39;%c&#39;&quot;, ARRAY_CLOSE, c);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (c == &#39;,&#39;) {</b>
+<b class="nc">&nbsp;				skipWhitespaces();</b>
+<b class="nc">&nbsp;				c = nextChar();</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (c != ARRAY_CLOSE)</b>
+<b class="nc">&nbsp;			throw parseException(&quot;&#39;%c&#39; expected&quot;, ARRAY_CLOSE);</b>
+&nbsp;
+<b class="nc">&nbsp;		return array.toArray();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Object map() throws IOException, ParseException {
+&nbsp;		int c;
+<b class="nc">&nbsp;		HashMap&lt;String, Object&gt; map = new HashMap&lt;String, Object&gt;();</b>
+&nbsp;		String key;
+&nbsp;		Object value;
+&nbsp;
+<b class="nc">&nbsp;		c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c != MAP_OPEN)</b>
+<b class="nc">&nbsp;			throw parseException(&quot;&#39;%c&#39; expected&quot;, MAP_OPEN);</b>
+&nbsp;
+<b class="nc">&nbsp;		c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		while (c != MAP_CLOSE) {</b>
+<b class="nc">&nbsp;			pushback(c);</b>
+<b class="nc">&nbsp;			key = id();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (key == null)</b>
+<b class="nc">&nbsp;				throw parseException(&quot;id expected here, &#39;%c&#39;&quot;, c);</b>
+&nbsp;
+<b class="nc">&nbsp;			skipWhitespaces();</b>
+<b class="nc">&nbsp;			c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (c == &#39;=&#39; || c == &#39;:&#39;) {</b>
+<b class="nc">&nbsp;				skipWhitespaces();</b>
+<b class="nc">&nbsp;				value = value(false);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				value = Boolean.TRUE;</b>
+<b class="nc">&nbsp;				pushback(c);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			map.put(key, value);</b>
+&nbsp;
+<b class="nc">&nbsp;			skipWhitespaces();</b>
+<b class="nc">&nbsp;			c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (c != MAP_CLOSE &amp;&amp; c != &#39;,&#39;)</b>
+<b class="nc">&nbsp;				throw parseException(&quot;&#39;%c&#39; or &#39;,&#39; expected, got &#39;%c&#39;&quot;, MAP_CLOSE, c);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (c == &#39;,&#39;) {</b>
+<b class="nc">&nbsp;				skipWhitespaces();</b>
+<b class="nc">&nbsp;				c = nextChar();</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (c != MAP_CLOSE)</b>
+<b class="nc">&nbsp;			throw parseException(&quot;&#39;%c&#39; expected&quot;, MAP_CLOSE);</b>
+&nbsp;
+<b class="nc">&nbsp;		return map;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Token directive() throws IOException, ParseException {
+&nbsp;		int c1, c2;
+&nbsp;
+&nbsp;		//
+&nbsp;		// Skip comment and empty lines
+&nbsp;		//
+&nbsp;		do {
+<b class="nc">&nbsp;			c1 = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (c1 == &#39;#&#39;)</b>
+<b class="nc">&nbsp;				skipLine();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (c1 &lt; 0)</b>
+<b class="nc">&nbsp;				return Token.EOF;</b>
+<b class="nc">&nbsp;		} while (c1 == &#39;#&#39; || c1 == &#39;\n&#39;);</b>
+&nbsp;
+<b class="nc">&nbsp;		c2 = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c1 &gt;= &#39;A&#39; &amp;&amp; c1 &lt;= &#39;Z&#39;)</b>
+<b class="nc">&nbsp;			c1 -= &#39;A&#39; - &#39;a&#39;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c2 &gt;= &#39;A&#39; &amp;&amp; c2 &lt;= &#39;Z&#39;)</b>
+<b class="nc">&nbsp;			c2 -= &#39;A&#39; - &#39;a&#39;;</b>
+&nbsp;
+<b class="nc">&nbsp;		switch (c1) {</b>
+&nbsp;		case &#39;a&#39;:
+<b class="nc">&nbsp;			if (c2 == &#39;n&#39;)</b>
+<b class="nc">&nbsp;				return Token.AN;</b>
+<b class="nc">&nbsp;			else if (c2 == &#39;e&#39;)</b>
+<b class="nc">&nbsp;				return Token.AE;</b>
+&nbsp;
+&nbsp;			break;
+&nbsp;		case &#39;c&#39;:
+<b class="nc">&nbsp;			switch (c2) {</b>
+&nbsp;			case &#39;n&#39;:
+<b class="nc">&nbsp;				return Token.CN;</b>
+&nbsp;			case &#39;e&#39;:
+<b class="nc">&nbsp;				return Token.CE;</b>
+&nbsp;			case &#39;g&#39;:
+<b class="nc">&nbsp;				return Token.CG;</b>
+&nbsp;			case &#39;l&#39;:
+<b class="nc">&nbsp;				return Token.CL;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case &#39;d&#39;:
+<b class="nc">&nbsp;			if (c2 == &#39;n&#39;)</b>
+<b class="nc">&nbsp;				return Token.DN;</b>
+<b class="nc">&nbsp;			else if (c2 == &#39;e&#39;)</b>
+<b class="nc">&nbsp;				return Token.DE;</b>
+&nbsp;
+&nbsp;			break;
+&nbsp;		case &#39;s&#39;:
+<b class="nc">&nbsp;			if (c2 == &#39;t&#39;)</b>
+<b class="nc">&nbsp;				return Token.ST;</b>
+&nbsp;
+&nbsp;			break;
+&nbsp;		case &#39;t&#39;:
+<b class="nc">&nbsp;			if (c1 == &#39;f&#39;)</b>
+<b class="nc">&nbsp;				return Token.TF;</b>
+&nbsp;
+&nbsp;			break;
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		throw parseException(&quot;unknown directive &#39;%c%c&#39;&quot;, c1, c2);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String string() throws IOException, ParseException {
+&nbsp;		int c, s;
+&nbsp;		StringBuilder builder;
+&nbsp;		boolean slash;
+&nbsp;
+<b class="nc">&nbsp;		slash = false;</b>
+<b class="nc">&nbsp;		builder = new StringBuilder();</b>
+<b class="nc">&nbsp;		c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c != &#39;\&quot;&#39; &amp;&amp; c != &#39;\&#39;&#39;)</b>
+<b class="nc">&nbsp;			throw parseException(&quot;string expected&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		s = c;</b>
+&nbsp;
+<b class="nc">&nbsp;		while ((c = nextChar()) != s || slash) {</b>
+<b class="nc">&nbsp;			if (slash &amp;&amp; c != s)</b>
+<b class="nc">&nbsp;				builder.append(&quot;\\&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			slash = c == &#39;\\&#39;;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (!slash) {</b>
+<b class="nc">&nbsp;				if (!Character.isValidCodePoint(c))</b>
+<b class="nc">&nbsp;					throw parseException(&quot;invalid code-point 0x%X&quot;, c);</b>
+&nbsp;
+<b class="nc">&nbsp;				builder.appendCodePoint(c);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return builder.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String id() throws IOException, ParseException {
+&nbsp;		int c;
+<b class="nc">&nbsp;		StringBuilder builder = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;		skipWhitespaces();</b>
+<b class="nc">&nbsp;		c = nextChar();</b>
+<b class="nc">&nbsp;		pushback(c);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (c == &#39;\&quot;&#39; || c == &#39;\&#39;&#39;) {</b>
+<b class="nc">&nbsp;			return string();</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			boolean stop = false;</b>
+&nbsp;
+<b class="nc">&nbsp;			while (!stop) {</b>
+<b class="nc">&nbsp;				c = nextChar();</b>
+&nbsp;
+<b class="nc">&nbsp;				switch (Character.getType(c)) {</b>
+&nbsp;				case Character.LOWERCASE_LETTER:
+&nbsp;				case Character.UPPERCASE_LETTER:
+&nbsp;				case Character.DECIMAL_DIGIT_NUMBER:
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				case Character.DASH_PUNCTUATION:
+<b class="nc">&nbsp;					if (c != &#39;-&#39;)</b>
+<b class="nc">&nbsp;						stop = true;</b>
+&nbsp;
+&nbsp;					break;
+&nbsp;				case Character.MATH_SYMBOL:
+<b class="nc">&nbsp;					if (c != &#39;+&#39;)</b>
+<b class="nc">&nbsp;						stop = true;</b>
+&nbsp;
+&nbsp;					break;
+&nbsp;				case Character.CONNECTOR_PUNCTUATION:
+<b class="nc">&nbsp;					if (c != &#39;_&#39;)</b>
+<b class="nc">&nbsp;						stop = true;</b>
+&nbsp;
+&nbsp;					break;
+&nbsp;				case Character.OTHER_PUNCTUATION:
+<b class="nc">&nbsp;					if (c != &#39;.&#39;)</b>
+<b class="nc">&nbsp;						stop = true;</b>
+&nbsp;
+&nbsp;					break;
+&nbsp;				default:
+<b class="nc">&nbsp;					stop = true;</b>
+&nbsp;					break;
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				if (!stop)</b>
+<b class="nc">&nbsp;					builder.appendCodePoint(c);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			pushback(c);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (builder.length() == 0)</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;
+<b class="nc">&nbsp;		return builder.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * protected long timestamp() throws IOException, ParseException { int c; String
+&nbsp;	 * time;
+&nbsp;	 * 
+&nbsp;	 * c = nextChar(); pushback(c);
+&nbsp;	 * 
+&nbsp;	 * switch (c) { case &#39;&quot;&#39;: case &#39;\&#39;&#39;: time = string(); break; default:
+&nbsp;	 * StringBuilder builder = new StringBuilder();
+&nbsp;	 * 
+&nbsp;	 * while ((c = nextChar()) != &#39;\n&#39; &amp;&amp; c != &#39;&quot;&#39;) builder.appendCodePoint(c);
+&nbsp;	 * 
+&nbsp;	 * pushback(c); time = builder.toString(); break; }
+&nbsp;	 * 
+&nbsp;	 * pushback(c); return dateIO.parse(time).getTimeInMillis(); }
+&nbsp;	 */
+&nbsp;
+&nbsp;	protected ParseException parseException(String message, Object... args) {
+<b class="nc">&nbsp;		return new ParseException(</b>
+<b class="nc">&nbsp;				String.format(String.format(&quot;parse error at (%d;%d) : %s&quot;, line, column, message), args));</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

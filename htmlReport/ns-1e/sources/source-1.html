@@ -1,0 +1,191 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Display</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.util</a>
+</div>
+
+<h1>Coverage Summary for Class: Display (org.graphstream.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Display</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; *
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; *
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; *
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; *
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; *
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @since 2017-11-08
+&nbsp; */
+&nbsp;package org.graphstream.util;
+&nbsp;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.ui.view.Viewer;
+&nbsp;
+&nbsp;public interface Display {
+&nbsp;	/**
+&nbsp;	 * Try to get the default display according to the &quot;org.graphstream.ui&quot; property.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * It will look for three class candidates:
+&nbsp;	 * 1. name defined in the property;
+&nbsp;	 * 2. #1 one with a &quot;.util.Display&quot; suffix;
+&nbsp;	 * 3. #2 one with a &quot;org.graphstream.ui.&quot; prefix.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * If the property is not set, or if no valid candidate can be found, a {@link MissingDisplayException} will be
+&nbsp;	 * thrown.
+&nbsp;	 *
+&nbsp;	 * @return the Display object linked to the UI property
+&nbsp;	 * @throws MissingDisplayException if no Display can be found
+&nbsp;	 */
+&nbsp;	static Display getDefault() throws MissingDisplayException {
+<b class="nc">&nbsp;		String uiModule = System.getProperty(&quot;org.graphstream.ui&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (uiModule == null) {</b>
+<b class="nc">&nbsp;			throw new MissingDisplayException(&quot;No UI package detected! &quot;</b>
+&nbsp;					+ &quot;Please use System.setProperty(\&quot;org.graphstream.ui\&quot;) for the selected package.&quot;);
+&nbsp;		} else {
+<b class="nc">&nbsp;			Display display = null;</b>
+<b class="nc">&nbsp;			String[] candidates = { uiModule, uiModule + &quot;.util.Display&quot;,</b>
+&nbsp;					&quot;org.graphstream.ui.&quot; + uiModule + &quot;.util.Display&quot; };
+&nbsp;
+<b class="nc">&nbsp;			for (String candidate : candidates) {</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					Class&lt;?&gt; clazz = Class.forName(candidate);</b>
+<b class="nc">&nbsp;					Object object = clazz.newInstance();</b>
+&nbsp;
+<b class="nc">&nbsp;					if (object instanceof Display) {</b>
+<b class="nc">&nbsp;						display = (Display) object;</b>
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					}
+<b class="nc">&nbsp;				} catch (ClassNotFoundException e) {</b>
+<b class="nc">&nbsp;					continue;</b>
+<b class="nc">&nbsp;				} catch (Exception e) {</b>
+<b class="nc">&nbsp;					throw new RuntimeException(&quot;Failed to create object&quot;, e);</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			if (display == null) {</b>
+<b class="nc">&nbsp;				throw new MissingDisplayException(&quot;No valid display found. &quot;</b>
+&nbsp;						+ &quot;Please check your System.setProperty(\&quot;org.graphstream.ui\&quot;) statement.&quot;);
+&nbsp;			} else {
+<b class="nc">&nbsp;				return display;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	Viewer display(Graph graph, boolean autoLayout);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

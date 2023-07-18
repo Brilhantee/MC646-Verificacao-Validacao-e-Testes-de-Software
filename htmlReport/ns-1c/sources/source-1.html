@@ -1,0 +1,1231 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DefaultCamera2D</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.view.camera</a>
+</div>
+
+<h1>Coverage Summary for Class: DefaultCamera2D (org.graphstream.ui.view.camera)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DefaultCamera2D</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/55)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/448)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DefaultCamera2D$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/56)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/451)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2018-01-18
+&nbsp; * 
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.view.camera;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.EnumSet;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.ui.geom.Point3;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicEdge;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicElement;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicGraph;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicNode;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicSprite;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Selector;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.Units;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Values;
+&nbsp;import org.graphstream.ui.view.util.GraphMetrics;
+&nbsp;import org.graphstream.ui.view.util.InteractiveElement;
+&nbsp;
+&nbsp;/**
+&nbsp; * Define a view of the graph or a part of the graph.
+&nbsp; * 
+&nbsp; * The camera can be seen as an element in charge of projecting the graph
+&nbsp; * elements in graph units (GU) into rendering space units, often in pixels. It
+&nbsp; * defines the transformation, an affine matrix, to pass from the first to the
+&nbsp; * second (in fact its the back-end that does it).
+&nbsp; * 
+&nbsp; * It also contains the graph metrics. This is a set of values that give the
+&nbsp; * overall dimensions of the graph in graph units, as well as the view port, the
+&nbsp; * area on the screen (or any rendering surface) that will receive the results
+&nbsp; * in pixels (or any rendering units). The two mains methods for this operation
+&nbsp; * are [[Camera.pushView(GraphicGraph)]] and [[Camera.popView()]].
+&nbsp; * 
+&nbsp; * The user of the camera must set both the view port and the graph bounds in
+&nbsp; * order for the camera to correctly project the graph view (the Renderer does
+&nbsp; * that before using the Camera, at each frame). The camera model is as follows:
+&nbsp; * the camera defines a center at which it always points. It can zoom on the
+&nbsp; * graph (as if the camera angle of view was changing), pan in any direction by
+&nbsp; * moving its center of view and rotate along the axe going from the center to
+&nbsp; * the camera position (camera can rotate around two axes in 3D, but this is a
+&nbsp; * 2D camera).
+&nbsp; * 
+&nbsp; * There are two modes: - an &quot;auto-fit&quot; mode where the camera always show the
+&nbsp; * whole graph even if it changes in size, by automatically changing the center
+&nbsp; * and zoom values, - and a &quot;user&quot; mode where the camera center (looked-at
+&nbsp; * point), zoom and panning are specified and will not be modified in the bounds
+&nbsp; * of the graph change.
+&nbsp; * 
+&nbsp; * The camera is also able to answer questions like: &quot;what element is visible
+&nbsp; * actually?&quot;, or &quot;on what element is the mouse cursor actually?&quot;.
+&nbsp; * 
+&nbsp; * The camera is also able to compute sprite positions according to their
+&nbsp; * attachment, as well as maintaining a list of all elements out of the view, so
+&nbsp; * that it is not needed to render them.
+&nbsp; */
+&nbsp;public class DefaultCamera2D implements Camera {
+&nbsp;
+&nbsp;	/** Information on the graph overall dimension and position. */
+<b class="nc">&nbsp;	protected GraphMetrics metrics = new GraphMetrics();</b>
+&nbsp;
+&nbsp;	/** Automatic centering of the view. */
+<b class="nc">&nbsp;	protected boolean autoFit = true;</b>
+&nbsp;
+&nbsp;	/** The camera center of view. */
+<b class="nc">&nbsp;	protected Point3 center = new Point3();</b>
+&nbsp;
+&nbsp;	/** The camera zoom. */
+<b class="nc">&nbsp;	protected double zoom = 1;</b>
+&nbsp;
+&nbsp;	/** The rotation angle (along an axis perpendicular to the view). */
+<b class="nc">&nbsp;	protected double rotation = 0;</b>
+&nbsp;
+&nbsp;	/** Padding around the graph. */
+<b class="nc">&nbsp;	protected Values padding = new Values(Units.GU, 0, 0, 0);</b>
+&nbsp;
+&nbsp;	/** The rendering back-end. */
+<b class="nc">&nbsp;	protected Backend bck = null;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Which node is visible. This allows to mark invisible nodes to fasten
+&nbsp;	 * visibility tests for nodes, attached sprites and edges. The visibility test
+&nbsp;	 * is heavy, and we often need to test for nodes visibility. This allows to do
+&nbsp;	 * it only once per rendering step. Hence the storage of the invisible nodes
+&nbsp;	 * here.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected HashSet&lt;String&gt; nodeInvisible = new HashSet&lt;&gt;();</b>
+&nbsp;
+&nbsp;	/** Which sprite is visible. */
+<b class="nc">&nbsp;	protected HashSet&lt;String&gt; spriteInvisible = new HashSet&lt;&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The graph view port, if any. The graph view port is a view inside the graph
+&nbsp;	 * space. It allows to compute the view according to a specified area of the
+&nbsp;	 * graph space instead of the graph dimensions.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected double[] gviewport = null;</b>
+&nbsp;
+&nbsp;	protected GraphicGraph graph;
+&nbsp;
+<b class="nc">&nbsp;	public DefaultCamera2D(GraphicGraph graph) {</b>
+<b class="nc">&nbsp;		this.graph = graph;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Point3 getViewCenter() {
+&nbsp;		// TODO Auto-generated method stub
+<b class="nc">&nbsp;		return center;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void setViewCenter(double x, double y, double z) {
+<b class="nc">&nbsp;		setAutoFitView(false);</b>
+<b class="nc">&nbsp;		center.set(x, y, z);</b>
+<b class="nc">&nbsp;		graph.graphChanged = true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setViewCenter(Point3 p) {
+<b class="nc">&nbsp;		setViewCenter(p.x, p.y, p.z);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public double getViewPercent() {
+&nbsp;		// TODO Auto-generated method stub
+<b class="nc">&nbsp;		return zoom;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void setViewPercent(double percent) {
+<b class="nc">&nbsp;		setAutoFitView(false);</b>
+<b class="nc">&nbsp;		setZoom(percent);</b>
+<b class="nc">&nbsp;		graph.graphChanged = true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the zoom (or percent of the graph visible), 1 means the graph is fully
+&nbsp;	 * visible.
+&nbsp;	 *
+&nbsp;	 * @param z
+&nbsp;	 *            The zoom.
+&nbsp;	 */
+&nbsp;	public void setZoom(double z) {
+<b class="nc">&nbsp;		zoom = z;</b>
+<b class="nc">&nbsp;		graph.graphChanged = true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public double getViewRotation() {
+&nbsp;		// TODO Auto-generated method stub
+<b class="nc">&nbsp;		return rotation;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void setViewRotation(double theta) {
+&nbsp;		// TODO Auto-generated method stub
+<b class="nc">&nbsp;		rotation = theta;</b>
+<b class="nc">&nbsp;		graph.graphChanged = true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the output view port size in pixels.
+&nbsp;	 * 
+&nbsp;	 * @param viewportWidth
+&nbsp;	 *            The width in pixels of the view port.
+&nbsp;	 * @param viewportHeight
+&nbsp;	 *            The width in pixels of the view port.
+&nbsp;	 */
+&nbsp;	public void setViewport(double x, double y, double viewportWidth, double viewportHeight) {
+<b class="nc">&nbsp;		metrics.setViewport(x, y, viewportWidth, viewportHeight);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public double getGraphDimension() {
+<b class="nc">&nbsp;		return metrics.getDiagonal();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean spriteContains(GraphicElement elt, double x, double y) {
+<b class="nc">&nbsp;		GraphicSprite sprite = (GraphicSprite) elt;</b>
+<b class="nc">&nbsp;		Values size = getNodeOrSpriteSize(elt);</b>
+<b class="nc">&nbsp;		double w2 = metrics.lengthToPx(size, 0) / 2;</b>
+<b class="nc">&nbsp;		double h2 = w2;</b>
+<b class="nc">&nbsp;		if (size.size() &gt; 1)</b>
+<b class="nc">&nbsp;			h2 = metrics.lengthToPx(size, 1) / 2;</b>
+&nbsp;
+<b class="nc">&nbsp;		Point3 dst = spritePositionPx(sprite);</b>
+&nbsp;
+<b class="nc">&nbsp;		double x1 = dst.x - w2;</b>
+<b class="nc">&nbsp;		double x2 = dst.x + w2;</b>
+<b class="nc">&nbsp;		double y1 = dst.y - h2;</b>
+<b class="nc">&nbsp;		double y2 = dst.y + h2;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (x &lt; x1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y &lt; y1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (x &gt; x2)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y &gt; y2)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Point3 spritePositionPx(GraphicSprite sprite) {
+<b class="nc">&nbsp;		return getSpritePosition(sprite, new Point3(), Units.PX);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the real position of a sprite according to its eventual attachment in
+&nbsp;	 * graph units.
+&nbsp;	 * 
+&nbsp;	 * @param sprite
+&nbsp;	 *            The sprite.
+&nbsp;	 * @param pos
+&nbsp;	 *            Receiver for the sprite 2D position, can be null.
+&nbsp;	 * @param units
+&nbsp;	 *            The units in which the position must be computed (the sprite
+&nbsp;	 *            already contains units).
+&nbsp;	 * @return The same instance as the one given by parameter pos or a new one if
+&nbsp;	 *         pos was null, containing the computed position in the given units.
+&nbsp;	 */
+&nbsp;	public Point3 getSpritePosition(GraphicSprite sprite, Point3 pos, Units units) {
+<b class="nc">&nbsp;		if (sprite.isAttachedToNode())</b>
+<b class="nc">&nbsp;			return getSpritePositionNode(sprite, pos, units);</b>
+<b class="nc">&nbsp;		else if (sprite.isAttachedToEdge())</b>
+<b class="nc">&nbsp;			return getSpritePositionEdge(sprite, pos, units);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return getSpritePositionFree(sprite, pos, units);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Point3 getSpritePositionFree(GraphicSprite sprite, Point3 position, Units units) {
+<b class="nc">&nbsp;		Point3 pos = position;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (pos == null) {</b>
+<b class="nc">&nbsp;			pos = new Point3();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (sprite.getUnits() == units) {</b>
+<b class="nc">&nbsp;			pos.x = sprite.getX();</b>
+<b class="nc">&nbsp;			pos.y = sprite.getY();</b>
+<b class="nc">&nbsp;		} else if (units == Units.GU &amp;&amp; sprite.getUnits() == Units.PX) {</b>
+<b class="nc">&nbsp;			pos.x = sprite.getX();</b>
+<b class="nc">&nbsp;			pos.y = sprite.getY();</b>
+<b class="nc">&nbsp;			bck.inverseTransform(pos);</b>
+<b class="nc">&nbsp;		} else if (units == Units.PX &amp;&amp; sprite.getUnits() == Units.GU) {</b>
+<b class="nc">&nbsp;			pos.x = sprite.getX();</b>
+<b class="nc">&nbsp;			pos.y = sprite.getY();</b>
+<b class="nc">&nbsp;			bck.transform(pos);</b>
+<b class="nc">&nbsp;		} else if (units == Units.GU &amp;&amp; sprite.getUnits() == Units.PERCENTS) {</b>
+<b class="nc">&nbsp;			pos.x = metrics.lo.x + (sprite.getX() / 100f) * metrics.graphWidthGU();</b>
+<b class="nc">&nbsp;			pos.y = metrics.lo.y + (sprite.getY() / 100f) * metrics.graphHeightGU();</b>
+<b class="nc">&nbsp;		} else if (units == Units.PX &amp;&amp; sprite.getUnits() == Units.PERCENTS) {</b>
+<b class="nc">&nbsp;			pos.x = (sprite.getX() / 100f) * metrics.viewport[2];</b>
+<b class="nc">&nbsp;			pos.y = (sprite.getY() / 100f) * metrics.viewport[3];</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			throw new RuntimeException(</b>
+<b class="nc">&nbsp;					&quot;Unhandled yet sprite positioning convertion &quot; + sprite.getUnits() + &quot; to &quot; + units + &quot;.&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return pos;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Point3 getSpritePositionEdge(GraphicSprite sprite, Point3 position, Units units) {
+<b class="nc">&nbsp;		Point3 pos = position;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (pos == null)</b>
+<b class="nc">&nbsp;			pos = new Point3();</b>
+&nbsp;
+<b class="nc">&nbsp;		GraphicEdge edge = sprite.getEdgeAttachment();</b>
+<b class="nc">&nbsp;		ConnectorSkeleton info = (ConnectorSkeleton) edge.getAttribute(Skeleton.attributeName);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (info != null) {</b>
+<b class="nc">&nbsp;			double o = metrics.lengthToGu(sprite.getY(), sprite.getUnits());</b>
+<b class="nc">&nbsp;			if (o == 0) {</b>
+<b class="nc">&nbsp;				Point3 p = info.pointOnShape(sprite.getX());</b>
+<b class="nc">&nbsp;				pos.x = p.x;</b>
+<b class="nc">&nbsp;				pos.y = p.y;</b>
+<b class="nc">&nbsp;			} else {</b>
+<b class="nc">&nbsp;				Point3 p = info.pointOnShapeAndPerpendicular(sprite.getX(), o);</b>
+<b class="nc">&nbsp;				pos.x = p.x;</b>
+<b class="nc">&nbsp;				pos.y = p.y;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else {</b>
+<b class="nc">&nbsp;			double x = 0.0;</b>
+<b class="nc">&nbsp;			double y = 0.0;</b>
+<b class="nc">&nbsp;			double dx = 0.0;</b>
+<b class="nc">&nbsp;			double dy = 0.0;</b>
+<b class="nc">&nbsp;			double d = sprite.getX();</b>
+<b class="nc">&nbsp;			double o = metrics.lengthToGu(sprite.getY(), sprite.getUnits());</b>
+&nbsp;
+<b class="nc">&nbsp;			x = edge.from.x;</b>
+<b class="nc">&nbsp;			y = edge.from.y;</b>
+<b class="nc">&nbsp;			dx = edge.to.x - x;</b>
+<b class="nc">&nbsp;			dy = edge.to.y - y;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (d &gt; 1)</b>
+<b class="nc">&nbsp;				d = 1;</b>
+<b class="nc">&nbsp;			if (d &lt; 0)</b>
+<b class="nc">&nbsp;				d = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;			x += dx * d;</b>
+<b class="nc">&nbsp;			x += dy * d;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o != 0) {</b>
+<b class="nc">&nbsp;				d = Math.sqrt(dx * dx + dy * dy);</b>
+<b class="nc">&nbsp;				dx /= d;</b>
+<b class="nc">&nbsp;				dy /= d;</b>
+&nbsp;
+<b class="nc">&nbsp;				x += -dy * o;</b>
+<b class="nc">&nbsp;				y += dx * o;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			pos.x = x;</b>
+<b class="nc">&nbsp;			pos.y = y;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (units == Units.PX)</b>
+<b class="nc">&nbsp;			bck.transform(pos);</b>
+&nbsp;
+<b class="nc">&nbsp;		return pos;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the position of a sprite if attached to a node.
+&nbsp;	 * 
+&nbsp;	 * @param sprite
+&nbsp;	 *            The sprite.
+&nbsp;	 * @param position
+&nbsp;	 *            Where to stored the computed position, if null, the position is
+&nbsp;	 *            created.
+&nbsp;	 * @param units
+&nbsp;	 *            The units the computed position must be given into.
+&nbsp;	 * @return The same instance as pos, or a new one if pos was null.
+&nbsp;	 */
+&nbsp;	public Point3 getSpritePositionNode(GraphicSprite sprite, Point3 position, Units units) {
+<b class="nc">&nbsp;		Point3 pos = position;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (pos == null)</b>
+<b class="nc">&nbsp;			pos = new Point3();</b>
+&nbsp;
+<b class="nc">&nbsp;		double spriteX = metrics.lengthToGu(sprite.getX(), sprite.getUnits());</b>
+<b class="nc">&nbsp;		double spriteY = metrics.lengthToGu(sprite.getY(), sprite.getUnits());</b>
+&nbsp;
+<b class="nc">&nbsp;		GraphicNode node = sprite.getNodeAttachment();</b>
+<b class="nc">&nbsp;		pos.x = node.x + spriteX;</b>
+<b class="nc">&nbsp;		pos.y = node.y + spriteY;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (units == Units.PX)</b>
+<b class="nc">&nbsp;			bck.transform(pos);</b>
+&nbsp;
+<b class="nc">&nbsp;		return pos;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean nodeContains(GraphicElement elt, double x, double y) {
+&nbsp;
+<b class="nc">&nbsp;		Values size = getNodeOrSpriteSize(elt);</b>
+<b class="nc">&nbsp;		double w2 = metrics.lengthToPx(size, 0) / 2;</b>
+<b class="nc">&nbsp;		double h2 = w2;</b>
+<b class="nc">&nbsp;		if (size.size() &gt; 1)</b>
+<b class="nc">&nbsp;			h2 = metrics.lengthToPx(size, 1) / 2;</b>
+<b class="nc">&nbsp;		Point3 dst = bck.transform(elt.getX(), elt.getY(), 0);</b>
+<b class="nc">&nbsp;		double x1 = (dst.x) - w2;</b>
+<b class="nc">&nbsp;		double x2 = (dst.x) + w2;</b>
+<b class="nc">&nbsp;		double y1 = (dst.y) - h2;</b>
+<b class="nc">&nbsp;		double y2 = (dst.y) + h2;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (x &lt; x1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y &lt; y1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (x &gt; x2)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y &gt; y2)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean edgeContains(GraphicElement elt, double x, double y) {
+&nbsp;
+<b class="nc">&nbsp;		Values size = elt.getStyle().getSize();</b>
+<b class="nc">&nbsp;		double w2 = metrics.lengthToPx(size, 0) / 2;</b>
+<b class="nc">&nbsp;		double h2 = w2;</b>
+<b class="nc">&nbsp;		if (size.size() &gt; 1)</b>
+<b class="nc">&nbsp;			h2 = metrics.lengthToPx(size, 1) / 2;</b>
+<b class="nc">&nbsp;		Point3 dst = bck.transform(elt.getX(), elt.getY(), 0);</b>
+&nbsp;
+<b class="nc">&nbsp;		double x1 = (dst.x) - w2;</b>
+<b class="nc">&nbsp;		double x2 = (dst.x) + w2;</b>
+<b class="nc">&nbsp;		double y1 = (dst.y) - h2;</b>
+<b class="nc">&nbsp;		double y2 = (dst.y) + h2;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (x &lt; x1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y &lt; y1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (x &gt; x2)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y &gt; y2)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Values getNodeOrSpriteSize(GraphicElement elt) {
+<b class="nc">&nbsp;		AreaSkeleton info = (AreaSkeleton) elt.getAttribute(Skeleton.attributeName);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (info != null) {</b>
+<b class="nc">&nbsp;			return new Values(Units.GU, info.theSize().x, info.theSize().y);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			return elt.getStyle().getSize();</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public Point3 getNodeOrSpritePositionGU(GraphicElement elt, Point3 pos) {
+<b class="nc">&nbsp;		Point3 p = pos;</b>
+<b class="nc">&nbsp;		if (p == null)</b>
+<b class="nc">&nbsp;			p = new Point3();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (elt instanceof GraphicNode) {</b>
+<b class="nc">&nbsp;			p.x = ((GraphicNode) elt).getX();</b>
+<b class="nc">&nbsp;			p.y = ((GraphicNode) elt).getY();</b>
+<b class="nc">&nbsp;		} else if (elt instanceof GraphicSprite) {</b>
+<b class="nc">&nbsp;			p = getSpritePosition(((GraphicSprite) elt), p, Units.GU);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return p;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void removeGraphViewport() {
+<b class="nc">&nbsp;		gviewport = null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void setGraphViewport(double minx, double miny, double maxx, double maxy) {
+<b class="nc">&nbsp;		gviewport = new double[4];</b>
+<b class="nc">&nbsp;		gviewport[0] = minx;</b>
+<b class="nc">&nbsp;		gviewport[1] = miny;</b>
+<b class="nc">&nbsp;		gviewport[2] = maxx;</b>
+<b class="nc">&nbsp;		gviewport[3] = maxy;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void resetView() {
+<b class="nc">&nbsp;		setAutoFitView(true);</b>
+<b class="nc">&nbsp;		setViewRotation(0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the camera view in the given graphics and backup the previous transform
+&nbsp;	 * of the graphics. Call {@link #popView()} to restore the saved transform. You
+&nbsp;	 * can only push one time the view.
+&nbsp;	 * 
+&nbsp;	 * @param graph
+&nbsp;	 *            The graphic graph (used to check element visibility).
+&nbsp;	 */
+&nbsp;	public void pushView(GraphicGraph graph) {
+<b class="nc">&nbsp;		bck.pushTransform();</b>
+<b class="nc">&nbsp;		setPadding(graph);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (autoFit)</b>
+<b class="nc">&nbsp;			autoFitView();</b>
+&nbsp;		else
+<b class="nc">&nbsp;			userView();</b>
+&nbsp;
+<b class="nc">&nbsp;		checkVisibility(graph);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Restore the transform that was used before {@link #pushView()} is used. */
+&nbsp;	public void popView() {
+<b class="nc">&nbsp;		bck.popTransform();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void checkVisibility(GraphicGraph graph) {
+<b class="nc">&nbsp;		nodeInvisible.clear();</b>
+<b class="nc">&nbsp;		spriteInvisible.clear();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!autoFit) {</b>
+&nbsp;			// If autoFit is on, we know the whole graph is visible anyway.
+<b class="nc">&nbsp;			double X = metrics.viewport[0];</b>
+<b class="nc">&nbsp;			double Y = metrics.viewport[1];</b>
+<b class="nc">&nbsp;			double W = metrics.viewport[2];</b>
+<b class="nc">&nbsp;			double H = metrics.viewport[3];</b>
+&nbsp;
+<b class="nc">&nbsp;			graph.nodes().forEach(node -&gt; {</b>
+<b class="nc">&nbsp;				GraphicNode n = (GraphicNode) node;</b>
+<b class="nc">&nbsp;				boolean visible = isNodeIn(n, X, Y, X + W, Y + H) &amp;&amp; (!n.hidden) &amp;&amp; n.positionned;</b>
+&nbsp;
+<b class="nc">&nbsp;				if (!visible) {</b>
+<b class="nc">&nbsp;					nodeInvisible.add(node.getId());</b>
+&nbsp;				}
+&nbsp;			});
+&nbsp;
+<b class="nc">&nbsp;			graph.sprites().forEach(sprite -&gt; {</b>
+<b class="nc">&nbsp;				boolean visible = isSpriteIn(sprite, X, Y, X + W, Y + H) &amp;&amp; (!sprite.hidden);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (!visible) {</b>
+<b class="nc">&nbsp;					spriteInvisible.add(sprite.getId());</b>
+&nbsp;				}
+&nbsp;			});
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Is the given node visible in the given area.
+&nbsp;	 * 
+&nbsp;	 * @param node
+&nbsp;	 *            The node to check.
+&nbsp;	 * @param X1
+&nbsp;	 *            The min abscissa of the area.
+&nbsp;	 * @param Y1
+&nbsp;	 *            The min ordinate of the area.
+&nbsp;	 * @param X2
+&nbsp;	 *            The max abscissa of the area.
+&nbsp;	 * @param Y2
+&nbsp;	 *            The max ordinate of the area.
+&nbsp;	 * @return True if the node lies in the given area.
+&nbsp;	 */
+&nbsp;	public boolean isNodeIn(GraphicNode node, double X1, double Y1, double X2, double Y2) {
+<b class="nc">&nbsp;		Values size = getNodeOrSpriteSize(node);// node.getStyle.getSize</b>
+<b class="nc">&nbsp;		double w2 = metrics.lengthToPx(size, 0) / 2;</b>
+<b class="nc">&nbsp;		double h2 = w2;</b>
+<b class="nc">&nbsp;		if (size.size() &gt; 1)</b>
+<b class="nc">&nbsp;			h2 = metrics.lengthToPx(size, 1) / 2;</b>
+&nbsp;
+<b class="nc">&nbsp;		Point3 src = new Point3(node.getX(), node.getY(), 0);</b>
+&nbsp;
+<b class="nc">&nbsp;		bck.transform(src);</b>
+&nbsp;
+<b class="nc">&nbsp;		double x1 = src.x - w2;</b>
+<b class="nc">&nbsp;		double x2 = src.x + w2;</b>
+<b class="nc">&nbsp;		double y1 = src.y - h2;</b>
+<b class="nc">&nbsp;		double y2 = src.y + h2;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (x2 &lt; X1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y2 &lt; Y1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (x1 &gt; X2)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y1 &gt; Y2)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isEdgeIn(GraphicEdge edge, double X1, double Y1, double X2, double Y2) {
+<b class="nc">&nbsp;		Values size = edge.getStyle().getSize();</b>
+<b class="nc">&nbsp;		double w2 = metrics.lengthToPx(size, 0) / 2;</b>
+<b class="nc">&nbsp;		double h2 = w2;</b>
+<b class="nc">&nbsp;		if (size.size() &gt; 1)</b>
+<b class="nc">&nbsp;			h2 = metrics.lengthToPx(size, 1) / 2;</b>
+&nbsp;
+<b class="nc">&nbsp;		Point3 src = new Point3(edge.getX(), edge.getY(), 0);</b>
+&nbsp;
+<b class="nc">&nbsp;		bck.transform(src);</b>
+&nbsp;
+<b class="nc">&nbsp;		double x1 = src.x - w2;</b>
+<b class="nc">&nbsp;		double x2 = src.x + w2;</b>
+<b class="nc">&nbsp;		double y1 = src.y - h2;</b>
+<b class="nc">&nbsp;		double y2 = src.y + h2;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (x2 &lt; X1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y2 &lt; Y1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (x1 &gt; X2)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y1 &gt; Y2)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the graph padding. Called in pushView.
+&nbsp;	 * 
+&nbsp;	 * @param graph
+&nbsp;	 *            The graphic graph.
+&nbsp;	 */
+&nbsp;	public void setPadding(GraphicGraph graph) {
+<b class="nc">&nbsp;		padding.copy(graph.getStyle().getPadding());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute a transformation matrix that pass from graph units (user space) to
+&nbsp;	 * pixel units (device space) so that the whole graph is visible.
+&nbsp;	 * 
+&nbsp;	 * @return The transformation modified.
+&nbsp;	 */
+&nbsp;	public void autoFitView() {
+<b class="nc">&nbsp;		double sx = 0.0;</b>
+<b class="nc">&nbsp;		double sy = 0.0;</b>
+<b class="nc">&nbsp;		double tx = 0.0;</b>
+<b class="nc">&nbsp;		double ty = 0.0;</b>
+<b class="nc">&nbsp;		double padXgu = paddingXgu() * 2;</b>
+<b class="nc">&nbsp;		double padYgu = paddingYgu() * 2;</b>
+<b class="nc">&nbsp;		double padXpx = paddingXpx() * 2;</b>
+<b class="nc">&nbsp;		double padYpx = paddingYpx() * 2;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (padXpx &gt; metrics.viewport[2])</b>
+<b class="nc">&nbsp;			padXpx = metrics.viewport[2] / 10.0;</b>
+<b class="nc">&nbsp;		if (padYpx &gt; metrics.viewport[3])</b>
+<b class="nc">&nbsp;			padYpx = metrics.viewport[3] / 10.0;</b>
+&nbsp;
+<b class="nc">&nbsp;		sx = (metrics.viewport[2] - padXpx) / (metrics.size.data[0] + padXgu); // Ratio along X</b>
+<b class="nc">&nbsp;		sy = (metrics.viewport[3] - padYpx) / (metrics.size.data[1] + padYgu); // Ratio along Y</b>
+<b class="nc">&nbsp;		tx = metrics.lo.x + (metrics.size.data[0] / 2); // Center of graph in X</b>
+<b class="nc">&nbsp;		ty = metrics.lo.y + (metrics.size.data[1] / 2); // Center of graph in Y</b>
+&nbsp;
+<b class="nc">&nbsp;		if (sx &gt; sy) // The least ratio.</b>
+<b class="nc">&nbsp;			sx = sy;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			sy = sx;</b>
+&nbsp;
+<b class="nc">&nbsp;		bck.beginTransform();</b>
+<b class="nc">&nbsp;		bck.setIdentity();</b>
+<b class="nc">&nbsp;		bck.translate(metrics.viewport[2] / 2, metrics.viewport[3] / 2, 0); // 4. Place the whole result at the center</b>
+&nbsp;																			// of the view port.
+<b class="nc">&nbsp;		if (rotation != 0)</b>
+<b class="nc">&nbsp;			bck.rotate(rotation / (180.0 / Math.PI), 0, 0, 1); // 3. Eventually apply a Z axis rotation.</b>
+<b class="nc">&nbsp;		bck.scale(sx, -sy, 0); // 2. Scale the graph to pixels. Scale -y since we reverse the view (top-left to</b>
+&nbsp;								// bottom-left).
+<b class="nc">&nbsp;		bck.translate(-tx, -ty, 0); // 1. Move the graph so that its real center is at (0,0).</b>
+<b class="nc">&nbsp;		bck.endTransform();</b>
+&nbsp;
+<b class="nc">&nbsp;		zoom = 1;</b>
+&nbsp;
+<b class="nc">&nbsp;		center.set(tx, ty, 0);</b>
+<b class="nc">&nbsp;		metrics.ratioPx2Gu = sx;</b>
+<b class="nc">&nbsp;		metrics.loVisible.copy(metrics.lo);</b>
+<b class="nc">&nbsp;		metrics.hiVisible.copy(metrics.hi);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute a transformation that pass from graph units (user space) to a pixel
+&nbsp;	 * units (device space) so that the view (zoom and center) requested by the user
+&nbsp;	 * is produced.
+&nbsp;	 * 
+&nbsp;	 * @return The transformation modified.
+&nbsp;	 */
+&nbsp;	public void userView() {
+<b class="nc">&nbsp;		double sx = 0.0;</b>
+<b class="nc">&nbsp;		double sy = 0.0;</b>
+<b class="nc">&nbsp;		double tx = 0.0;</b>
+<b class="nc">&nbsp;		double ty = 0.0;</b>
+<b class="nc">&nbsp;		double padXgu = paddingXgu() * 2;</b>
+<b class="nc">&nbsp;		double padYgu = paddingYgu() * 2;</b>
+<b class="nc">&nbsp;		double padXpx = paddingXpx() * 2;</b>
+<b class="nc">&nbsp;		double padYpx = paddingYpx() * 2;</b>
+&nbsp;		double gw;
+<b class="nc">&nbsp;		if (gviewport != null)</b>
+<b class="nc">&nbsp;			gw = gviewport[2] - gviewport[0];</b>
+&nbsp;		else
+<b class="nc">&nbsp;			gw = metrics.size.data[0];</b>
+&nbsp;
+&nbsp;		double gh;
+<b class="nc">&nbsp;		if (gviewport != null)</b>
+<b class="nc">&nbsp;			gh = gviewport[3] - gviewport[1];</b>
+&nbsp;		else
+<b class="nc">&nbsp;			gh = metrics.size.data[1];</b>
+&nbsp;
+<b class="nc">&nbsp;		if (padXpx &gt; metrics.viewport[2])</b>
+<b class="nc">&nbsp;			padXpx = metrics.viewport[2] / 10.0;</b>
+<b class="nc">&nbsp;		if (padYpx &gt; metrics.viewport[3])</b>
+<b class="nc">&nbsp;			padYpx = metrics.viewport[3] / 10.0;</b>
+&nbsp;
+<b class="nc">&nbsp;		sx = (metrics.viewport[2] - padXpx) / ((gw + padXgu) * zoom);</b>
+<b class="nc">&nbsp;		sy = (metrics.viewport[3] - padYpx) / ((gh + padYgu) * zoom);</b>
+&nbsp;
+<b class="nc">&nbsp;		tx = center.x;</b>
+<b class="nc">&nbsp;		ty = center.y;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (sx &gt; sy) // The least ratio.</b>
+<b class="nc">&nbsp;			sx = sy;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			sy = sx;</b>
+&nbsp;
+<b class="nc">&nbsp;		bck.beginTransform();</b>
+<b class="nc">&nbsp;		bck.setIdentity();</b>
+<b class="nc">&nbsp;		bck.translate(metrics.viewport[2] / 2, metrics.viewport[3] / 2, 0); // 4. Place the whole result at the center</b>
+&nbsp;																			// of the view port.
+<b class="nc">&nbsp;		if (rotation != 0)</b>
+<b class="nc">&nbsp;			bck.rotate(rotation / (180.0 / Math.PI), 0, 0, 1); // 3. Eventually apply a rotation.</b>
+<b class="nc">&nbsp;		bck.scale(sx, -sy, 0); // 2. Scale the graph to pixels. Scale -y since we reverse the view (top-left to</b>
+&nbsp;								// bottom-left).
+<b class="nc">&nbsp;		bck.translate(-tx, -ty, 0); // 1. Move the graph so that the give center is at (0,0).</b>
+<b class="nc">&nbsp;		bck.endTransform();</b>
+&nbsp;
+<b class="nc">&nbsp;		metrics.ratioPx2Gu = sx;</b>
+&nbsp;
+<b class="nc">&nbsp;		double w2 = (metrics.viewport[2] / sx) / 2f;</b>
+<b class="nc">&nbsp;		double h2 = (metrics.viewport[3] / sx) / 2f;</b>
+&nbsp;
+<b class="nc">&nbsp;		metrics.loVisible.set(center.x - w2, center.y - h2);</b>
+<b class="nc">&nbsp;		metrics.hiVisible.set(center.x + w2, center.y + h2);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public double paddingXgu() {
+<b class="nc">&nbsp;		if (padding.units == Units.GU &amp;&amp; padding.size() &gt; 0)</b>
+<b class="nc">&nbsp;			return padding.get(0);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public double paddingYgu() {
+<b class="nc">&nbsp;		if (padding.units == Units.GU &amp;&amp; padding.size() &gt; 1)</b>
+<b class="nc">&nbsp;			return padding.get(1);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return paddingXgu();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public double paddingXpx() {
+<b class="nc">&nbsp;		if (padding.units == Units.PX &amp;&amp; padding.size() &gt; 0)</b>
+<b class="nc">&nbsp;			return padding.get(0);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public double paddingYpx() {
+<b class="nc">&nbsp;		if (padding.units == Units.PX &amp;&amp; padding.size() &gt; 1)</b>
+<b class="nc">&nbsp;			return padding.get(1);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return paddingXpx();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the graphic graph bounds (the lowest and highest points).
+&nbsp;	 * 
+&nbsp;	 * @param minx
+&nbsp;	 *            Lowest abscissa.
+&nbsp;	 * @param miny
+&nbsp;	 *            Lowest ordinate.
+&nbsp;	 * @param minz
+&nbsp;	 *            Lowest depth.
+&nbsp;	 * @param maxx
+&nbsp;	 *            Highest abscissa.
+&nbsp;	 * @param maxy
+&nbsp;	 *            Highest ordinate.
+&nbsp;	 * @param maxz
+&nbsp;	 *            Highest depth.
+&nbsp;	 */
+&nbsp;	public void setBounds(double minx, double miny, double minz, double maxx, double maxy, double maxz) {
+<b class="nc">&nbsp;		metrics.setBounds(minx, miny, minz, maxx, maxy, maxz);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Set the graphic graph bounds from the graphic graph. */
+&nbsp;	public void setBounds(GraphicGraph graph) {
+<b class="nc">&nbsp;		setBounds(graph.getMinPos().x, graph.getMinPos().y, 0, graph.getMaxPos().x, graph.getMaxPos().y, 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public GraphMetrics getMetrics() {
+&nbsp;		// TODO Auto-generated method stub
+<b class="nc">&nbsp;		return metrics;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Enable or disable automatic adjustment of the view to see the entire graph.
+&nbsp;	 * 
+&nbsp;	 * @param on
+&nbsp;	 *            If true, automatic adjustment is enabled.
+&nbsp;	 */
+&nbsp;	public void setAutoFitView(boolean on) {
+<b class="nc">&nbsp;		if (autoFit &amp;&amp; (!on)) {</b>
+&nbsp;			// We go from autoFit to user view, ensure the current center is at the
+&nbsp;			// middle of the graph, and the zoom is at one.
+&nbsp;
+<b class="nc">&nbsp;			zoom = 1;</b>
+<b class="nc">&nbsp;			center.set(metrics.lo.x + (metrics.size.data[0] / 2), metrics.lo.y + (metrics.size.data[1] / 2), 0);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		autoFit = on;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setBackend(Backend backend) {
+<b class="nc">&nbsp;		this.bck = backend;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Transform a point in graph units into pixels.
+&nbsp;	 * 
+&nbsp;	 * @return The transformed point.
+&nbsp;	 */
+&nbsp;	public Point3 transformGuToPx(double x, double y, double z) {
+<b class="nc">&nbsp;		return bck.transform(x, y, 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Return the given point in pixels converted in graph units (GU) using the
+&nbsp;	 * inverse transformation of the current projection matrix. The inverse matrix
+&nbsp;	 * is computed only once each time a new projection matrix is created.
+&nbsp;	 * 
+&nbsp;	 * @param x
+&nbsp;	 *            The source point abscissa in pixels.
+&nbsp;	 * @param y
+&nbsp;	 *            The source point ordinate in pixels.
+&nbsp;	 * @return The resulting points in graph units.
+&nbsp;	 */
+&nbsp;	public Point3 transformPxToGu(double x, double y) {
+<b class="nc">&nbsp;		return bck.inverseTransform(x, y, 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected boolean styleVisible(GraphicElement element) {
+<b class="nc">&nbsp;		Values visibility = element.getStyle().getVisibility();</b>
+&nbsp;
+<b class="nc">&nbsp;		switch (element.getStyle().getVisibilityMode()) {</b>
+&nbsp;		case HIDDEN:
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		case AT_ZOOM:
+<b class="nc">&nbsp;			return (zoom == visibility.get(0));</b>
+&nbsp;		case UNDER_ZOOM:
+<b class="nc">&nbsp;			return (zoom &lt;= visibility.get(0));</b>
+&nbsp;		case OVER_ZOOM:
+<b class="nc">&nbsp;			return (zoom &gt;= visibility.get(0));</b>
+&nbsp;		case ZOOM_RANGE:
+<b class="nc">&nbsp;			if (visibility.size() &gt; 1)</b>
+<b class="nc">&nbsp;				return (zoom &gt;= visibility.get(0) &amp;&amp; zoom &lt;= visibility.get(1));</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return true;</b>
+&nbsp;		case ZOOMS:
+<b class="nc">&nbsp;			return Arrays.asList(Selector.Type.values()).contains(visibility.get(0));</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isTextVisible(GraphicElement element) {
+<b class="nc">&nbsp;		Values visibility = element.getStyle().getTextVisibility();</b>
+&nbsp;
+<b class="nc">&nbsp;		switch (element.getStyle().getTextVisibilityMode()) {</b>
+&nbsp;		case HIDDEN:
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		case AT_ZOOM:
+<b class="nc">&nbsp;			return (zoom == visibility.get(0));</b>
+&nbsp;		case UNDER_ZOOM:
+<b class="nc">&nbsp;			return (zoom &lt;= visibility.get(0));</b>
+&nbsp;		case OVER_ZOOM:
+<b class="nc">&nbsp;			return (zoom &gt;= visibility.get(0));</b>
+&nbsp;		case ZOOM_RANGE:
+<b class="nc">&nbsp;			if (visibility.size() &gt; 1)</b>
+<b class="nc">&nbsp;				return (zoom &gt;= visibility.get(0) &amp;&amp; zoom &lt;= visibility.get(1));</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return true;</b>
+&nbsp;		case ZOOMS:
+<b class="nc">&nbsp;			return Arrays.asList(Selector.Type.values()).contains(visibility.get(0));</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the element should be visible on screen. The method used is to
+&nbsp;	 * transform the center of the element (which is always in graph units) using
+&nbsp;	 * the camera actual transformation to put it in pixel units. Then to look in
+&nbsp;	 * the style sheet the size of the element and to test if its enclosing
+&nbsp;	 * rectangle intersects the view port. For edges, its two nodes are used. As a
+&nbsp;	 * speed-up by default if the camera is in automatic fitting mode, all element
+&nbsp;	 * should be visible, and the test always returns true.
+&nbsp;	 *
+&nbsp;	 * @param element
+&nbsp;	 *            The element to test.
+&nbsp;	 * @return True if the element is visible and therefore must be rendered.
+&nbsp;	 */
+&nbsp;	public boolean isVisible(GraphicElement element) {
+<b class="nc">&nbsp;		if (autoFit) {</b>
+<b class="nc">&nbsp;			return ((!element.hidden) &amp;&amp; (element.style.getVisibilityMode() != StyleConstants.VisibilityMode.HIDDEN));</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			switch (element.getSelectorType()) {</b>
+&nbsp;			case NODE:
+<b class="nc">&nbsp;				return !nodeInvisible.contains(element.getId());</b>
+&nbsp;			case EDGE:
+<b class="nc">&nbsp;				return isEdgeVisible((GraphicEdge) element);</b>
+&nbsp;			case SPRITE:
+<b class="nc">&nbsp;				return !spriteInvisible.contains(element.getId());</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				return false;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Check if a sprite is visible in the current view port.
+&nbsp;	 * 
+&nbsp;	 * @param sprite
+&nbsp;	 *            The sprite to check.
+&nbsp;	 * @return True if visible.
+&nbsp;	 */
+&nbsp;	public boolean isSpriteVisible(GraphicSprite sprite) {
+<b class="nc">&nbsp;		return isSpriteIn(sprite, 0, 0, metrics.viewport[2], metrics.viewport[3]);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Is the given sprite visible in the given area.
+&nbsp;	 * 
+&nbsp;	 * @param sprite
+&nbsp;	 *            The sprite to check.
+&nbsp;	 * @param X1
+&nbsp;	 *            The min abscissa of the area.
+&nbsp;	 * @param Y1
+&nbsp;	 *            The min ordinate of the area.
+&nbsp;	 * @param X2
+&nbsp;	 *            The max abscissa of the area.
+&nbsp;	 * @param Y2
+&nbsp;	 *            The max ordinate of the area.
+&nbsp;	 * @return True if the node lies in the given area.
+&nbsp;	 */
+&nbsp;	public boolean isSpriteIn(GraphicSprite sprite, double X1, double Y1, double X2, double Y2) {
+<b class="nc">&nbsp;		Values size = getNodeOrSpriteSize(sprite);</b>
+<b class="nc">&nbsp;		double w2 = metrics.lengthToPx(size, 0) / 2;</b>
+<b class="nc">&nbsp;		double h2 = w2;</b>
+<b class="nc">&nbsp;		if (size.size() &gt; 1)</b>
+<b class="nc">&nbsp;			h2 = metrics.lengthToPx(size, 1) / 2;</b>
+&nbsp;
+&nbsp;		// val src = new Point3()
+&nbsp;		// getSpritePosition(sprite, src, Units.GU)
+&nbsp;		// bck.transform(src)
+&nbsp;
+<b class="nc">&nbsp;		Point3 src = spritePositionPx(sprite);</b>
+<b class="nc">&nbsp;		double x1 = src.x - w2;</b>
+<b class="nc">&nbsp;		double x2 = src.x + w2;</b>
+<b class="nc">&nbsp;		double y1 = src.y - h2;</b>
+<b class="nc">&nbsp;		double y2 = src.y + h2;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (x2 &lt; X1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y2 &lt; Y1)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (x1 &gt; X2)</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		else if (y1 &gt; Y2)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Check if an edge is visible in the current view port.
+&nbsp;	 * 
+&nbsp;	 * @param edge
+&nbsp;	 *            The edge to check.
+&nbsp;	 * @return True if visible.
+&nbsp;	 */
+&nbsp;	public boolean isEdgeVisible(GraphicEdge edge) {
+<b class="nc">&nbsp;		if (!((GraphicNode) edge.getNode0()).positionned || !((GraphicNode) edge.getNode1()).positionned) {</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		} else if (edge.hidden) {</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			boolean node0Invis = nodeInvisible.contains(edge.getNode0().getId());</b>
+<b class="nc">&nbsp;			boolean node1Invis = nodeInvisible.contains(edge.getNode1().getId());</b>
+&nbsp;
+<b class="nc">&nbsp;			return !(node0Invis &amp;&amp; node1Invis);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Search for the first GraphicElement among those specified. Multiple elements
+&nbsp;	 * are resolved by priority- {@link InteractiveElement.NODE} &gt;
+&nbsp;	 * {@link InteractiveElement.EDGE} &gt; {@link InteractiveElement.SPRITE}, (in that
+&nbsp;	 * order) that contains the point at coordinates (x, y).
+&nbsp;	 *
+&nbsp;	 * @param graph
+&nbsp;	 *            The graph to search for.
+&nbsp;	 * @param x
+&nbsp;	 *            The point abscissa.
+&nbsp;	 * @param y
+&nbsp;	 *            The point ordinate.
+&nbsp;	 * @return The first node or sprite at the given coordinates or null if nothing
+&nbsp;	 *         found.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public GraphicElement findGraphicElementAt(GraphicGraph graph, EnumSet&lt;InteractiveElement&gt; types, double x,
+&nbsp;			double y) {
+<b class="nc">&nbsp;		double xT = x + metrics.viewport[0];</b>
+<b class="nc">&nbsp;		double yT = y + metrics.viewport[1];</b>
+&nbsp;
+<b class="nc">&nbsp;		if (types.contains(InteractiveElement.NODE)) {</b>
+<b class="nc">&nbsp;			Optional&lt;Node&gt; node = graph.nodes().filter(n -&gt; nodeContains((GraphicElement) n, xT, yT)).findFirst();</b>
+<b class="nc">&nbsp;			if (node.isPresent()) {</b>
+<b class="nc">&nbsp;				if (isVisible((GraphicElement) node.get())) {</b>
+<b class="nc">&nbsp;					return (GraphicElement) node.get();</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		if (types.contains(InteractiveElement.EDGE)) {</b>
+<b class="nc">&nbsp;			Optional&lt;Edge&gt; edge = graph.edges().filter(e -&gt; edgeContains((GraphicElement) e, xT, yT)).findFirst();</b>
+<b class="nc">&nbsp;			if (edge.isPresent()) {</b>
+<b class="nc">&nbsp;				if (isVisible((GraphicElement) edge.get())) {</b>
+<b class="nc">&nbsp;					return (GraphicElement) edge.get();</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		if (types.contains(InteractiveElement.SPRITE)) {</b>
+<b class="nc">&nbsp;			Optional&lt;GraphicSprite&gt; sprite = graph.sprites().filter(s -&gt; spriteContains(s, xT, yT)).findFirst();</b>
+<b class="nc">&nbsp;			if (sprite.isPresent()) {</b>
+<b class="nc">&nbsp;				if (isVisible((GraphicElement) sprite.get())) {</b>
+<b class="nc">&nbsp;					return (GraphicElement) sprite.get();</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public double[] graphViewport() {
+<b class="nc">&nbsp;		return gviewport;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Collection&lt;GraphicElement&gt; allGraphicElementsIn(GraphicGraph graph, EnumSet&lt;InteractiveElement&gt; types,
+&nbsp;			double x1, double y1, double x2, double y2) {
+&nbsp;		// add offset of viewport, because find(...) is always called without offset
+&nbsp;		// in most cases the offset of the viewport is 0 anyway
+<b class="nc">&nbsp;		double x1T = x1 + metrics.viewport[0];</b>
+<b class="nc">&nbsp;		double y1T = y1 + metrics.viewport[1];</b>
+<b class="nc">&nbsp;		double x2T = x2 + metrics.viewport[0];</b>
+<b class="nc">&nbsp;		double y2T = y2 + metrics.viewport[1];</b>
+&nbsp;
+<b class="nc">&nbsp;		List&lt;GraphicElement&gt; elts = new ArrayList&lt;GraphicElement&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		Stream nodeStream = null;</b>
+<b class="nc">&nbsp;		Stream edgeStream = null;</b>
+<b class="nc">&nbsp;		Stream spriteStream = null;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (types.contains(InteractiveElement.NODE)) {</b>
+&nbsp;
+<b class="nc">&nbsp;			nodeStream = graph.nodes().filter(n -&gt; isNodeIn((GraphicNode) n, x1T, y1T, x2T, y2T));</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			nodeStream = Stream.empty();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (types.contains(InteractiveElement.EDGE)) {</b>
+<b class="nc">&nbsp;			edgeStream = graph.edges().filter(e -&gt; isEdgeIn((GraphicEdge) e, x1T, y1T, x2T, y2T));</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			edgeStream = Stream.empty();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (types.contains(InteractiveElement.SPRITE)) {</b>
+<b class="nc">&nbsp;			spriteStream = graph.sprites().filter(e -&gt; isSpriteIn((GraphicSprite) e, x1T, y1T, x2T, y2T));</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			spriteStream = Stream.empty();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		Stream&lt;GraphicElement&gt; s = Stream.concat(nodeStream, Stream.concat(edgeStream, spriteStream));</b>
+<b class="nc">&nbsp;		return s.collect(Collectors.toList());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		StringBuilder builder = new StringBuilder(String.format(&quot;Camera :%n&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;		builder.append(String.format(&quot;    autoFit  = %b%n&quot;, autoFit));</b>
+<b class="nc">&nbsp;		builder.append(String.format(&quot;    center   = %s%n&quot;, center));</b>
+<b class="nc">&nbsp;		builder.append(String.format(&quot;    rotation = %f%n&quot;, rotation));</b>
+<b class="nc">&nbsp;		builder.append(String.format(&quot;    zoom     = %f%n&quot;, zoom));</b>
+<b class="nc">&nbsp;		builder.append(String.format(&quot;    padding  = %s%n&quot;, padding));</b>
+<b class="nc">&nbsp;		builder.append(String.format(&quot;    metrics  = %s%n&quot;, metrics));</b>
+&nbsp;
+<b class="nc">&nbsp;		return builder.toString();</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

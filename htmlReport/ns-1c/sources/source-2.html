@@ -1,0 +1,214 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ConnectorSkeleton</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.view.camera</a>
+</div>
+
+<h1>Coverage Summary for Class: ConnectorSkeleton (org.graphstream.ui.view.camera)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ConnectorSkeleton</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2018-01-18
+&nbsp; * 
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.view.camera;
+&nbsp;
+&nbsp;import org.graphstream.ui.geom.Point3;
+&nbsp;
+&nbsp;/**
+&nbsp; * Class used by DefaultCamera, implementation in gs-ui-... Skeleton for edges.
+&nbsp; * Data stored on the edge to retrieve the edge basic geometry and various
+&nbsp; * shared data between parts of the renderer.
+&nbsp; * 
+&nbsp; * XXX TODO This part needs much work. The skeleton geometry of an edge can be
+&nbsp; * various things: - An automatically computed shape (for multi-graphs and loop
+&nbsp; * edges). - An user specified shape: - A polyline (points are in absolute
+&nbsp; * coordinates). - A polycurve (in absolute coordinates). - A vector
+&nbsp; * representation (points are relative to an origin and the whole may be
+&nbsp; * rotated).
+&nbsp; */
+&nbsp;public interface ConnectorSkeleton {
+&nbsp;	public String kindString();
+&nbsp;
+&nbsp;	/** If true the edge shape is a polyline made of size points. */
+&nbsp;	public boolean isPoly();
+&nbsp;
+&nbsp;	/** If true the edge shape is a loop defined by four points. */
+&nbsp;	public boolean isCurve();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If larger than one there are several edges between the two nodes of this
+&nbsp;	 * edge.
+&nbsp;	 */
+&nbsp;	public int multi();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This is only set when the edge is a curve, if true the starting and ending
+&nbsp;	 * nodes of the edge are the same node.
+&nbsp;	 */
+&nbsp;	public boolean isLoop();
+&nbsp;
+&nbsp;	public void setPoly(Object aSetOfPoints);
+&nbsp;
+&nbsp;	public void setPoly(Point3[] aSetOfPoints);
+&nbsp;
+&nbsp;	public void setCurve(double x0, double y0, double z0, double x1, double y1, double z1, double x2, double y2,
+&nbsp;			double z2, double x3, double y3, double z3);
+&nbsp;
+&nbsp;	public void setLine(double x0, double y0, double z0, double x1, double y1, double z1);
+&nbsp;
+&nbsp;	public void setMulti(int aMulti);
+&nbsp;
+&nbsp;	public boolean isMulti();
+&nbsp;
+&nbsp;	public void setLoop(double x0, double y0, double z0, double x1, double y1, double z1, double x2, double y2,
+&nbsp;			double z2);
+&nbsp;
+&nbsp;	/** The number of points in the edge shape. */
+&nbsp;	public int size();
+&nbsp;
+&nbsp;	/** The i-th point of the edge shape. */
+&nbsp;	public Point3 apply(int i);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Change the i-th point in the set of points making up the shape of this edge.
+&nbsp;	 */
+&nbsp;	public void update(int i, Point3 p);
+&nbsp;
+&nbsp;	/** The last point of the edge shape. */
+&nbsp;	public Point3 to();
+&nbsp;
+&nbsp;	/** The first point of the edge shape. */
+&nbsp;	public Point3 from();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Total length of the polyline defined by the points.
+&nbsp;	 */
+&nbsp;	public double length();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the length of each segment between the points making up this edge.
+&nbsp;	 * This is mostly only useful for polylines. The results of this method is
+&nbsp;	 * cached. It is only recomputed when a points changes in the shape. There are
+&nbsp;	 * size-1 segments if the are size points. The segment 0 is between points 0 and
+&nbsp;	 * 1.
+&nbsp;	 */
+&nbsp;	public double[] segmentsLengths();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Length of the i-th segment. There are size-1 segments if there are size
+&nbsp;	 * points. The segment 0 is between points 0 and 1.
+&nbsp;	 */
+&nbsp;	public double segmentLength(int i);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute a point at the given percent on the shape and return it. The percent
+&nbsp;	 * must be a number between 0 and 1.
+&nbsp;	 */
+&nbsp;	public Point3 pointOnShape(double percent);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute a point at a given percent on the shape and store it in the target,
+&nbsp;	 * also returning it. The percent must be a number between 0 and 1.
+&nbsp;	 */
+&nbsp;	public Point3 pointOnShape(double percent, Point3 target);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute a point at a given percent on the shape and push it from the shape
+&nbsp;	 * perpendicular to it at a given distance in GU. The percent must be a number
+&nbsp;	 * between 0 and 1. The resulting points is returned.
+&nbsp;	 */
+&nbsp;	public Point3 pointOnShapeAndPerpendicular(double percent, double perpendicular);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute a point at a given percent on the shape and push it from the shape
+&nbsp;	 * perpendicular to it at a given distance in GU. The percent must be a number
+&nbsp;	 * between 0 and 1. The result is stored in target and also returned.
+&nbsp;	 */
+&nbsp;	public Point3 pointOnShapeAndPerpendicular(double percent, double perpendicular, Point3 target);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,273 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TokenMgrError</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.util.parser</a>
+</div>
+
+<h1>Coverage Summary for Class: TokenMgrError (org.graphstream.util.parser)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TokenMgrError</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.util.parser;
+&nbsp;
+&nbsp;/** Token Manager Error. */
+&nbsp;public class TokenMgrError extends Error {
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The version identifier for this Serializable class. Increment only if the
+&nbsp;	 * &lt;i&gt;serialized&lt;/i&gt; form of the class changes.
+&nbsp;	 */
+&nbsp;	private static final long serialVersionUID = 1L;
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * Ordinals for various reasons why an Error of this type can be thrown.
+&nbsp;	 */
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Lexical error occurred.
+&nbsp;	 */
+&nbsp;	public static final int LEXICAL_ERROR = 0;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * An attempt was made to create a second instance of a static token manager.
+&nbsp;	 */
+&nbsp;	public static final int STATIC_LEXER_ERROR = 1;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Tried to change to an invalid lexical state.
+&nbsp;	 */
+&nbsp;	public static final int INVALID_LEXICAL_STATE = 2;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Detected (and bailed out of) an infinite loop in the token manager.
+&nbsp;	 */
+&nbsp;	public static final int LOOP_DETECTED = 3;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Indicates the reason why the exception is thrown. It will have one of the
+&nbsp;	 * above 4 values.
+&nbsp;	 */
+&nbsp;	int errorCode;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Replaces unprintable characters by their escaped (or unicode escaped)
+&nbsp;	 * equivalents in the given string
+&nbsp;	 */
+&nbsp;	protected static final String addEscapes(String str) {
+<b class="nc">&nbsp;		StringBuffer retval = new StringBuffer();</b>
+&nbsp;		char ch;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; str.length(); i++) {</b>
+<b class="nc">&nbsp;			switch (str.charAt(i)) {</b>
+&nbsp;			case 0:
+<b class="nc">&nbsp;				continue;</b>
+&nbsp;			case &#39;\b&#39;:
+<b class="nc">&nbsp;				retval.append(&quot;\\b&quot;);</b>
+<b class="nc">&nbsp;				continue;</b>
+&nbsp;			case &#39;\t&#39;:
+<b class="nc">&nbsp;				retval.append(&quot;\\t&quot;);</b>
+<b class="nc">&nbsp;				continue;</b>
+&nbsp;			case &#39;\n&#39;:
+<b class="nc">&nbsp;				retval.append(&quot;\\n&quot;);</b>
+<b class="nc">&nbsp;				continue;</b>
+&nbsp;			case &#39;\f&#39;:
+<b class="nc">&nbsp;				retval.append(&quot;\\f&quot;);</b>
+<b class="nc">&nbsp;				continue;</b>
+&nbsp;			case &#39;\r&#39;:
+<b class="nc">&nbsp;				retval.append(&quot;\\r&quot;);</b>
+<b class="nc">&nbsp;				continue;</b>
+&nbsp;			case &#39;\&quot;&#39;:
+<b class="nc">&nbsp;				retval.append(&quot;\\\&quot;&quot;);</b>
+<b class="nc">&nbsp;				continue;</b>
+&nbsp;			case &#39;\&#39;&#39;:
+<b class="nc">&nbsp;				retval.append(&quot;\\\&#39;&quot;);</b>
+<b class="nc">&nbsp;				continue;</b>
+&nbsp;			case &#39;\\&#39;:
+<b class="nc">&nbsp;				retval.append(&quot;\\\\&quot;);</b>
+<b class="nc">&nbsp;				continue;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				if ((ch = str.charAt(i)) &lt; 0x20 || ch &gt; 0x7e) {</b>
+<b class="nc">&nbsp;					String s = &quot;0000&quot; + Integer.toString(ch, 16);</b>
+<b class="nc">&nbsp;					retval.append(&quot;\\u&quot; + s.substring(s.length() - 4, s.length()));</b>
+<b class="nc">&nbsp;				} else {</b>
+<b class="nc">&nbsp;					retval.append(ch);</b>
+&nbsp;				}
+&nbsp;				continue;
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		return retval.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Returns a detailed message for the Error when it is thrown by the token
+&nbsp;	 * manager to indicate a lexical error. Parameters : EOFSeen : indicates if EOF
+&nbsp;	 * caused the lexical error curLexState : lexical state in which this error
+&nbsp;	 * occurred errorLine : line number when the error occurred errorColumn : column
+&nbsp;	 * number when the error occurred errorAfter : prefix that was seen before this
+&nbsp;	 * error occurred curchar : the offending character Note: You can customize the
+&nbsp;	 * lexical error message by modifying this method.
+&nbsp;	 */
+&nbsp;	protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn,
+&nbsp;			String errorAfter, char curChar) {
+<b class="nc">&nbsp;		return (&quot;Lexical error at line &quot; + errorLine + &quot;, column &quot; + errorColumn + &quot;.  Encountered: &quot;</b>
+&nbsp;				+ (EOFSeen ? &quot;&lt;EOF&gt; &quot;
+<b class="nc">&nbsp;						: (&quot;\&quot;&quot; + addEscapes(String.valueOf(curChar)) + &quot;\&quot;&quot;) + &quot; (&quot; + (int) curChar + &quot;), &quot;)</b>
+<b class="nc">&nbsp;				+ &quot;after : \&quot;&quot; + addEscapes(errorAfter) + &quot;\&quot;&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * You can also modify the body of this method to customize your error messages.
+&nbsp;	 * For example, cases like LOOP_DETECTED and INVALID_LEXICAL_STATE are not of
+&nbsp;	 * end-users concern, so you can return something like :
+&nbsp;	 * 
+&nbsp;	 * &quot;Internal Error : Please file a bug report .... &quot;
+&nbsp;	 * 
+&nbsp;	 * from this method for such cases in the release version of your parser.
+&nbsp;	 */
+&nbsp;	public String getMessage() {
+<b class="nc">&nbsp;		return super.getMessage();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * Constructors of various flavors follow.
+&nbsp;	 */
+&nbsp;
+&nbsp;	/** No arg constructor. */
+<b class="nc">&nbsp;	public TokenMgrError() {</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Constructor with message and reason. */
+&nbsp;	public TokenMgrError(String message, int reason) {
+<b class="nc">&nbsp;		super(message);</b>
+<b class="nc">&nbsp;		errorCode = reason;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Full Constructor. */
+&nbsp;	public TokenMgrError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar,
+&nbsp;			int reason) {
+<b class="nc">&nbsp;		this(LexicalError(EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

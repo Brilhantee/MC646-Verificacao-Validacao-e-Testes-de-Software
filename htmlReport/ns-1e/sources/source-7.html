@@ -1,0 +1,820 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > VerboseSink</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.util</a>
+</div>
+
+<h1>Coverage Summary for Class: VerboseSink (org.graphstream.util)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">VerboseSink</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/167)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">VerboseSink$1</td>
+  </tr>
+  <tr>
+    <td class="name">VerboseSink$Args</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">VerboseSink$EventType</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/29)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/170)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-11-25
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.util;
+&nbsp;
+&nbsp;import java.io.PrintStream;
+&nbsp;import java.lang.reflect.Array;
+&nbsp;import java.util.EnumMap;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Stack;
+&nbsp;
+&nbsp;import org.graphstream.stream.Sink;
+&nbsp;
+&nbsp;/**
+&nbsp; * A sink that can be used to display event in a PrintStream like System.out.
+&nbsp; * Format of messages can be customized, inserting keywords quoted with &#39;%&#39; in
+&nbsp; * the format.
+&nbsp; * 
+&nbsp; * &#39;%sourceId%&#39; and &#39;%timeId%&#39; keywords are defined for each event. Following
+&nbsp; * defines keywords available for each event types:
+&nbsp; * &lt;dl&gt;
+&nbsp; * &lt;dt&gt;ADD_NODE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%nodeId%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;ADD_NODE_ATTRIBUTE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%nodeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%attributeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%value%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;SET_NODE_ATTRIBUTE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%nodeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%attributeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%value%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;DEL_NODE_ATTRIBUTE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%nodeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%attributeId%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;DEL_NODE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%nodeId%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;ADD_EDGE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%edgeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%source%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%target%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%directed%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;ADD_EDGE_ATTRIBUTE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%edgeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%attributeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%value%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;SET_EDGE_ATTRIBUTE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%edgeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%attributeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%value%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;DEL_EDGE_ATTRIBUTE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%edgeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%attributeId%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;DEL_EDGE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%edgeId%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;ADD_GRAPH_ATTRIBUTE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%attributeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%value%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;SET_GRAPH_ATTRIBUTE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%attributeId%&lt;/li&gt;
+&nbsp; * &lt;li&gt;%value%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;DEL_GRAPH_ATTRIBUTE&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%attributeId%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;dt&gt;CLEAR&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;&lt;/dd&gt;
+&nbsp; * &lt;dt&gt;STEP_BEGINS&lt;/dt&gt;
+&nbsp; * &lt;dd&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;%step%&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/dd&gt;
+&nbsp; * &lt;/dl&gt;
+&nbsp; */
+&nbsp;public class VerboseSink implements Sink {
+&nbsp;	public static final String DEFAULT_AN_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] add node \&quot;%nodeId%\&quot;%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_CNA_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] set node \&quot;%nodeId%\&quot; +\&quot;%attributeId%\&quot;=%value%%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_CNC_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] set node \&quot;%nodeId%\&quot; \&quot;%attributeId%\&quot;=%value%%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_CNR_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] set node \&quot;%nodeId%\&quot; -\&quot;%attributeId%\&quot;%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_DN_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] remove node \&quot;%nodeId%\&quot;%suffix%&quot;;
+&nbsp;
+&nbsp;	public static final String DEFAULT_AE_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] add edge \&quot;%edgeId%\&quot; : \&quot;%source%\&quot; -- \&quot;%target%\&quot;%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_CEA_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] set edge \&quot;%edgeId%\&quot; +\&quot;%attributeId%\&quot;=%value%%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_CEC_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] set edge \&quot;%edgeId%\&quot; \&quot;%attributeId%\&quot;=%value%%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_CER_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] set edge \&quot;%edgeId%\&quot; -\&quot;%attributeId%\&quot;%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_DE_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] remove edge \&quot;%edgeId%\&quot;%suffix%&quot;;
+&nbsp;
+&nbsp;	public static final String DEFAULT_CGA_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] set +\&quot;%attributeId%\&quot;=%value%%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_CGC_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] set \&quot;%attributeId%\&quot;=%value%%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_CGR_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] set -\&quot;%attributeId%\&quot;%suffix%&quot;;
+&nbsp;
+&nbsp;	public static final String DEFAULT_CL_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] clear%suffix%&quot;;
+&nbsp;	public static final String DEFAULT_ST_FORMAT = &quot;%prefix%[%sourceId%:%timeId%] step %step% begins%suffix%&quot;;
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * Shortcut to use HashMap&lt;String, Object&gt;.
+&nbsp;	 */
+<b class="nc">&nbsp;	private static class Args extends HashMap&lt;String, Object&gt; {</b>
+&nbsp;		private static final long serialVersionUID = 3064164898156692557L;
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Enumeration defining type of events.
+&nbsp;	 * 
+&nbsp;	 */
+<b class="nc">&nbsp;	public static enum EventType {</b>
+<b class="nc">&nbsp;		ADD_NODE, ADD_NODE_ATTRIBUTE, SET_NODE_ATTRIBUTE, DEL_NODE_ATTRIBUTE, DEL_NODE, ADD_EDGE, ADD_EDGE_ATTRIBUTE, SET_EDGE_ATTRIBUTE, DEL_EDGE_ATTRIBUTE, DEL_EDGE, ADD_GRAPH_ATTRIBUTE, SET_GRAPH_ATTRIBUTE, DEL_GRAPH_ATTRIBUTE, CLEAR, STEP_BEGINS</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Flag used to indicate if the sink has to flush the output when writting a
+&nbsp;	 * message.
+&nbsp;	 */
+&nbsp;	protected boolean autoflush;
+&nbsp;	/**
+&nbsp;	 * Stream used to write message.
+&nbsp;	 */
+&nbsp;	protected final PrintStream out;
+&nbsp;	/**
+&nbsp;	 * Format of messages associated with each event.
+&nbsp;	 */
+&nbsp;	protected final EnumMap&lt;EventType, String&gt; formats;
+&nbsp;	/**
+&nbsp;	 * Flag used to indicate if an event has to be written or note.
+&nbsp;	 */
+&nbsp;	protected final EnumMap&lt;EventType, Boolean&gt; enable;
+&nbsp;	/*
+&nbsp;	 * Used to avoid to create a lot of hashmap when passing event arguments.
+&nbsp;	 */
+&nbsp;	private final Stack&lt;Args&gt; argsStack;
+&nbsp;
+&nbsp;	protected String prefix;
+&nbsp;
+&nbsp;	protected String suffix;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a new verbose sink using System.out.
+&nbsp;	 */
+&nbsp;	public VerboseSink() {
+<b class="nc">&nbsp;		this(System.out);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a new verbose sink.
+&nbsp;	 * 
+&nbsp;	 * @param out
+&nbsp;	 *            stream used to output message
+&nbsp;	 */
+<b class="nc">&nbsp;	public VerboseSink(PrintStream out) {</b>
+<b class="nc">&nbsp;		this.out = out;</b>
+<b class="nc">&nbsp;		argsStack = new Stack&lt;Args&gt;();</b>
+<b class="nc">&nbsp;		enable = new EnumMap&lt;EventType, Boolean&gt;(EventType.class);</b>
+<b class="nc">&nbsp;		formats = new EnumMap&lt;EventType, String&gt;(EventType.class);</b>
+&nbsp;
+<b class="nc">&nbsp;		formats.put(EventType.ADD_NODE, DEFAULT_AN_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.ADD_NODE_ATTRIBUTE, DEFAULT_CNA_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.SET_NODE_ATTRIBUTE, DEFAULT_CNC_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.DEL_NODE_ATTRIBUTE, DEFAULT_CNR_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.DEL_NODE, DEFAULT_DN_FORMAT);</b>
+&nbsp;
+<b class="nc">&nbsp;		formats.put(EventType.ADD_EDGE, DEFAULT_AE_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.ADD_EDGE_ATTRIBUTE, DEFAULT_CEA_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.SET_EDGE_ATTRIBUTE, DEFAULT_CEC_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.DEL_EDGE_ATTRIBUTE, DEFAULT_CER_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.DEL_EDGE, DEFAULT_DE_FORMAT);</b>
+&nbsp;
+<b class="nc">&nbsp;		formats.put(EventType.ADD_GRAPH_ATTRIBUTE, DEFAULT_CGA_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.SET_GRAPH_ATTRIBUTE, DEFAULT_CGC_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.DEL_GRAPH_ATTRIBUTE, DEFAULT_CGR_FORMAT);</b>
+&nbsp;
+<b class="nc">&nbsp;		formats.put(EventType.CLEAR, DEFAULT_CL_FORMAT);</b>
+<b class="nc">&nbsp;		formats.put(EventType.STEP_BEGINS, DEFAULT_ST_FORMAT);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (EventType t : EventType.values())</b>
+<b class="nc">&nbsp;			enable.put(t, Boolean.TRUE);</b>
+&nbsp;
+<b class="nc">&nbsp;		suffix = &quot;&quot;;</b>
+<b class="nc">&nbsp;		prefix = &quot;&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Enable or disable autoflush.
+&nbsp;	 * 
+&nbsp;	 * @param on
+&nbsp;	 *            true to enable autoflush
+&nbsp;	 */
+&nbsp;	public void setAutoFlush(boolean on) {
+<b class="nc">&nbsp;		this.autoflush = on;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Redefines message format of an event.
+&nbsp;	 * 
+&nbsp;	 * @param type
+&nbsp;	 *            type of the event
+&nbsp;	 * @param format
+&nbsp;	 *            new format of the message attached with the event
+&nbsp;	 */
+&nbsp;	public void setEventFormat(EventType type, String format) {
+<b class="nc">&nbsp;		formats.put(type, format);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Enable or disable an event.
+&nbsp;	 * 
+&nbsp;	 * @param type
+&nbsp;	 *            type of the event
+&nbsp;	 * @param on
+&nbsp;	 *            true to enable message for this event
+&nbsp;	 */
+&nbsp;	public void setEventEnabled(EventType type, boolean on) {
+<b class="nc">&nbsp;		enable.put(type, on);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Enable or disable all messages associated with attribute events.
+&nbsp;	 * 
+&nbsp;	 * @param on
+&nbsp;	 *            true to enable events
+&nbsp;	 */
+&nbsp;	public void setElementEventEnabled(boolean on) {
+<b class="nc">&nbsp;		enable.put(EventType.ADD_EDGE_ATTRIBUTE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.SET_EDGE_ATTRIBUTE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.DEL_EDGE_ATTRIBUTE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.ADD_NODE_ATTRIBUTE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.SET_NODE_ATTRIBUTE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.DEL_NODE_ATTRIBUTE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.ADD_GRAPH_ATTRIBUTE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.SET_GRAPH_ATTRIBUTE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.DEL_GRAPH_ATTRIBUTE, on);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Enable or disable all messages associated with element events.
+&nbsp;	 * 
+&nbsp;	 * @param on
+&nbsp;	 *            true to enable events
+&nbsp;	 */
+&nbsp;	public void setAttributeEventEnabled(boolean on) {
+<b class="nc">&nbsp;		enable.put(EventType.ADD_EDGE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.DEL_EDGE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.ADD_NODE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.DEL_NODE, on);</b>
+<b class="nc">&nbsp;		enable.put(EventType.CLEAR, on);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set prefix used in messages.
+&nbsp;	 * 
+&nbsp;	 * @param prefix
+&nbsp;	 *            new prefix
+&nbsp;	 */
+&nbsp;	public void setPrefix(String prefix) {
+<b class="nc">&nbsp;		this.prefix = prefix;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set suffix used in messages.
+&nbsp;	 * 
+&nbsp;	 * @param suffix
+&nbsp;	 *            new suffix
+&nbsp;	 */
+&nbsp;	public void setSuffix(String suffix) {
+<b class="nc">&nbsp;		this.suffix = suffix;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void print(EventType type, Args args) {
+<b class="nc">&nbsp;		if (!enable.get(type))</b>
+&nbsp;			return;
+&nbsp;
+<b class="nc">&nbsp;		String out = formats.get(type);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String k : args.keySet()) {</b>
+<b class="nc">&nbsp;			Object o = args.get(k);</b>
+<b class="nc">&nbsp;			out = out.replace(String.format(&quot;%%%s%%&quot;, k), o == null ? &quot;null&quot; : o.toString());</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		this.out.print(out);</b>
+<b class="nc">&nbsp;		this.out.printf(&quot;\n&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (autoflush)</b>
+<b class="nc">&nbsp;			this.out.flush();</b>
+&nbsp;
+<b class="nc">&nbsp;		argsPnP(args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private Args argsPnP(Args args) {
+<b class="nc">&nbsp;		if (args == null) {</b>
+<b class="nc">&nbsp;			if (argsStack.size() &gt; 0)</b>
+<b class="nc">&nbsp;				args = argsStack.pop();</b>
+&nbsp;			else
+<b class="nc">&nbsp;				args = new Args();</b>
+&nbsp;
+<b class="nc">&nbsp;			args.put(&quot;prefix&quot;, prefix);</b>
+<b class="nc">&nbsp;			args.put(&quot;suffix&quot;, suffix);</b>
+&nbsp;
+<b class="nc">&nbsp;			return args;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			args.clear();</b>
+<b class="nc">&nbsp;			argsStack.push(args);</b>
+&nbsp;
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private String toStringValue(Object o) {
+<b class="nc">&nbsp;		if (o == null)</b>
+<b class="nc">&nbsp;			return &quot;&lt;null&gt;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o instanceof String)</b>
+<b class="nc">&nbsp;			return &quot;\&quot;&quot; + ((String) o).replace(&quot;\&quot;&quot;, &quot;\\\&quot;&quot;) + &quot;\&quot;&quot;;</b>
+<b class="nc">&nbsp;		else if (o.getClass().isArray()) {</b>
+<b class="nc">&nbsp;			StringBuilder buffer = new StringBuilder();</b>
+<b class="nc">&nbsp;			buffer.append(&quot;{&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0; i &lt; Array.getLength(o); i++) {</b>
+<b class="nc">&nbsp;				if (i &gt; 0)</b>
+<b class="nc">&nbsp;					buffer.append(&quot;, &quot;);</b>
+<b class="nc">&nbsp;				buffer.append(toStringValue(Array.get(o, i)));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			buffer.append(&quot;}&quot;);</b>
+<b class="nc">&nbsp;			return buffer.toString();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return o.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#edgeAttributeAdded(java.lang.String,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;edgeId&quot;, edgeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;attributeId&quot;, attribute);</b>
+<b class="nc">&nbsp;		args.put(&quot;value&quot;, toStringValue(value));</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.ADD_EDGE_ATTRIBUTE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#edgeAttributeChanged(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;edgeId&quot;, edgeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;attributeId&quot;, attribute);</b>
+<b class="nc">&nbsp;		args.put(&quot;value&quot;, toStringValue(newValue));</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.SET_EDGE_ATTRIBUTE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#edgeAttributeRemoved(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;edgeId&quot;, edgeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;attributeId&quot;, attribute);</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.DEL_EDGE_ATTRIBUTE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#graphAttributeAdded(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;attributeId&quot;, attribute);</b>
+<b class="nc">&nbsp;		args.put(&quot;value&quot;, toStringValue(value));</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.ADD_GRAPH_ATTRIBUTE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.AttributeSink#graphAttributeChanged(java.lang.
+&nbsp;	 * String, long, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;attributeId&quot;, attribute);</b>
+<b class="nc">&nbsp;		args.put(&quot;value&quot;, toStringValue(newValue));</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.SET_GRAPH_ATTRIBUTE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.AttributeSink#graphAttributeRemoved(java.lang.
+&nbsp;	 * String, long, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;attributeId&quot;, attribute);</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.DEL_GRAPH_ATTRIBUTE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#nodeAttributeAdded(java.lang.String,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;nodeId&quot;, nodeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;attributeId&quot;, attribute);</b>
+<b class="nc">&nbsp;		args.put(&quot;value&quot;, toStringValue(value));</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.ADD_NODE_ATTRIBUTE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#nodeAttributeChanged(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;nodeId&quot;, nodeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;attributeId&quot;, attribute);</b>
+<b class="nc">&nbsp;		args.put(&quot;value&quot;, toStringValue(newValue));</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.SET_NODE_ATTRIBUTE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#nodeAttributeRemoved(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;nodeId&quot;, nodeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;attributeId&quot;, attribute);</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.DEL_NODE_ATTRIBUTE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#edgeAdded(java.lang.String, long,
+&nbsp;	 * java.lang.String, java.lang.String, java.lang.String, boolean)
+&nbsp;	 */
+&nbsp;	public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+&nbsp;			boolean directed) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;edgeId&quot;, edgeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;source&quot;, fromNodeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;target&quot;, toNodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.ADD_EDGE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#edgeRemoved(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void edgeRemoved(String sourceId, long timeId, String edgeId) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;edgeId&quot;, edgeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.DEL_EDGE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#graphCleared(java.lang.String, long)
+&nbsp;	 */
+&nbsp;	public void graphCleared(String sourceId, long timeId) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.CLEAR, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#nodeAdded(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeAdded(String sourceId, long timeId, String nodeId) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;nodeId&quot;, nodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.ADD_NODE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#nodeRemoved(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeRemoved(String sourceId, long timeId, String nodeId) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;nodeId&quot;, nodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.DEL_NODE, args);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#stepBegins(java.lang.String, long,
+&nbsp;	 * double)
+&nbsp;	 */
+&nbsp;	public void stepBegins(String sourceId, long timeId, double step) {
+<b class="nc">&nbsp;		Args args = argsPnP(null);</b>
+&nbsp;
+<b class="nc">&nbsp;		args.put(&quot;sourceId&quot;, sourceId);</b>
+<b class="nc">&nbsp;		args.put(&quot;timeId&quot;, timeId);</b>
+<b class="nc">&nbsp;		args.put(&quot;step&quot;, step);</b>
+&nbsp;
+<b class="nc">&nbsp;		print(EventType.STEP_BEGINS, args);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

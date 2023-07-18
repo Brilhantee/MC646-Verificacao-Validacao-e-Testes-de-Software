@@ -1,0 +1,254 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AbstractEdge</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.graph.implementations</a>
+</div>
+
+<h1>Coverage Summary for Class: AbstractEdge (org.graphstream.graph.implementations)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AbstractEdge</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    45.5%
+  </span>
+  <span class="absValue">
+    (5/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    65%
+  </span>
+  <span class="absValue">
+    (13/20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-07-22
+&nbsp; * 
+&nbsp; * @author Stefan Balev &lt;stefan.balev@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.graph.implementations;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.stream.SourceBase.ElementType;
+&nbsp;
+&nbsp;/**
+&nbsp; * &lt;p&gt;
+&nbsp; * This class provides a basic implementation of {@code Edge} interface, to
+&nbsp; * minimize the effort required to implement this interface.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Although this class is abstract it implements all the methods of
+&nbsp; * {@link org.graphstream.graph.Edge} and
+&nbsp; * {@link org.graphstream.graph.implementations.AbstractElement}. It has a low
+&nbsp; * memory overhead (3 references and a boolean as fields). All {@code Edge}
+&nbsp; * methods are executed in O(1) time.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+<b class="fc">&nbsp;public class AbstractEdge extends AbstractElement implements Edge {</b>
+&nbsp;
+&nbsp;	// *** Fields ***
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The source node
+&nbsp;	 */
+&nbsp;	protected AbstractNode source;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The target node
+&nbsp;	 */
+&nbsp;	protected AbstractNode target;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Is this edge directed ?
+&nbsp;	 */
+&nbsp;	protected boolean directed;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The graph to which this edge belongs
+&nbsp;	 */
+&nbsp;	protected AbstractGraph graph;
+&nbsp;
+&nbsp;	// *** Constructors ***
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Constructs a new edge. This constructor copies the parameters into the
+&nbsp;	 * corresponding fields.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            Unique identifier of this edge.
+&nbsp;	 * @param source
+&nbsp;	 *            Source node.
+&nbsp;	 * @param target
+&nbsp;	 *            Target node.
+&nbsp;	 * @param directed
+&nbsp;	 *            Indicates if the edge is directed.
+&nbsp;	 */
+&nbsp;	protected AbstractEdge(String id, AbstractNode source, AbstractNode target, boolean directed) {
+<b class="fc">&nbsp;		super(id);</b>
+<b class="fc">&nbsp;		assert source != null &amp;&amp; target != null : &quot;An edge cannot have null endpoints&quot;;</b>
+<b class="fc">&nbsp;		this.source = source;</b>
+<b class="fc">&nbsp;		this.target = target;</b>
+<b class="fc">&nbsp;		this.directed = directed;</b>
+<b class="fc">&nbsp;		this.graph = (AbstractGraph) source.getGraph();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Inherited from AbstractElement ***
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue, Object newValue) {
+<b class="nc">&nbsp;		graph.listeners.sendAttributeChangedEvent(id, ElementType.EDGE, attribute, event, oldValue, newValue);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		return String.format(&quot;%s[%s-%s%s]&quot;, getId(), source, directed ? &quot;&gt;&quot; : &quot;-&quot;, target);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Inherited from Edge ***
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getNode0() {
+<b class="nc">&nbsp;		return source;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getNode1() {
+<b class="nc">&nbsp;		return target;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getOpposite(Node node) {
+<b class="fc">&nbsp;		if (node == source)</b>
+<b class="fc">&nbsp;			return target;</b>
+<b class="fc">&nbsp;		if (node == target)</b>
+<b class="fc">&nbsp;			return source;</b>
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getSourceNode() {
+<b class="fc">&nbsp;		return source;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getTargetNode() {
+<b class="fc">&nbsp;		return target;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isDirected() {
+<b class="nc">&nbsp;		return directed;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isLoop() {
+<b class="nc">&nbsp;		return source == target;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

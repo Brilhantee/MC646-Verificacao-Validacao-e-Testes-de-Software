@@ -1,0 +1,1030 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSinkTikZ</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSinkTikZ (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileSinkTikZ</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/41)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/274)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">FileSinkTikZ$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">FileSinkTikZ$PointsWrapper</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/29)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/48)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/307)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-04-13
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Color;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.PrintWriter;
+&nbsp;import java.lang.reflect.Array;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.LinkedList;
+&nbsp;import java.util.Locale;
+&nbsp;import java.util.logging.Logger;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Element;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.stream.GraphReplay;
+&nbsp;import org.graphstream.ui.geom.Point3;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicEdge;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicGraph;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicNode;
+&nbsp;import org.graphstream.ui.graphicGraph.StyleGroup;
+&nbsp;import org.graphstream.ui.graphicGraph.StyleGroupSet;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.FillMode;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.SizeMode;
+&nbsp;import org.graphstream.ui.layout.springbox.implementations.SpringBox;
+&nbsp;
+&nbsp;/**
+&nbsp; * An export of a graph to PGF/TikZ format.
+&nbsp; * &lt;a&gt;http://sourceforge.net/projects/pgf/&lt;/a&gt;
+&nbsp; * 
+&nbsp; * This allows to include graph in a latex document. Only
+&nbsp; * &lt;code&gt;writeAll(Graph,*)&lt;/code&gt; is working, dynamics is not handle. If the
+&nbsp; * exported graph is a GraphicGraph, then CSS style of the graph will be used.
+&nbsp; * 
+&nbsp; * For a better rendering, it is strongly recommended to run previously a layout
+&nbsp; * algorithm that will add coordinates on nodes. Else, random coordinates will
+&nbsp; * be choosen for nodes. Layout can be run in this way : &lt;code&gt;
+&nbsp; * Graph g;
+&nbsp; * ...
+&nbsp; * SpringBox sbox = new SpringBox();
+&nbsp; * 
+&nbsp; * g.addSink(sbox);
+&nbsp; * sbox.addAttributeSink(g);
+&nbsp; * 
+&nbsp; * do sbox.compute(); while (sbox.getStabilization() &lt; 0.9);
+&nbsp; * 
+&nbsp; * g.removeSink(sbox);
+&nbsp; * sbox.remoteAttributeSink(g);
+&nbsp; * &lt;/code&gt;
+&nbsp; * 
+&nbsp; * TikZ pictures are scalable so pixel units is not handle here. The picture is
+&nbsp; * bounded in a box which width and height can be defined by adding attributes
+&nbsp; * to the graph:
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;&quot;ui.tikz.width&quot;&lt;/li&gt;
+&nbsp; * &lt;li&gt;&quot;ui.tikz.height&quot;&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * The value of these attributes has to be considered as centimeters.
+&nbsp; * 
+&nbsp; * Common supported style :
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;&quot;fill-color&quot;, alpha is supported to&lt;/li&gt;
+&nbsp; * &lt;li&gt;&quot;size&quot; in &quot;gu&quot;&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * 
+&nbsp; * Node supported style :
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;&quot;shape&quot; with &quot;box&quot;, &quot;rounded-box&quot;, &quot;circle&quot;, &quot;triangle&quot;, &quot;diamond&quot;&lt;/li&gt;
+&nbsp; * &lt;li&gt;&quot;stroke-mode&quot; with &quot;plain&quot;&lt;/li&gt;
+&nbsp; * &lt;li&gt;&quot;stroke-color&quot;, alpha is supported to&lt;/li&gt;
+&nbsp; * &lt;li&gt;&quot;stroke-width&quot; in &quot;gu&quot;&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * 
+&nbsp; * Edge supported style :
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; */
+&nbsp;public class FileSinkTikZ extends FileSinkBase {
+<b class="nc">&nbsp;	private static final Logger LOGGER = Logger.getLogger(FileSinkTikZ.class.getName());</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Node attribute storing coordinates.
+&nbsp;	 */
+&nbsp;	public static final String XYZ_ATTR = &quot;xyz&quot;;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Graph attribute storing width of the TikZ picture.
+&nbsp;	 */
+&nbsp;	public static final String WIDTH_ATTR = &quot;ui.tikz.width&quot;;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Graph attribute storing height of the TikZ picture.
+&nbsp;	 */
+&nbsp;	public static final String HEIGHT_ATTR = &quot;ui.tikz.height&quot;;
+&nbsp;
+&nbsp;	public static final double DEFAULT_WIDTH = 10;
+&nbsp;
+&nbsp;	public static final double DEFAULT_HEIGHT = 10;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Define the default minimum size of nodes when using a dynamic size. This size
+&nbsp;	 * is in millimeter.
+&nbsp;	 */
+&nbsp;	public static final double DISPLAY_MIN_SIZE_IN_MM = 2;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Define the default maximum size of nodes when using a dynamic size. This size
+&nbsp;	 * is in millimeter.
+&nbsp;	 */
+&nbsp;	public static final double DISPLAY_MAX_SIZE_IN_MM = 10;
+&nbsp;
+&nbsp;	protected PrintWriter out;
+&nbsp;
+<b class="nc">&nbsp;	protected HashMap&lt;String, String&gt; colors = new HashMap&lt;String, String&gt;();</b>
+<b class="nc">&nbsp;	protected HashMap&lt;String, String&gt; classes = new HashMap&lt;String, String&gt;();</b>
+<b class="nc">&nbsp;	protected HashMap&lt;String, String&gt; classNames = new HashMap&lt;String, String&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;	protected int classIndex = 0;</b>
+<b class="nc">&nbsp;	protected int colorIndex = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;	protected double width = Double.NaN;</b>
+<b class="nc">&nbsp;	protected double height = Double.NaN;</b>
+&nbsp;
+<b class="nc">&nbsp;	protected boolean layout = false;</b>
+&nbsp;
+&nbsp;	protected GraphicGraph buffer;
+&nbsp;
+<b class="nc">&nbsp;	protected String css = null;</b>
+&nbsp;
+<b class="nc">&nbsp;	protected double minSize = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;	protected double maxSize = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;	protected double displayMinSize = DISPLAY_MIN_SIZE_IN_MM;</b>
+&nbsp;
+<b class="nc">&nbsp;	protected double displayMaxSize = DISPLAY_MAX_SIZE_IN_MM;</b>
+&nbsp;
+&nbsp;	private double xmin, ymin, xmax, ymax;
+&nbsp;
+&nbsp;	private PointsWrapper points;
+<b class="nc">&nbsp;	private Locale l = Locale.ROOT;</b>
+&nbsp;
+&nbsp;	protected static String formatId(String id) {
+<b class="nc">&nbsp;		return &quot;node&quot; + id.replaceAll(&quot;\\W&quot;, &quot;_&quot;);</b>
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	public FileSinkTikZ() {</b>
+<b class="nc">&nbsp;		buffer = new GraphicGraph(&quot;tikz-buffer&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public double getWidth() {
+<b class="nc">&nbsp;		return width;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setWidth(double width) {
+<b class="nc">&nbsp;		this.width = width;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public double getHeight() {
+<b class="nc">&nbsp;		return height;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setHeight(double height) {
+<b class="nc">&nbsp;		this.height = height;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setDisplaySize(double min, double max) {
+<b class="nc">&nbsp;		this.displayMinSize = min;</b>
+<b class="nc">&nbsp;		this.displayMaxSize = max;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setCSS(String css) {
+<b class="nc">&nbsp;		this.css = css;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setLayout(boolean layout) {
+<b class="nc">&nbsp;		this.layout = layout;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected double getNodeX(Node n) {
+<b class="nc">&nbsp;		if (n.hasAttribute(XYZ_ATTR))</b>
+<b class="nc">&nbsp;			return ((Number) (n.getArray(XYZ_ATTR)[0])).doubleValue();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (n.hasAttribute(&quot;x&quot;))</b>
+<b class="nc">&nbsp;			return n.getNumber(&quot;x&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		return Double.NaN;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected double getNodeY(Node n) {
+<b class="nc">&nbsp;		if (n.hasAttribute(XYZ_ATTR))</b>
+<b class="nc">&nbsp;			return ((Number) (n.getArray(XYZ_ATTR)[1])).doubleValue();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (n.hasAttribute(&quot;y&quot;))</b>
+<b class="nc">&nbsp;			return n.getNumber(&quot;y&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		return Double.NaN;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String getNodeStyle(Node n) {
+<b class="nc">&nbsp;		String style = &quot;tikzgsnode&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (n instanceof GraphicNode) {</b>
+<b class="nc">&nbsp;			GraphicNode gn = (GraphicNode) n;</b>
+&nbsp;
+<b class="nc">&nbsp;			style = classNames.get(gn.style.getId());</b>
+&nbsp;
+<b class="nc">&nbsp;			if (gn.style.getFillMode() == FillMode.DYN_PLAIN) {</b>
+<b class="nc">&nbsp;				double uicolor = gn.getNumber(&quot;ui.color&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (Double.isNaN(uicolor))</b>
+<b class="nc">&nbsp;					uicolor = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;				int c = gn.style.getFillColorCount();</b>
+<b class="nc">&nbsp;				int s = 1;</b>
+<b class="nc">&nbsp;				double d = 1.0 / (c - 1);</b>
+&nbsp;
+<b class="nc">&nbsp;				while (s * d &lt; uicolor &amp;&amp; s &lt; c)</b>
+<b class="nc">&nbsp;					s++;</b>
+&nbsp;
+<b class="nc">&nbsp;				uicolor -= (s - 1) * d;</b>
+<b class="nc">&nbsp;				uicolor *= c;</b>
+&nbsp;
+<b class="nc">&nbsp;				style += String.format(Locale.ROOT, &quot;, fill=%s!%d!%s&quot;, checkColor(gn.style.getFillColor(0)),</b>
+<b class="nc">&nbsp;						(int) (uicolor * 100), checkColor(gn.style.getFillColor(1)));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			if (gn.style.getSizeMode() == SizeMode.DYN_SIZE) {</b>
+<b class="nc">&nbsp;				double uisize = gn.getNumber(&quot;ui.size&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (Double.isNaN(uisize))</b>
+<b class="nc">&nbsp;					uisize = minSize;</b>
+&nbsp;
+<b class="nc">&nbsp;				uisize = (uisize - minSize) / (maxSize - minSize);</b>
+<b class="nc">&nbsp;				uisize = uisize * (displayMaxSize - displayMinSize) + displayMinSize;</b>
+&nbsp;
+<b class="nc">&nbsp;				style += String.format(Locale.ROOT, &quot;, minimum size=%fmm&quot;, uisize);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return style;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String getEdgeStyle(Edge e) {
+<b class="nc">&nbsp;		String style = &quot;tikzgsnode&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (e instanceof GraphicEdge) {</b>
+<b class="nc">&nbsp;			GraphicEdge ge = (GraphicEdge) e;</b>
+&nbsp;
+<b class="nc">&nbsp;			style = classNames.get(ge.style.getId());</b>
+&nbsp;
+<b class="nc">&nbsp;			if (ge.style.getFillMode() == FillMode.DYN_PLAIN) {</b>
+<b class="nc">&nbsp;				double uicolor = ge.getNumber(&quot;ui.color&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (Double.isNaN(uicolor))</b>
+<b class="nc">&nbsp;					uicolor = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;				int c = ge.style.getFillColorCount();</b>
+<b class="nc">&nbsp;				int s = 1;</b>
+<b class="nc">&nbsp;				double d = 1.0 / (c - 1);</b>
+&nbsp;
+<b class="nc">&nbsp;				while (s * d &lt; uicolor &amp;&amp; s &lt; c)</b>
+<b class="nc">&nbsp;					s++;</b>
+&nbsp;
+<b class="nc">&nbsp;				uicolor -= (s - 1) * d;</b>
+<b class="nc">&nbsp;				uicolor *= c;</b>
+&nbsp;
+<b class="nc">&nbsp;				style += String.format(Locale.ROOT, &quot;, draw=%s!%d!%s&quot;, checkColor(ge.style.getFillColor(s - 1)),</b>
+<b class="nc">&nbsp;						(int) (uicolor * 100), checkColor(ge.style.getFillColor(s)));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			if (ge.style.getSizeMode() == SizeMode.DYN_SIZE) {</b>
+<b class="nc">&nbsp;				double uisize = ge.getNumber(&quot;ui.size&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (Double.isNaN(uisize) || uisize &lt; 0.01)</b>
+<b class="nc">&nbsp;					uisize = 1;</b>
+&nbsp;
+<b class="nc">&nbsp;				style += String.format(Locale.ROOT, &quot;, line width=%fpt&quot;, uisize);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return style;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String checkColor(Color c) {
+<b class="nc">&nbsp;		String rgb = String.format(Locale.ROOT, &quot;%.3f,%.3f,%.3f&quot;, c.getRed() / 255.0f, c.getGreen() / 255.0f,</b>
+<b class="nc">&nbsp;				c.getBlue() / 255.0f);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (colors.containsKey(rgb))</b>
+<b class="nc">&nbsp;			return colors.get(rgb);</b>
+&nbsp;
+<b class="nc">&nbsp;		String key = String.format(&quot;tikzC%02d&quot;, colorIndex++);</b>
+<b class="nc">&nbsp;		colors.put(rgb, key);</b>
+&nbsp;
+<b class="nc">&nbsp;		return key;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Convert a StyleGroup to tikz style.
+&nbsp;	 * 
+&nbsp;	 * @param group
+&nbsp;	 *            the style group to convert
+&nbsp;	 * @return string representation of the style group usable in TikZ.
+&nbsp;	 */
+&nbsp;	protected String getTikzStyle(StyleGroup group) {
+<b class="nc">&nbsp;		StringBuilder buffer = new StringBuilder();</b>
+<b class="nc">&nbsp;		LinkedList&lt;String&gt; style = new LinkedList&lt;String&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; group.getFillColorCount(); i++)</b>
+<b class="nc">&nbsp;			checkColor(group.getFillColor(i));</b>
+&nbsp;
+<b class="nc">&nbsp;		switch (group.getType()) {</b>
+&nbsp;		case NODE: {
+<b class="nc">&nbsp;			if (group.getFillMode() != FillMode.DYN_PLAIN) {</b>
+<b class="nc">&nbsp;				String fill = checkColor(group.getFillColor(0));</b>
+<b class="nc">&nbsp;				style.add(&quot;fill=&quot; + fill);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			if (group.getFillColor(0).getAlpha() &lt; 255)</b>
+<b class="nc">&nbsp;				style.add(String.format(Locale.ROOT, &quot;fill opacity=%.2f&quot;, group.getFillColor(0).getAlpha() / 255.0f));</b>
+&nbsp;
+<b class="nc">&nbsp;			switch (group.getStrokeMode()) {</b>
+&nbsp;			case DOTS:
+&nbsp;			case DASHES:
+&nbsp;			case PLAIN:
+<b class="nc">&nbsp;				String stroke = checkColor(group.getStrokeColor(0));</b>
+<b class="nc">&nbsp;				style.add(&quot;draw=&quot; + stroke);</b>
+<b class="nc">&nbsp;				style.add(&quot;line width=&quot; + String.format(Locale.ROOT, &quot;%.1fpt&quot;, group.getStrokeWidth().value));</b>
+&nbsp;
+<b class="nc">&nbsp;				if (group.getStrokeColor(0).getAlpha() &lt; 255)</b>
+<b class="nc">&nbsp;					style.add(String.format(Locale.ROOT, &quot;draw opacity=%.2f&quot;,</b>
+<b class="nc">&nbsp;							group.getStrokeColor(0).getAlpha() / 255.0f));</b>
+&nbsp;
+&nbsp;				break;
+&nbsp;			default:
+<b class="nc">&nbsp;				LOGGER.warning(String.format(&quot;unhandled stroke mode : %s%n&quot;, group.getStrokeMode()));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			switch (group.getShape()) {</b>
+&nbsp;			case CIRCLE:
+<b class="nc">&nbsp;				style.add(&quot;circle&quot;);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case ROUNDED_BOX:
+<b class="nc">&nbsp;				style.add(&quot;rounded corners=2pt&quot;);</b>
+&nbsp;			case BOX:
+<b class="nc">&nbsp;				style.add(&quot;rectangle&quot;);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case TRIANGLE:
+<b class="nc">&nbsp;				style.add(&quot;isosceles triangle&quot;);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case DIAMOND:
+<b class="nc">&nbsp;				style.add(&quot;diamond&quot;);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				LOGGER.warning(String.format(&quot;unhandled shape : %s%n&quot;, group.getShape()));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			String text = checkColor(group.getTextColor(0));</b>
+<b class="nc">&nbsp;			style.add(&quot;text=&quot; + text);</b>
+&nbsp;
+<b class="nc">&nbsp;			switch (group.getSize().units) {</b>
+&nbsp;			case GU:
+<b class="nc">&nbsp;				style.add(&quot;minimum size=&quot; + String.format(Locale.ROOT, &quot;%.1fcm&quot;, group.getSize().values.get(0)));</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case PX:
+<b class="nc">&nbsp;				style.add(&quot;minimum size=&quot; + String.format(Locale.ROOT, &quot;%.1fpt&quot;, group.getSize().values.get(0)));</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				LOGGER.warning(</b>
+<b class="nc">&nbsp;						String.format(&quot;%% [warning] units %s are not compatible with TikZ.%n&quot;, group.getSize().units));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			style.add(&quot;inner sep=0pt&quot;);</b>
+&nbsp;		}
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case EDGE: {
+<b class="nc">&nbsp;			if (group.getFillMode() != FillMode.DYN_PLAIN) {</b>
+<b class="nc">&nbsp;				String fill = checkColor(group.getFillColor(0));</b>
+<b class="nc">&nbsp;				style.add(&quot;draw=&quot; + fill);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			if (group.getFillColor(0).getAlpha() &lt; 255)</b>
+<b class="nc">&nbsp;				style.add(String.format(Locale.ROOT, &quot;draw opacity=%.2f&quot;, group.getFillColor(0).getAlpha() / 255.0f));</b>
+&nbsp;
+<b class="nc">&nbsp;			switch (group.getSize().units) {</b>
+&nbsp;			case PX:
+&nbsp;			case GU:
+<b class="nc">&nbsp;				style.add(&quot;line width=&quot; + String.format(Locale.ROOT, &quot;%.1fpt&quot;, group.getSize().values.get(0)));</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				LOGGER.warning(</b>
+<b class="nc">&nbsp;						String.format(&quot;%% [warning] units %s are not compatible with TikZ.%n&quot;, group.getSize().units));</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			LOGGER.warning(String.format(&quot;unhandled group type : %s%n&quot;, group.getType()));</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; style.size(); i++) {</b>
+<b class="nc">&nbsp;			if (i &gt; 0)</b>
+<b class="nc">&nbsp;				buffer.append(&quot;,&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			buffer.append(style.get(i));</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return buffer.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSinkBase#outputHeader()
+&nbsp;	 */
+&nbsp;	protected void outputHeader() throws IOException {
+<b class="nc">&nbsp;		out = (PrintWriter) output;</b>
+&nbsp;
+<b class="nc">&nbsp;		colors.clear();</b>
+<b class="nc">&nbsp;		classes.clear();</b>
+<b class="nc">&nbsp;		classNames.clear();</b>
+&nbsp;
+<b class="nc">&nbsp;		buffer.clear();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSinkBase#outputEndOfFile()
+&nbsp;	 */
+&nbsp;	protected void outputEndOfFile() throws IOException {
+<b class="nc">&nbsp;		if (Double.isNaN(width)) {</b>
+<b class="nc">&nbsp;			if (buffer.hasNumber(WIDTH_ATTR))</b>
+<b class="nc">&nbsp;				width = buffer.getNumber(WIDTH_ATTR);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				width = DEFAULT_WIDTH;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (Double.isNaN(height)) {</b>
+<b class="nc">&nbsp;			if (buffer.hasNumber(HEIGHT_ATTR))</b>
+<b class="nc">&nbsp;				height = buffer.getNumber(HEIGHT_ATTR);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				height = DEFAULT_WIDTH;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		checkLayout();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (css != null)</b>
+<b class="nc">&nbsp;			buffer.setAttribute(&quot;ui.stylesheet&quot;, css);</b>
+&nbsp;
+<b class="nc">&nbsp;		points = new PointsWrapper();</b>
+&nbsp;
+&nbsp;		//
+&nbsp;		// Begin tikzpicture
+&nbsp;		//
+<b class="nc">&nbsp;		out.printf(&quot;%%%n%% Do not forget \\usepackage{tikz} in header.%n%%%n&quot;);</b>
+<b class="nc">&nbsp;		out.printf(&quot;\\begin{tikzpicture}&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		checkAndOutputStyle();</b>
+<b class="nc">&nbsp;		checkXYandSize();</b>
+&nbsp;
+<b class="nc">&nbsp;		buffer.nodes().forEach(n -&gt; {</b>
+&nbsp;			double x, y;
+&nbsp;
+<b class="nc">&nbsp;			x = getNodeX(n);</b>
+<b class="nc">&nbsp;			y = getNodeY(n);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (Double.isNaN(x) || Double.isNaN(y)) {</b>
+<b class="nc">&nbsp;				x = Math.random() * width;</b>
+<b class="nc">&nbsp;				y = Math.random() * height;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				x = width * (x - xmin) / (xmax - xmin);</b>
+<b class="nc">&nbsp;				y = height * (y - ymin) / (ymax - ymin);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			out.printf(l, &quot;\t\\node[inner sep=0pt] (%s) at (%f,%f) {};%n&quot;, formatId(n.getId()), x, y);</b>
+&nbsp;		});
+&nbsp;
+<b class="nc">&nbsp;		StyleGroupSet sgs = buffer.getStyleGroups();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (HashSet&lt;StyleGroup&gt; groups : sgs.zIndex()) {</b>
+<b class="nc">&nbsp;			for (StyleGroup group : groups) {</b>
+<b class="nc">&nbsp;				switch (group.getType()) {</b>
+&nbsp;				case NODE:
+<b class="nc">&nbsp;					for (Element e : group.elements())</b>
+<b class="nc">&nbsp;						outputNode((Node) e);</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				case EDGE:
+<b class="nc">&nbsp;					for (Element e : group.elements())</b>
+<b class="nc">&nbsp;						outputEdge((Edge) e);</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				default:
+&nbsp;				}
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		//
+&nbsp;		// End of tikzpicture.
+&nbsp;		//
+<b class="nc">&nbsp;		out.printf(&quot;\\end{tikzpicture}%n&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void checkLayout() {
+<b class="nc">&nbsp;		if (!layout)</b>
+&nbsp;			return;
+&nbsp;
+<b class="nc">&nbsp;		SpringBox sbox = new SpringBox();</b>
+&nbsp;
+<b class="nc">&nbsp;		GraphReplay replay = new GraphReplay(&quot;replay&quot;);</b>
+<b class="nc">&nbsp;		replay.addSink(sbox);</b>
+<b class="nc">&nbsp;		sbox.addAttributeSink(buffer);</b>
+&nbsp;
+<b class="nc">&nbsp;		replay.replay(buffer);</b>
+&nbsp;
+&nbsp;		do
+<b class="nc">&nbsp;			sbox.compute();</b>
+<b class="nc">&nbsp;		while (sbox.getStabilization() &lt; 0.9);</b>
+&nbsp;
+<b class="nc">&nbsp;		buffer.removeSink(sbox);</b>
+<b class="nc">&nbsp;		sbox.removeAttributeSink(buffer);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void checkXYandSize() {
+<b class="nc">&nbsp;		xmin = ymin = Double.MAX_VALUE;</b>
+<b class="nc">&nbsp;		xmax = ymax = Double.MIN_VALUE;</b>
+&nbsp;
+<b class="nc">&nbsp;		buffer.nodes().forEach(n -&gt; {</b>
+&nbsp;			double x, y;
+&nbsp;
+<b class="nc">&nbsp;			x = getNodeX(n);</b>
+<b class="nc">&nbsp;			y = getNodeY(n);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (!Double.isNaN(x) &amp;&amp; !Double.isNaN(y)) {</b>
+<b class="nc">&nbsp;				xmin = Math.min(xmin, x);</b>
+<b class="nc">&nbsp;				xmax = Math.max(xmax, x);</b>
+<b class="nc">&nbsp;				ymin = Math.min(ymin, y);</b>
+<b class="nc">&nbsp;				ymax = Math.max(ymax, y);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				LOGGER.warning(String.format(&quot;%% [warning] missing node (x,y).%n&quot;));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			if (n.hasNumber(&quot;ui.size&quot;)) {</b>
+<b class="nc">&nbsp;				minSize = Math.min(minSize, n.getNumber(&quot;ui.size&quot;));</b>
+<b class="nc">&nbsp;				maxSize = Math.max(maxSize, n.getNumber(&quot;ui.size&quot;));</b>
+&nbsp;			}
+&nbsp;		});
+&nbsp;
+<b class="nc">&nbsp;		if (minSize == maxSize)</b>
+<b class="nc">&nbsp;			maxSize += 1;</b>
+&nbsp;
+<b class="nc">&nbsp;		buffer.edges().forEach(e -&gt; {</b>
+<b class="nc">&nbsp;			points.setElement(e);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (points.check()) {</b>
+<b class="nc">&nbsp;				for (int i = 0; i &lt; points.getPointsCount(); i++) {</b>
+<b class="nc">&nbsp;					double x = points.getX(i);</b>
+<b class="nc">&nbsp;					double y = points.getY(i);</b>
+&nbsp;
+<b class="nc">&nbsp;					xmin = Math.min(xmin, x);</b>
+<b class="nc">&nbsp;					xmax = Math.max(xmax, x);</b>
+<b class="nc">&nbsp;					ymin = Math.min(ymin, y);</b>
+<b class="nc">&nbsp;					ymax = Math.max(ymax, y);</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		});
+&nbsp;	}
+&nbsp;
+&nbsp;	private void checkAndOutputStyle() {
+<b class="nc">&nbsp;		String nodeStyle = &quot;circle,draw=black,fill=black&quot;;</b>
+<b class="nc">&nbsp;		String edgeStyle = &quot;draw=black&quot;;</b>
+<b class="nc">&nbsp;		StyleGroupSet sgs = buffer.getStyleGroups();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (StyleGroup sg : sgs.groups()) {</b>
+<b class="nc">&nbsp;			String key = String.format(&quot;class%02d&quot;, classIndex++);</b>
+<b class="nc">&nbsp;			classNames.put(sg.getId(), key);</b>
+<b class="nc">&nbsp;			classes.put(key, getTikzStyle(sg));</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		out.printf(&quot;[%n&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String key : classes.keySet())</b>
+<b class="nc">&nbsp;			out.printf(l, &quot;\t%s/.style={%s},%n&quot;, key, classes.get(key));</b>
+&nbsp;
+<b class="nc">&nbsp;		out.printf(l, &quot;\ttikzgsnode/.style={%s},%n&quot;, nodeStyle);</b>
+<b class="nc">&nbsp;		out.printf(l, &quot;\ttikzgsedge/.style={%s}%n&quot;, edgeStyle);</b>
+&nbsp;
+<b class="nc">&nbsp;		out.printf(&quot;]%n&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String rgb : colors.keySet())</b>
+<b class="nc">&nbsp;			out.printf(l, &quot;\t\\definecolor{%s}{rgb}{%s}%n&quot;, colors.get(rgb), rgb);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void outputNode(Node n) {
+&nbsp;		String label;
+<b class="nc">&nbsp;		String style = getNodeStyle(n);</b>
+&nbsp;
+<b class="nc">&nbsp;		label = n.hasAttribute(&quot;label&quot;) ? (String) n.getLabel(&quot;label&quot;)</b>
+<b class="nc">&nbsp;				: (n.hasAttribute(&quot;ui.label&quot;) ? (String) n.getLabel(&quot;ui.label&quot;) : &quot;&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		out.printf(l, &quot;\t\\node[%s] at (%s) {%s};%n&quot;, style, formatId(n.getId()), label);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void outputEdge(Edge e) {
+<b class="nc">&nbsp;		String style = getEdgeStyle(e);</b>
+<b class="nc">&nbsp;		String uiPoints = &quot;&quot;;</b>
+<b class="nc">&nbsp;		points.setElement(e);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (points.check()) {</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; points.getPointsCount(); i++) {</b>
+&nbsp;				double x, y;
+&nbsp;
+<b class="nc">&nbsp;				x = points.getX(i);</b>
+<b class="nc">&nbsp;				y = points.getY(i);</b>
+<b class="nc">&nbsp;				x = width * (x - xmin) / (xmax - xmin);</b>
+<b class="nc">&nbsp;				y = height * (y - ymin) / (ymax - ymin);</b>
+&nbsp;
+<b class="nc">&nbsp;				uiPoints = String.format(l, &quot;%s-- (%.3f,%.3f) &quot;, uiPoints, x, y);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		out.printf(l, &quot;\t\\draw[%s] (%s) %s%s (%s);%n&quot;, style, formatId(e.getSourceNode().getId()), uiPoints,</b>
+<b class="nc">&nbsp;				e.isDirected() ? &quot;-&gt;&quot; : &quot;--&quot;, formatId(e.getTargetNode().getId()));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#graphAttributeAdded(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
+<b class="nc">&nbsp;		buffer.graphAttributeAdded(sourceId, timeId, attribute, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.AttributeSink#graphAttributeChanged(java.lang.
+&nbsp;	 * String, long, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;		buffer.graphAttributeChanged(sourceId, timeId, attribute, oldValue, newValue);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.AttributeSink#graphAttributeRemoved(java.lang.
+&nbsp;	 * String, long, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
+<b class="nc">&nbsp;		buffer.graphAttributeRemoved(sourceId, timeId, attribute);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#nodeAttributeAdded(java.lang.String,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+<b class="nc">&nbsp;		buffer.nodeAttributeAdded(sourceId, timeId, nodeId, attribute, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#nodeAttributeChanged(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;		buffer.nodeAttributeChanged(sourceId, timeId, nodeId, attribute, oldValue, newValue);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#nodeAttributeRemoved(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+<b class="nc">&nbsp;		buffer.nodeAttributeRemoved(sourceId, timeId, nodeId, attribute);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#edgeAttributeAdded(java.lang.String,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
+<b class="nc">&nbsp;		buffer.edgeAttributeAdded(sourceId, timeId, edgeId, attribute, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#edgeAttributeChanged(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;		buffer.edgeAttributeChanged(sourceId, timeId, edgeId, attribute, oldValue, newValue);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#edgeAttributeRemoved(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
+<b class="nc">&nbsp;		buffer.edgeAttributeRemoved(sourceId, timeId, edgeId, attribute);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#nodeAdded(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeAdded(String sourceId, long timeId, String nodeId) {
+<b class="nc">&nbsp;		buffer.nodeAdded(sourceId, timeId, nodeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#nodeRemoved(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeRemoved(String sourceId, long timeId, String nodeId) {
+<b class="nc">&nbsp;		buffer.nodeRemoved(sourceId, timeId, nodeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#edgeAdded(java.lang.String, long,
+&nbsp;	 * java.lang.String, java.lang.String, java.lang.String, boolean)
+&nbsp;	 */
+&nbsp;	public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+&nbsp;			boolean directed) {
+<b class="nc">&nbsp;		buffer.edgeAdded(sourceId, timeId, edgeId, fromNodeId, toNodeId, directed);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#edgeRemoved(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void edgeRemoved(String sourceId, long timeId, String edgeId) {
+<b class="nc">&nbsp;		buffer.edgeRemoved(sourceId, timeId, edgeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#graphCleared(java.lang.String, long)
+&nbsp;	 */
+&nbsp;	public void graphCleared(String sourceId, long timeId) {
+<b class="nc">&nbsp;		buffer.graphCleared(sourceId, timeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#stepBegins(java.lang.String, long,
+&nbsp;	 * double)
+&nbsp;	 */
+&nbsp;	public void stepBegins(String sourceId, long timeId, double step) {
+<b class="nc">&nbsp;		buffer.stepBegins(sourceId, timeId, step);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected class PointsWrapper {
+&nbsp;		Object[] points;
+&nbsp;
+<b class="nc">&nbsp;		PointsWrapper() {</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void setElement(Element e) {
+<b class="nc">&nbsp;			if (e.hasArray(&quot;ui.points&quot;))</b>
+<b class="nc">&nbsp;				points = e.getArray(&quot;ui.points&quot;);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				points = null;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public boolean check() {
+<b class="nc">&nbsp;			if (points == null)</b>
+<b class="nc">&nbsp;				return false;</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0; i &lt; points.length; i++) {</b>
+<b class="nc">&nbsp;				if (!(points[i] instanceof Point3) &amp;&amp; !points[i].getClass().isArray())</b>
+<b class="nc">&nbsp;					return false;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public int getPointsCount() {
+<b class="nc">&nbsp;			return points == null ? 0 : points.length;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public double getX(int i) {
+<b class="nc">&nbsp;			if (points == null || i &gt;= points.length)</b>
+<b class="nc">&nbsp;				return Double.NaN;</b>
+&nbsp;
+<b class="nc">&nbsp;			Object p = points[i];</b>
+&nbsp;
+<b class="nc">&nbsp;			if (p instanceof Point3)</b>
+<b class="nc">&nbsp;				return ((Point3) p).x;</b>
+&nbsp;			else {
+<b class="nc">&nbsp;				Object x = Array.get(p, 0);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (x instanceof Number)</b>
+<b class="nc">&nbsp;					return ((Number) x).doubleValue();</b>
+&nbsp;				else
+<b class="nc">&nbsp;					return Array.getDouble(p, 0);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		public double getY(int i) {
+<b class="nc">&nbsp;			if (i &gt;= points.length)</b>
+<b class="nc">&nbsp;				return Double.NaN;</b>
+&nbsp;
+<b class="nc">&nbsp;			Object p = points[i];</b>
+&nbsp;
+<b class="nc">&nbsp;			if (p instanceof Point3)</b>
+<b class="nc">&nbsp;				return ((Point3) p).y;</b>
+&nbsp;			else {
+<b class="nc">&nbsp;				Object y = Array.get(p, 0);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (y instanceof Number)</b>
+<b class="nc">&nbsp;					return ((Number) y).doubleValue();</b>
+&nbsp;				else
+<b class="nc">&nbsp;					return Array.getDouble(p, 1);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

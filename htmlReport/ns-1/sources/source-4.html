@@ -1,0 +1,262 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PathModelTest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.mbtroads</a>
+</div>
+
+<h1>Coverage Summary for Class: PathModelTest (com.mbtroads)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PathModelTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (84/84)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.mbtroads;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.graph.Path;
+&nbsp;import org.graphstream.graph.implementations.SingleGraph;
+&nbsp;import org.graphwalker.core.machine.ExecutionContext;
+&nbsp;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;import static org.junit.jupiter.api.Assertions.assertEquals;
+&nbsp;
+<b class="fc">&nbsp;public class PathModelTest extends ExecutionContext implements PathModel {</b>
+<b class="fc">&nbsp;    Path path = null;</b>
+<b class="fc">&nbsp;    Graph graph = null;</b>
+<b class="fc">&nbsp;    int number_of_nodes = 0;</b>
+<b class="fc">&nbsp;    int number_of_edges = 0;</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void empty_estate(){
+<b class="fc">&nbsp;        System.out.println(&quot;\nEmpty Path Estate&quot;);</b>
+<b class="fc">&nbsp;        path = new Path();</b>
+<b class="fc">&nbsp;        graph = new SingleGraph(&quot;Graph 1&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        Stream&lt;Node&gt; nodes = path.nodes();</b>
+<b class="fc">&nbsp;        Stream&lt;Edge&gt; edges = path.edges();</b>
+&nbsp;
+<b class="fc">&nbsp;        long count_of_edges = edges.count();</b>
+<b class="fc">&nbsp;        long count_of_nodes = nodes.count();</b>
+&nbsp;
+<b class="fc">&nbsp;        assert(count_of_edges == 0);</b>
+<b class="fc">&nbsp;        assert(count_of_nodes == 0);</b>
+&nbsp;
+<b class="fc">&nbsp;        System.out.println(&quot;Number of Node is: &quot; + count_of_nodes);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Number of Edges is: &quot; + count_of_edges);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void normal_estate(){
+<b class="fc">&nbsp;        System.out.println(&quot;\nNormal Path Estate&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        Stream&lt;Node&gt; nodes = path.nodes();</b>
+<b class="fc">&nbsp;        Stream&lt;Edge&gt; edges = path.edges();</b>
+&nbsp;
+<b class="fc">&nbsp;        long count_of_edges = edges.count();</b>
+<b class="fc">&nbsp;        long count_of_nodes = nodes.count();</b>
+&nbsp;
+<b class="fc">&nbsp;        assert(count_of_nodes  == number_of_nodes);</b>
+<b class="fc">&nbsp;        assert(count_of_edges  == number_of_edges);</b>
+&nbsp;
+<b class="fc">&nbsp;        System.out.println(&quot;Number of Node is: &quot; + count_of_nodes);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Number of Edges is: &quot; + count_of_edges);</b>
+&nbsp;    }
+&nbsp;    @Override
+&nbsp;    public void set_root(){
+<b class="fc">&nbsp;        System.out.println(&quot;\nSet Root&quot;);</b>
+<b class="fc">&nbsp;        number_of_nodes ++;</b>
+<b class="fc">&nbsp;        String node_id = &quot;Node &quot; + number_of_nodes;</b>
+<b class="fc">&nbsp;        Node node = graph.addNode(node_id);</b>
+&nbsp;
+<b class="fc">&nbsp;        path.setRoot(node);</b>
+&nbsp;    }
+&nbsp;    @Override
+&nbsp;    public void add_the_first_node(){
+<b class="fc">&nbsp;        System.out.println(&quot;\nAdd The First Note&quot;);</b>
+<b class="fc">&nbsp;        number_of_nodes =+ 2;</b>
+<b class="fc">&nbsp;        number_of_edges ++;</b>
+&nbsp;
+<b class="fc">&nbsp;        String node_source_id = &quot;Node &quot; + (number_of_nodes - 1);</b>
+<b class="fc">&nbsp;        String node_target_id = &quot;Node &quot; + number_of_nodes;</b>
+<b class="fc">&nbsp;        String edge_id = &quot;Edge &quot; + number_of_edges;</b>
+&nbsp;
+<b class="fc">&nbsp;        Node node = graph.addNode(node_source_id);</b>
+<b class="fc">&nbsp;        graph.addNode(node_target_id);</b>
+&nbsp;
+<b class="fc">&nbsp;        Edge edge = graph.addEdge(edge_id,node_source_id, node_target_id);</b>
+&nbsp;
+<b class="fc">&nbsp;        path.add(node, edge);</b>
+&nbsp;    }
+&nbsp;    @Override
+&nbsp;    public void add_node(){
+<b class="fc">&nbsp;        System.out.println(&quot;\nAdd Note&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        number_of_nodes ++;</b>
+<b class="fc">&nbsp;        number_of_edges ++;</b>
+&nbsp;
+<b class="fc">&nbsp;        String node_source_id = &quot;Node &quot; + (number_of_nodes - 1);</b>
+<b class="fc">&nbsp;        String node_target_id = &quot;Node &quot; + number_of_nodes;</b>
+<b class="fc">&nbsp;        String edge_id = &quot;Edge &quot; + number_of_edges;</b>
+&nbsp;
+<b class="fc">&nbsp;        graph.addNode(node_target_id);</b>
+<b class="fc">&nbsp;        Node node = graph.getNode(node_source_id);</b>
+&nbsp;
+<b class="fc">&nbsp;        Edge edge = graph.addEdge(edge_id,node_source_id, node_target_id);</b>
+&nbsp;
+<b class="fc">&nbsp;        path.add(node, edge);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void clear(){
+<b class="fc">&nbsp;        System.out.println(&quot;\nClear&quot;);</b>
+<b class="fc">&nbsp;        path.clear();</b>
+<b class="fc">&nbsp;        graph.clear();</b>
+&nbsp;
+<b class="fc">&nbsp;        number_of_edges = 0;</b>
+<b class="fc">&nbsp;        number_of_nodes = 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void pop_edge(){
+<b class="fc">&nbsp;        System.out.println(&quot;\nPopEdge&quot;);</b>
+<b class="fc">&nbsp;        if (number_of_edges &gt;= 1){</b>
+<b class="fc">&nbsp;            path.popEdge();</b>
+<b class="fc">&nbsp;            graph.removeEdge(&quot;Edge &quot; + number_of_edges);</b>
+<b class="fc">&nbsp;            graph.removeNode(&quot;Node &quot; + number_of_nodes);</b>
+<b class="fc">&nbsp;            number_of_edges --;</b>
+<b class="fc">&nbsp;            number_of_nodes --;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void pop_node(){
+<b class="fc">&nbsp;        System.out.println(&quot;\nPopNode&quot;);</b>
+<b class="fc">&nbsp;        if (number_of_nodes &gt; 1) {</b>
+<b class="fc">&nbsp;            path.popNode();</b>
+<b class="fc">&nbsp;            graph.removeEdge(&quot;Edge &quot; + number_of_edges);</b>
+<b class="fc">&nbsp;            graph.removeNode(&quot;Node &quot; + number_of_nodes);</b>
+<b class="fc">&nbsp;            number_of_edges --;</b>
+<b class="fc">&nbsp;            number_of_nodes --;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void add_edge(){
+<b class="fc">&nbsp;        System.out.println(&quot;\nAdd Edge&quot;);</b>
+<b class="fc">&nbsp;        Stream&lt;Node&gt; nodes = path.nodes();</b>
+<b class="fc">&nbsp;        Stream&lt;Edge&gt; edges = path.edges();</b>
+&nbsp;
+<b class="fc">&nbsp;        long count_of_edges = edges.count();</b>
+<b class="fc">&nbsp;        long count_of_nodes = nodes.count();</b>
+&nbsp;
+<b class="fc">&nbsp;        System.out.println(count_of_nodes);</b>
+<b class="fc">&nbsp;        System.out.println(count_of_edges);</b>
+&nbsp;
+<b class="fc">&nbsp;        number_of_nodes ++;</b>
+<b class="fc">&nbsp;        number_of_edges ++;</b>
+&nbsp;
+<b class="fc">&nbsp;        String node_source_id = &quot;Node &quot; + (number_of_nodes - 1);</b>
+<b class="fc">&nbsp;        String node_target_id = &quot;Node &quot; + number_of_nodes;</b>
+<b class="fc">&nbsp;        String edge_id = &quot;Edge &quot; + number_of_edges;</b>
+&nbsp;
+<b class="fc">&nbsp;        graph.addNode(node_target_id);</b>
+&nbsp;
+<b class="fc">&nbsp;        Edge edge = graph.addEdge(edge_id,node_source_id, node_target_id);</b>
+&nbsp;
+<b class="fc">&nbsp;        path.add(edge);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

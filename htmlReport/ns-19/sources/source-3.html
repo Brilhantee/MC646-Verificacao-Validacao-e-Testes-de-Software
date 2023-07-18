@@ -1,0 +1,244 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SpringBox</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.layout.springbox.implementations</a>
+</div>
+
+<h1>Coverage Summary for Class: SpringBox (org.graphstream.ui.layout.springbox.implementations)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SpringBox</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2012-06-19
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.layout.springbox.implementations;
+&nbsp;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;import org.graphstream.ui.layout.LayoutRunner;
+&nbsp;import org.graphstream.ui.layout.springbox.BarnesHutLayout;
+&nbsp;import org.graphstream.ui.layout.springbox.NodeParticle;
+&nbsp;
+&nbsp;/**
+&nbsp; * The GraphStream Spring-Box layout.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * This layout is the default GraphStream layout that handles dynamic graphs. It
+&nbsp; * can constantly evolve according to the changes in the graph. And works well
+&nbsp; * with the {@link LayoutRunner} class so that the computations stops when the
+&nbsp; * layout is stable enougth.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * This algorithm is based on the Frutcherman-Reingold force layout algorithm
+&nbsp; * modified on the attraction (the degree of nodes is taken into account to
+&nbsp; * stabilize the layout as we are not only interested in the result, but also in
+&nbsp; * the steps in between).
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public class SpringBox extends BarnesHutLayout {
+&nbsp;	/**
+&nbsp;	 * The optimal distance between nodes.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected double k = 1f;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Default attraction.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected double K1 = 0.06f; // 0.3 ??</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Default repulsion.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected double K2 = 0.024f; // 0.12 ??</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New &quot;Spring-Box&quot; 2D Barnes-Hut simulation.
+&nbsp;	 */
+&nbsp;	public SpringBox() {
+<b class="nc">&nbsp;		this(false);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New &quot;Spring-Box&quot; Barnes-Hut simulation.
+&nbsp;	 * 
+&nbsp;	 * @param is3D
+&nbsp;	 *            If true the simulation dimensions count is 3 else 2.
+&nbsp;	 */
+&nbsp;	public SpringBox(boolean is3D) {
+<b class="nc">&nbsp;		this(is3D, new Random(System.currentTimeMillis()));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New &quot;Spring-Box&quot; Barnes-Hut simulation.
+&nbsp;	 * 
+&nbsp;	 * @param is3D
+&nbsp;	 *            If true the simulation dimensions count is 3 else 2.
+&nbsp;	 * @param randomNumberGenerator
+&nbsp;	 *            The random number generator to use.
+&nbsp;	 */
+&nbsp;	public SpringBox(boolean is3D, Random randomNumberGenerator) {
+<b class="nc">&nbsp;		super(is3D, randomNumberGenerator);</b>
+<b class="nc">&nbsp;		setQuality(0.1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String getLayoutAlgorithmName() {
+<b class="nc">&nbsp;		return &quot;SpringBox&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void setQuality(double qualityLevel) {
+<b class="nc">&nbsp;		super.setQuality(qualityLevel);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (quality &gt;= 1) {</b>
+<b class="nc">&nbsp;			viewZone = -1;</b>
+<b class="nc">&nbsp;		} else if (quality &lt;= 0) {</b>
+<b class="nc">&nbsp;			viewZone = k;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			viewZone = k + (k * 10 * quality);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void chooseNodePosition(NodeParticle n0, NodeParticle n1) {
+<b class="nc">&nbsp;		if (n0.frozen || n1.frozen)</b>
+&nbsp;			return;
+&nbsp;
+<b class="nc">&nbsp;		double delta = random.nextDouble(); // k * 0.1;</b>
+<b class="nc">&nbsp;		if (n0.getEdges().size() == 1 &amp;&amp; n1.getEdges().size() &gt; 1) {</b>
+<b class="nc">&nbsp;			org.miv.pherd.geom.Point3 pos = n1.getPosition();</b>
+<b class="nc">&nbsp;			n0.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);</b>
+<b class="nc">&nbsp;		} else if (n1.getEdges().size() == 1 &amp;&amp; n0.getEdges().size() &gt; 1) {</b>
+<b class="nc">&nbsp;			org.miv.pherd.geom.Point3 pos = n0.getPosition();</b>
+<b class="nc">&nbsp;			n1.moveTo(pos.x + delta, pos.y + delta, pos.z + delta);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public NodeParticle newNodeParticle(String id) {
+<b class="nc">&nbsp;		return new SpringBoxNodeParticle(this, id);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

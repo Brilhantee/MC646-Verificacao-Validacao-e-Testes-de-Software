@@ -1,0 +1,1234 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DOTParser</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file.dot</a>
+</div>
+
+<h1>Coverage Summary for Class: DOTParser (org.graphstream.stream.file.dot)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DOTParser</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/54)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/522)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DOTParser$1</td>
+  </tr>
+  <tr>
+    <td class="name">DOTParser$JJCalls</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">DOTParser$LookaheadSuccess</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/56)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/524)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-07-21
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file.dot;
+&nbsp;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.Reader;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.LinkedList;
+&nbsp;
+&nbsp;import org.graphstream.stream.SourceBase.ElementType;
+&nbsp;import org.graphstream.stream.file.FileSourceDOT;
+&nbsp;import org.graphstream.graph.IdAlreadyInUseException;
+&nbsp;import org.graphstream.graph.implementations.AbstractElement.AttributeChangeEvent;
+&nbsp;
+&nbsp;import org.graphstream.util.parser.ParseException;
+&nbsp;import org.graphstream.util.parser.Parser;
+&nbsp;import org.graphstream.util.parser.SimpleCharStream;
+&nbsp;import org.graphstream.util.parser.Token;
+&nbsp;import org.graphstream.util.parser.TokenMgrError;
+&nbsp;
+&nbsp;/**
+&nbsp; * This class defines a DOT parser.
+&nbsp; * 
+&nbsp; * It respects the specifications of the DOT language that can be found
+&nbsp; * &lt;a href=&quot;http://www.graphviz.org/doc/info/lang.html&quot;&gt;here&lt;/a&gt;.
+&nbsp; * 
+&nbsp; * Subgraph produces no error but has no effect on the graph.
+&nbsp; */
+&nbsp;@SuppressWarnings(&quot;unused&quot;)
+&nbsp;public class DOTParser implements Parser, DOTParserConstants {
+&nbsp;	/**
+&nbsp;	 * The DOT source associated with this parser.
+&nbsp;	 */
+&nbsp;	private FileSourceDOT dot;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Id of the parser used in events.
+&nbsp;	 */
+&nbsp;	private String sourceId;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Flag telling if the graph is directed.
+&nbsp;	 */
+&nbsp;	private boolean directed;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Flag telling if the graph is &#39;strict&#39;.
+&nbsp;	 */
+&nbsp;	private boolean strict;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Global attributes of nodes.
+&nbsp;	 */
+&nbsp;	private HashMap&lt;String, Object&gt; globalNodesAttributes;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Global attributes of edges.
+&nbsp;	 */
+&nbsp;	private HashMap&lt;String, Object&gt; globalEdgesAttributes;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * IDs of added nodes.
+&nbsp;	 */
+&nbsp;	private HashSet&lt;String&gt; nodeAdded;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a new parser associated with a DOT source from an input stream.
+&nbsp;	 */
+&nbsp;	public DOTParser(FileSourceDOT dot, InputStream stream) {
+<b class="nc">&nbsp;		this(stream);</b>
+<b class="nc">&nbsp;		init(dot);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a new parser associated with a DOT source from a reader.
+&nbsp;	 */
+&nbsp;	public DOTParser(FileSourceDOT dot, Reader stream) {
+<b class="nc">&nbsp;		this(stream);</b>
+<b class="nc">&nbsp;		init(dot);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Closes the parser, closing the opened stream.
+&nbsp;	 */
+&nbsp;	public void close() throws IOException {
+<b class="nc">&nbsp;		jj_input_stream.close();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void init(FileSourceDOT dot) {
+<b class="nc">&nbsp;		this.dot = dot;</b>
+<b class="nc">&nbsp;		this.sourceId = String.format(&quot;&lt;DOT stream %x&gt;&quot;, System.nanoTime());</b>
+&nbsp;
+<b class="nc">&nbsp;		globalNodesAttributes = new HashMap&lt;String, Object&gt;();</b>
+<b class="nc">&nbsp;		globalEdgesAttributes = new HashMap&lt;String, Object&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		nodeAdded = new HashSet&lt;String&gt;();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void addNode(String nodeId, String[] port, HashMap&lt;String, Object&gt; attr) {
+<b class="nc">&nbsp;		if (nodeAdded.contains(nodeId)) {</b>
+<b class="nc">&nbsp;			if (attr != null) {</b>
+<b class="nc">&nbsp;				for (String key : attr.keySet())</b>
+<b class="nc">&nbsp;					dot.sendAttributeChangedEvent(sourceId, nodeId, ElementType.NODE, key, AttributeChangeEvent.ADD,</b>
+<b class="nc">&nbsp;							null, attr.get(key));</b>
+&nbsp;			}
+&nbsp;		} else {
+<b class="nc">&nbsp;			dot.sendNodeAdded(sourceId, nodeId);</b>
+<b class="nc">&nbsp;			nodeAdded.add(nodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (attr == null) {</b>
+<b class="nc">&nbsp;				for (String key : globalNodesAttributes.keySet())</b>
+<b class="nc">&nbsp;					dot.sendAttributeChangedEvent(sourceId, nodeId, ElementType.NODE, key, AttributeChangeEvent.ADD,</b>
+<b class="nc">&nbsp;							null, globalNodesAttributes.get(key));</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				for (String key : globalNodesAttributes.keySet()) {</b>
+<b class="nc">&nbsp;					if (!attr.containsKey(key))</b>
+<b class="nc">&nbsp;						dot.sendAttributeChangedEvent(sourceId, nodeId, ElementType.NODE, key, AttributeChangeEvent.ADD,</b>
+<b class="nc">&nbsp;								null, globalNodesAttributes.get(key));</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;
+<b class="nc">&nbsp;				for (String key : attr.keySet())</b>
+<b class="nc">&nbsp;					dot.sendAttributeChangedEvent(sourceId, nodeId, ElementType.NODE, key, AttributeChangeEvent.ADD,</b>
+<b class="nc">&nbsp;							null, attr.get(key));</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private void addEdges(LinkedList&lt;String&gt; edges, HashMap&lt;String, Object&gt; attr) {
+<b class="nc">&nbsp;		HashMap&lt;String, Integer&gt; hash = new HashMap&lt;String, Integer&gt;();</b>
+<b class="nc">&nbsp;		String[] ids = new String[(edges.size() - 1) / 2];</b>
+<b class="nc">&nbsp;		boolean[] directed = new boolean[(edges.size() - 1) / 2];</b>
+<b class="nc">&nbsp;		int count = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; edges.size() - 1; i += 2) {</b>
+<b class="nc">&nbsp;			String from = edges.get(i);</b>
+<b class="nc">&nbsp;			String to = edges.get(i + 2);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (!nodeAdded.contains(from))</b>
+<b class="nc">&nbsp;				addNode(from, null, null);</b>
+<b class="nc">&nbsp;			if (!nodeAdded.contains(to))</b>
+<b class="nc">&nbsp;				addNode(to, null, null);</b>
+&nbsp;
+<b class="nc">&nbsp;			String edgeId = String.format(&quot;(%s;%s)&quot;, from, to);</b>
+<b class="nc">&nbsp;			String rev = String.format(&quot;(%s;%s)&quot;, to, from);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (hash.containsKey(rev)) {</b>
+<b class="nc">&nbsp;				directed[hash.get(rev)] = false;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				hash.put(edgeId, count);</b>
+<b class="nc">&nbsp;				ids[count] = edgeId;</b>
+<b class="nc">&nbsp;				directed[count] = edges.get(i + 1).equals(&quot;-&gt;&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;				count++;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		hash.clear();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (count == 1 &amp;&amp; attr != null &amp;&amp; attr.containsKey(&quot;id&quot;)) {</b>
+<b class="nc">&nbsp;			ids[0] = attr.get(&quot;id&quot;).toString();</b>
+<b class="nc">&nbsp;			attr.remove(&quot;id&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; count; i++) {</b>
+<b class="nc">&nbsp;			boolean addedEdge = false;</b>
+<b class="nc">&nbsp;			String IDtoTry = ids[i];</b>
+<b class="nc">&nbsp;			while (!addedEdge) {</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					dot.sendEdgeAdded(sourceId, ids[i], edges.get(i * 2), edges.get((i + 1) * 2), directed[i]);</b>
+<b class="nc">&nbsp;					addedEdge = true;</b>
+<b class="nc">&nbsp;				} catch (IdAlreadyInUseException e) {</b>
+<b class="nc">&nbsp;					IDtoTry += &quot;&#39;&quot;;</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			if (attr == null) {</b>
+<b class="nc">&nbsp;				for (String key : globalEdgesAttributes.keySet())</b>
+<b class="nc">&nbsp;					dot.sendAttributeChangedEvent(sourceId, ids[i], ElementType.EDGE, key, AttributeChangeEvent.ADD,</b>
+<b class="nc">&nbsp;							null, globalEdgesAttributes.get(key));</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				for (String key : globalEdgesAttributes.keySet()) {</b>
+<b class="nc">&nbsp;					if (!attr.containsKey(key))</b>
+<b class="nc">&nbsp;						dot.sendAttributeChangedEvent(sourceId, ids[i], ElementType.EDGE, key, AttributeChangeEvent.ADD,</b>
+<b class="nc">&nbsp;								null, globalEdgesAttributes.get(key));</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;
+<b class="nc">&nbsp;				for (String key : attr.keySet())</b>
+<b class="nc">&nbsp;					dot.sendAttributeChangedEvent(sourceId, ids[i], ElementType.EDGE, key, AttributeChangeEvent.ADD,</b>
+<b class="nc">&nbsp;							null, attr.get(key));</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private void setGlobalAttributes(String who, HashMap&lt;String, Object&gt; attr) {
+<b class="nc">&nbsp;		if (who.equalsIgnoreCase(&quot;graph&quot;)) {</b>
+<b class="nc">&nbsp;			for (String key : attr.keySet())</b>
+<b class="nc">&nbsp;				dot.sendAttributeChangedEvent(sourceId, sourceId, ElementType.GRAPH, key, AttributeChangeEvent.ADD,</b>
+<b class="nc">&nbsp;						null, attr.get(key));</b>
+<b class="nc">&nbsp;		} else if (who.equalsIgnoreCase(&quot;node&quot;))</b>
+<b class="nc">&nbsp;			globalNodesAttributes.putAll(attr);</b>
+<b class="nc">&nbsp;		else if (who.equalsIgnoreCase(&quot;edge&quot;))</b>
+<b class="nc">&nbsp;			globalEdgesAttributes.putAll(attr);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final public void all() throws ParseException {
+<b class="nc">&nbsp;		graph();</b>
+&nbsp;		label_1: while (true) {
+<b class="nc">&nbsp;			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;			case GRAPH:
+&nbsp;			case SUBGRAPH:
+&nbsp;			case NODE:
+&nbsp;			case EDGE:
+&nbsp;			case REAL:
+&nbsp;			case STRING:
+&nbsp;			case WORD:
+&nbsp;				;
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				jj_la1[0] = jj_gen;</b>
+<b class="nc">&nbsp;				break label_1;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			statement();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		jj_consume_token(RBRACE);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final public boolean next() throws ParseException {
+<b class="nc">&nbsp;		boolean hasMore = false;</b>
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case GRAPH:
+&nbsp;		case SUBGRAPH:
+&nbsp;		case NODE:
+&nbsp;		case EDGE:
+&nbsp;		case REAL:
+&nbsp;		case STRING:
+&nbsp;		case WORD:
+<b class="nc">&nbsp;			statement();</b>
+<b class="nc">&nbsp;			hasMore = true;</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case RBRACE:
+<b class="nc">&nbsp;			jj_consume_token(RBRACE);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 0:
+<b class="nc">&nbsp;			jj_consume_token(0);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[1] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return hasMore;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final public void open() throws ParseException {
+<b class="nc">&nbsp;		graph();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private void graph() throws ParseException {
+<b class="nc">&nbsp;		directed = false;</b>
+<b class="nc">&nbsp;		strict = false;</b>
+&nbsp;
+<b class="nc">&nbsp;		globalNodesAttributes.clear();</b>
+<b class="nc">&nbsp;		globalEdgesAttributes.clear();</b>
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case STRICT:
+<b class="nc">&nbsp;			jj_consume_token(STRICT);</b>
+<b class="nc">&nbsp;			strict = true;</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[2] = jj_gen;</b>
+&nbsp;			;
+&nbsp;		}
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case GRAPH:
+<b class="nc">&nbsp;			jj_consume_token(GRAPH);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case DIGRAPH:
+<b class="nc">&nbsp;			jj_consume_token(DIGRAPH);</b>
+<b class="nc">&nbsp;			directed = true;</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[3] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case REAL:
+&nbsp;		case STRING:
+&nbsp;		case WORD:
+<b class="nc">&nbsp;			this.sourceId = id();</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[4] = jj_gen;</b>
+&nbsp;			;
+&nbsp;		}
+<b class="nc">&nbsp;		jj_consume_token(LBRACE);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private void subgraph() throws ParseException {
+<b class="nc">&nbsp;		jj_consume_token(SUBGRAPH);</b>
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case REAL:
+&nbsp;		case STRING:
+&nbsp;		case WORD:
+<b class="nc">&nbsp;			id();</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[5] = jj_gen;</b>
+&nbsp;			;
+&nbsp;		}
+<b class="nc">&nbsp;		jj_consume_token(LBRACE);</b>
+&nbsp;		label_2: while (true) {
+<b class="nc">&nbsp;			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;			case GRAPH:
+&nbsp;			case SUBGRAPH:
+&nbsp;			case NODE:
+&nbsp;			case EDGE:
+&nbsp;			case REAL:
+&nbsp;			case STRING:
+&nbsp;			case WORD:
+&nbsp;				;
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				jj_la1[6] = jj_gen;</b>
+<b class="nc">&nbsp;				break label_2;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			statement();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		jj_consume_token(RBRACE);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private String id() throws ParseException {
+&nbsp;		Token t;
+&nbsp;		String id;
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case STRING:
+<b class="nc">&nbsp;			t = jj_consume_token(STRING);</b>
+<b class="nc">&nbsp;			id = t.image.substring(1, t.image.length() - 1);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case REAL:
+<b class="nc">&nbsp;			t = jj_consume_token(REAL);</b>
+<b class="nc">&nbsp;			id = t.image;</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case WORD:
+<b class="nc">&nbsp;			t = jj_consume_token(WORD);</b>
+<b class="nc">&nbsp;			id = t.image;</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[7] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private void statement() throws ParseException {
+<b class="nc">&nbsp;		if (jj_2_1(3)) {</b>
+<b class="nc">&nbsp;			edgeStatement();</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;			case REAL:
+&nbsp;			case STRING:
+&nbsp;			case WORD:
+<b class="nc">&nbsp;				nodeStatement();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case GRAPH:
+&nbsp;			case NODE:
+&nbsp;			case EDGE:
+<b class="nc">&nbsp;				attributeStatement();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case SUBGRAPH:
+<b class="nc">&nbsp;				subgraph();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				jj_la1[8] = jj_gen;</b>
+<b class="nc">&nbsp;				jj_consume_token(-1);</b>
+<b class="nc">&nbsp;				throw new ParseException();</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		jj_consume_token(27);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private void nodeStatement() throws ParseException {
+&nbsp;		String nodeId;
+&nbsp;		String[] port;
+<b class="nc">&nbsp;		HashMap&lt;String, Object&gt; attr = null;</b>
+&nbsp;
+<b class="nc">&nbsp;		port = null;</b>
+<b class="nc">&nbsp;		nodeId = id();</b>
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case COLON:
+<b class="nc">&nbsp;			port = port();</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[9] = jj_gen;</b>
+&nbsp;			;
+&nbsp;		}
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case LSQBR:
+<b class="nc">&nbsp;			attr = attributesList();</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[10] = jj_gen;</b>
+&nbsp;			;
+&nbsp;		}
+<b class="nc">&nbsp;		addNode(nodeId, port, attr);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private String compassPoint() throws ParseException {
+<b class="nc">&nbsp;		Token pt = null;</b>
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case 28:
+<b class="nc">&nbsp;			pt = jj_consume_token(28);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 29:
+<b class="nc">&nbsp;			pt = jj_consume_token(29);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 30:
+<b class="nc">&nbsp;			pt = jj_consume_token(30);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 31:
+<b class="nc">&nbsp;			pt = jj_consume_token(31);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 32:
+<b class="nc">&nbsp;			pt = jj_consume_token(32);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 33:
+<b class="nc">&nbsp;			pt = jj_consume_token(33);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 34:
+<b class="nc">&nbsp;			pt = jj_consume_token(34);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 35:
+<b class="nc">&nbsp;			pt = jj_consume_token(35);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 36:
+<b class="nc">&nbsp;			pt = jj_consume_token(36);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 37:
+<b class="nc">&nbsp;			pt = jj_consume_token(37);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[11] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return pt.image;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private String[] port() throws ParseException {
+<b class="nc">&nbsp;		String[] p = { null, null };</b>
+<b class="nc">&nbsp;		jj_consume_token(COLON);</b>
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case REAL:
+&nbsp;		case STRING:
+&nbsp;		case WORD:
+<b class="nc">&nbsp;			p[0] = id();</b>
+<b class="nc">&nbsp;			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;			case COLON:
+<b class="nc">&nbsp;				jj_consume_token(COLON);</b>
+<b class="nc">&nbsp;				p[1] = compassPoint();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				jj_la1[12] = jj_gen;</b>
+&nbsp;				;
+&nbsp;			}
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 28:
+&nbsp;		case 29:
+&nbsp;		case 30:
+&nbsp;		case 31:
+&nbsp;		case 32:
+&nbsp;		case 33:
+&nbsp;		case 34:
+&nbsp;		case 35:
+&nbsp;		case 36:
+&nbsp;		case 37:
+<b class="nc">&nbsp;			p[1] = compassPoint();</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[13] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return p;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private void edgeStatement() throws ParseException {
+&nbsp;		String id;
+<b class="nc">&nbsp;		LinkedList&lt;String&gt; edges = new LinkedList&lt;String&gt;();</b>
+<b class="nc">&nbsp;		HashMap&lt;String, Object&gt; attr = null;</b>
+<b class="nc">&nbsp;		id = id();</b>
+<b class="nc">&nbsp;		edges.add(id);</b>
+<b class="nc">&nbsp;		edgeRHS(edges);</b>
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case LSQBR:
+<b class="nc">&nbsp;			attr = attributesList();</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[14] = jj_gen;</b>
+&nbsp;			;
+&nbsp;		}
+<b class="nc">&nbsp;		addEdges(edges, attr);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private void edgeRHS(LinkedList&lt;String&gt; edges) throws ParseException {
+&nbsp;		Token t;
+&nbsp;		String i;
+<b class="nc">&nbsp;		t = jj_consume_token(EDGE_OP);</b>
+<b class="nc">&nbsp;		edges.add(t.image);</b>
+<b class="nc">&nbsp;		i = id();</b>
+<b class="nc">&nbsp;		edges.add(i);</b>
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case EDGE_OP:
+<b class="nc">&nbsp;			edgeRHS(edges);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[15] = jj_gen;</b>
+&nbsp;			;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	final private void attributeStatement() throws ParseException {
+&nbsp;		Token t;
+&nbsp;		HashMap&lt;String, Object&gt; attr;
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case GRAPH:
+<b class="nc">&nbsp;			t = jj_consume_token(GRAPH);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case NODE:
+<b class="nc">&nbsp;			t = jj_consume_token(NODE);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case EDGE:
+<b class="nc">&nbsp;			t = jj_consume_token(EDGE);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[16] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		attr = attributesList();</b>
+<b class="nc">&nbsp;		setGlobalAttributes(t.image, attr);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private HashMap&lt;String, Object&gt; attributesList() throws ParseException {
+<b class="nc">&nbsp;		HashMap&lt;String, Object&gt; attributes = new HashMap&lt;String, Object&gt;();</b>
+&nbsp;		label_3: while (true) {
+<b class="nc">&nbsp;			jj_consume_token(LSQBR);</b>
+<b class="nc">&nbsp;			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;			case REAL:
+&nbsp;			case STRING:
+&nbsp;			case WORD:
+<b class="nc">&nbsp;				attributeList(attributes);</b>
+&nbsp;				label_4: while (true) {
+<b class="nc">&nbsp;					switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;					case COMMA:
+&nbsp;						;
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					default:
+<b class="nc">&nbsp;						jj_la1[17] = jj_gen;</b>
+<b class="nc">&nbsp;						break label_4;</b>
+&nbsp;					}
+<b class="nc">&nbsp;					jj_consume_token(COMMA);</b>
+<b class="nc">&nbsp;					attributeList(attributes);</b>
+&nbsp;				}
+&nbsp;				break;
+&nbsp;			default:
+<b class="nc">&nbsp;				jj_la1[18] = jj_gen;</b>
+&nbsp;				;
+&nbsp;			}
+<b class="nc">&nbsp;			jj_consume_token(RSQBR);</b>
+<b class="nc">&nbsp;			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;			case LSQBR:
+&nbsp;				;
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				jj_la1[19] = jj_gen;</b>
+<b class="nc">&nbsp;				break label_3;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return attributes;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final private void attributeList(HashMap&lt;String, Object&gt; attributes) throws ParseException {
+&nbsp;		String key;
+&nbsp;		Object val;
+&nbsp;
+&nbsp;		Token t;
+<b class="nc">&nbsp;		key = id();</b>
+<b class="nc">&nbsp;		val = Boolean.TRUE;</b>
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case EQUALS:
+<b class="nc">&nbsp;			jj_consume_token(EQUALS);</b>
+<b class="nc">&nbsp;			if (jj_2_2(2)) {</b>
+<b class="nc">&nbsp;				t = jj_consume_token(REAL);</b>
+<b class="nc">&nbsp;				val = Double.parseDouble(t.image);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;				case REAL:
+&nbsp;				case STRING:
+&nbsp;				case WORD:
+<b class="nc">&nbsp;					val = id();</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				default:
+<b class="nc">&nbsp;					jj_la1[20] = jj_gen;</b>
+<b class="nc">&nbsp;					jj_consume_token(-1);</b>
+<b class="nc">&nbsp;					throw new ParseException();</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;			break;
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[21] = jj_gen;</b>
+&nbsp;			;
+&nbsp;		}
+<b class="nc">&nbsp;		attributes.put(key, val);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_2_1(int xla) {
+<b class="nc">&nbsp;		jj_la = xla;</b>
+<b class="nc">&nbsp;		jj_lastpos = jj_scanpos = token;</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			return !jj_3_1();</b>
+<b class="nc">&nbsp;		} catch (LookaheadSuccess ls) {</b>
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;		} finally {
+<b class="nc">&nbsp;			jj_save(0, xla);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_2_2(int xla) {
+<b class="nc">&nbsp;		jj_la = xla;</b>
+<b class="nc">&nbsp;		jj_lastpos = jj_scanpos = token;</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			return !jj_3_2();</b>
+<b class="nc">&nbsp;		} catch (LookaheadSuccess ls) {</b>
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;		} finally {
+<b class="nc">&nbsp;			jj_save(1, xla);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_3R_6() {
+&nbsp;		Token xsp;
+<b class="nc">&nbsp;		xsp = jj_scanpos;</b>
+<b class="nc">&nbsp;		if (jj_3R_8()) {</b>
+<b class="nc">&nbsp;			jj_scanpos = xsp;</b>
+<b class="nc">&nbsp;			if (jj_3R_9()) {</b>
+<b class="nc">&nbsp;				jj_scanpos = xsp;</b>
+<b class="nc">&nbsp;				if (jj_3R_10())</b>
+<b class="nc">&nbsp;					return true;</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_3_2() {
+<b class="nc">&nbsp;		if (jj_scan_token(REAL))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_3R_8() {
+<b class="nc">&nbsp;		if (jj_scan_token(STRING))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_3R_10() {
+<b class="nc">&nbsp;		if (jj_scan_token(WORD))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_3R_7() {
+<b class="nc">&nbsp;		if (jj_scan_token(EDGE_OP))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (jj_3R_6())</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_3R_9() {
+<b class="nc">&nbsp;		if (jj_scan_token(REAL))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_3R_5() {
+<b class="nc">&nbsp;		if (jj_3R_6())</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (jj_3R_7())</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private boolean jj_3_1() {
+<b class="nc">&nbsp;		if (jj_3R_5())</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Generated Token Manager. */
+&nbsp;	public DOTParserTokenManager token_source;
+&nbsp;	SimpleCharStream jj_input_stream;
+&nbsp;	/** Current token. */
+&nbsp;	public Token token;
+&nbsp;	/** Next token. */
+&nbsp;	public Token jj_nt;
+&nbsp;	private int jj_ntk;
+&nbsp;	private Token jj_scanpos, jj_lastpos;
+&nbsp;	private int jj_la;
+&nbsp;	private int jj_gen;
+<b class="nc">&nbsp;	final private int[] jj_la1 = new int[22];</b>
+&nbsp;	static private int[] jj_la1_0;
+&nbsp;	static private int[] jj_la1_1;
+&nbsp;	static {
+<b class="nc">&nbsp;		jj_la1_init_0();</b>
+<b class="nc">&nbsp;		jj_la1_init_1();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static void jj_la1_init_0() {
+<b class="nc">&nbsp;		jj_la1_0 = new int[] { 0x73a0000, 0x73a2001, 0x400000, 0x60000, 0x7000000, 0x7000000, 0x73a0000, 0x7000000,</b>
+&nbsp;				0x73a0000, 0x4000, 0x400, 0xf0000000, 0x4000, 0xf7000000, 0x400, 0x800000, 0x320000, 0x8000, 0x7000000,
+&nbsp;				0x400, 0x7000000, 0x10000, };
+&nbsp;	}
+&nbsp;
+&nbsp;	private static void jj_la1_init_1() {
+<b class="nc">&nbsp;		jj_la1_1 = new int[] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x3f, 0x0, 0x3f, 0x0, 0x0, 0x0,</b>
+&nbsp;				0x0, 0x0, 0x0, 0x0, 0x0, };
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	final private JJCalls[] jj_2_rtns = new JJCalls[2];</b>
+<b class="nc">&nbsp;	private boolean jj_rescan = false;</b>
+<b class="nc">&nbsp;	private int jj_gc = 0;</b>
+&nbsp;
+&nbsp;	/** Constructor with InputStream. */
+&nbsp;	public DOTParser(java.io.InputStream stream) {
+<b class="nc">&nbsp;		this(stream, null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Constructor with InputStream and supplied encoding */
+<b class="nc">&nbsp;	public DOTParser(java.io.InputStream stream, String encoding) {</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1);</b>
+<b class="nc">&nbsp;		} catch (java.io.UnsupportedEncodingException e) {</b>
+<b class="nc">&nbsp;			throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		token_source = new DOTParserTokenManager(jj_input_stream);</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 22; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; jj_2_rtns.length; i++)</b>
+<b class="nc">&nbsp;			jj_2_rtns[i] = new JJCalls();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reinitialise. */
+&nbsp;	public void ReInit(java.io.InputStream stream) {
+<b class="nc">&nbsp;		ReInit(stream, null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reinitialise. */
+&nbsp;	public void ReInit(java.io.InputStream stream, String encoding) {
+&nbsp;		try {
+<b class="nc">&nbsp;			jj_input_stream.ReInit(stream, encoding, 1, 1);</b>
+<b class="nc">&nbsp;		} catch (java.io.UnsupportedEncodingException e) {</b>
+<b class="nc">&nbsp;			throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		token_source.ReInit(jj_input_stream);</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 22; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; jj_2_rtns.length; i++)</b>
+<b class="nc">&nbsp;			jj_2_rtns[i] = new JJCalls();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Constructor. */
+<b class="nc">&nbsp;	public DOTParser(java.io.Reader stream) {</b>
+<b class="nc">&nbsp;		jj_input_stream = new SimpleCharStream(stream, 1, 1);</b>
+<b class="nc">&nbsp;		token_source = new DOTParserTokenManager(jj_input_stream);</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 22; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; jj_2_rtns.length; i++)</b>
+<b class="nc">&nbsp;			jj_2_rtns[i] = new JJCalls();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reinitialise. */
+&nbsp;	public void ReInit(java.io.Reader stream) {
+<b class="nc">&nbsp;		jj_input_stream.ReInit(stream, 1, 1);</b>
+<b class="nc">&nbsp;		token_source.ReInit(jj_input_stream);</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 22; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; jj_2_rtns.length; i++)</b>
+<b class="nc">&nbsp;			jj_2_rtns[i] = new JJCalls();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Constructor with generated Token Manager. */
+<b class="nc">&nbsp;	public DOTParser(DOTParserTokenManager tm) {</b>
+<b class="nc">&nbsp;		token_source = tm;</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 22; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; jj_2_rtns.length; i++)</b>
+<b class="nc">&nbsp;			jj_2_rtns[i] = new JJCalls();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reinitialise. */
+&nbsp;	public void ReInit(DOTParserTokenManager tm) {
+<b class="nc">&nbsp;		token_source = tm;</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 22; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; jj_2_rtns.length; i++)</b>
+<b class="nc">&nbsp;			jj_2_rtns[i] = new JJCalls();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private Token jj_consume_token(int kind) throws ParseException {
+&nbsp;		Token oldToken;
+<b class="nc">&nbsp;		if ((oldToken = token).next != null)</b>
+<b class="nc">&nbsp;			token = token.next;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			token = token.next = token_source.getNextToken();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		if (token.kind == kind) {</b>
+<b class="nc">&nbsp;			jj_gen++;</b>
+<b class="nc">&nbsp;			if (++jj_gc &gt; 100) {</b>
+<b class="nc">&nbsp;				jj_gc = 0;</b>
+<b class="nc">&nbsp;				for (int i = 0; i &lt; jj_2_rtns.length; i++) {</b>
+<b class="nc">&nbsp;					JJCalls c = jj_2_rtns[i];</b>
+<b class="nc">&nbsp;					while (c != null) {</b>
+<b class="nc">&nbsp;						if (c.gen &lt; jj_gen)</b>
+<b class="nc">&nbsp;							c.first = null;</b>
+<b class="nc">&nbsp;						c = c.next;</b>
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;			return token;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		token = oldToken;</b>
+<b class="nc">&nbsp;		jj_kind = kind;</b>
+<b class="nc">&nbsp;		throw generateParseException();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@SuppressWarnings(&quot;serial&quot;)
+<b class="nc">&nbsp;	static private final class LookaheadSuccess extends java.lang.Error {</b>
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	final private LookaheadSuccess jj_ls = new LookaheadSuccess();</b>
+&nbsp;
+&nbsp;	private boolean jj_scan_token(int kind) {
+<b class="nc">&nbsp;		if (jj_scanpos == jj_lastpos) {</b>
+<b class="nc">&nbsp;			jj_la--;</b>
+<b class="nc">&nbsp;			if (jj_scanpos.next == null) {</b>
+<b class="nc">&nbsp;				jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				jj_lastpos = jj_scanpos = jj_scanpos.next;</b>
+&nbsp;			}
+&nbsp;		} else {
+<b class="nc">&nbsp;			jj_scanpos = jj_scanpos.next;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (jj_rescan) {</b>
+<b class="nc">&nbsp;			int i = 0;</b>
+<b class="nc">&nbsp;			Token tok = token;</b>
+<b class="nc">&nbsp;			while (tok != null &amp;&amp; tok != jj_scanpos) {</b>
+<b class="nc">&nbsp;				i++;</b>
+<b class="nc">&nbsp;				tok = tok.next;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			if (tok != null)</b>
+<b class="nc">&nbsp;				jj_add_error_token(kind, i);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (jj_scanpos.kind != kind)</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (jj_la == 0 &amp;&amp; jj_scanpos == jj_lastpos)</b>
+<b class="nc">&nbsp;			throw jj_ls;</b>
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the next Token. */
+&nbsp;	final public Token getNextToken() {
+<b class="nc">&nbsp;		if (token.next != null)</b>
+<b class="nc">&nbsp;			token = token.next;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			token = token.next = token_source.getNextToken();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen++;</b>
+<b class="nc">&nbsp;		return token;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the specific Token. */
+&nbsp;	final public Token getToken(int index) {
+<b class="nc">&nbsp;		Token t = token;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; index; i++) {</b>
+<b class="nc">&nbsp;			if (t.next != null)</b>
+<b class="nc">&nbsp;				t = t.next;</b>
+&nbsp;			else
+<b class="nc">&nbsp;				t = t.next = token_source.getNextToken();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return t;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private int jj_ntk() {
+<b class="nc">&nbsp;		if ((jj_nt = token.next) == null)</b>
+<b class="nc">&nbsp;			return (jj_ntk = (token.next = token_source.getNextToken()).kind);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return (jj_ntk = jj_nt.kind);</b>
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	private java.util.List&lt;int[]&gt; jj_expentries = new java.util.ArrayList&lt;int[]&gt;();</b>
+&nbsp;	private int[] jj_expentry;
+<b class="nc">&nbsp;	private int jj_kind = -1;</b>
+<b class="nc">&nbsp;	private int[] jj_lasttokens = new int[100];</b>
+&nbsp;	private int jj_endpos;
+&nbsp;
+&nbsp;	private void jj_add_error_token(int kind, int pos) {
+<b class="nc">&nbsp;		if (pos &gt;= 100)</b>
+&nbsp;			return;
+<b class="nc">&nbsp;		if (pos == jj_endpos + 1) {</b>
+<b class="nc">&nbsp;			jj_lasttokens[jj_endpos++] = kind;</b>
+<b class="nc">&nbsp;		} else if (jj_endpos != 0) {</b>
+<b class="nc">&nbsp;			jj_expentry = new int[jj_endpos];</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; jj_endpos; i++) {</b>
+<b class="nc">&nbsp;				jj_expentry[i] = jj_lasttokens[i];</b>
+&nbsp;			}
+<b class="nc">&nbsp;			jj_entries_loop: for (java.util.Iterator&lt;?&gt; it = jj_expentries.iterator(); it.hasNext();) {</b>
+<b class="nc">&nbsp;				int[] oldentry = (int[]) (it.next());</b>
+<b class="nc">&nbsp;				if (oldentry.length == jj_expentry.length) {</b>
+<b class="nc">&nbsp;					for (int i = 0; i &lt; jj_expentry.length; i++) {</b>
+<b class="nc">&nbsp;						if (oldentry[i] != jj_expentry[i]) {</b>
+<b class="nc">&nbsp;							continue jj_entries_loop;</b>
+&nbsp;						}
+&nbsp;					}
+<b class="nc">&nbsp;					jj_expentries.add(jj_expentry);</b>
+<b class="nc">&nbsp;					break jj_entries_loop;</b>
+&nbsp;				}
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;			if (pos != 0)</b>
+<b class="nc">&nbsp;				jj_lasttokens[(jj_endpos = pos) - 1] = kind;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Generate ParseException. */
+&nbsp;	public ParseException generateParseException() {
+<b class="nc">&nbsp;		jj_expentries.clear();</b>
+<b class="nc">&nbsp;		boolean[] la1tokens = new boolean[38];</b>
+<b class="nc">&nbsp;		if (jj_kind &gt;= 0) {</b>
+<b class="nc">&nbsp;			la1tokens[jj_kind] = true;</b>
+<b class="nc">&nbsp;			jj_kind = -1;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 22; i++) {</b>
+<b class="nc">&nbsp;			if (jj_la1[i] == jj_gen) {</b>
+<b class="nc">&nbsp;				for (int j = 0; j &lt; 32; j++) {</b>
+<b class="nc">&nbsp;					if ((jj_la1_0[i] &amp; (1 &lt;&lt; j)) != 0) {</b>
+<b class="nc">&nbsp;						la1tokens[j] = true;</b>
+&nbsp;					}
+<b class="nc">&nbsp;					if ((jj_la1_1[i] &amp; (1 &lt;&lt; j)) != 0) {</b>
+<b class="nc">&nbsp;						la1tokens[32 + j] = true;</b>
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 38; i++) {</b>
+<b class="nc">&nbsp;			if (la1tokens[i]) {</b>
+<b class="nc">&nbsp;				jj_expentry = new int[1];</b>
+<b class="nc">&nbsp;				jj_expentry[0] = i;</b>
+<b class="nc">&nbsp;				jj_expentries.add(jj_expentry);</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		jj_endpos = 0;</b>
+<b class="nc">&nbsp;		jj_rescan_token();</b>
+<b class="nc">&nbsp;		jj_add_error_token(0, 0);</b>
+<b class="nc">&nbsp;		int[][] exptokseq = new int[jj_expentries.size()][];</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; jj_expentries.size(); i++) {</b>
+<b class="nc">&nbsp;			exptokseq[i] = jj_expentries.get(i);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return new ParseException(token, exptokseq, tokenImage);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Enable tracing. */
+&nbsp;	final public void enable_tracing() {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Disable tracing. */
+&nbsp;	final public void disable_tracing() {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	private void jj_rescan_token() {
+<b class="nc">&nbsp;		jj_rescan = true;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 2; i++) {</b>
+&nbsp;			try {
+<b class="nc">&nbsp;				JJCalls p = jj_2_rtns[i];</b>
+&nbsp;				do {
+<b class="nc">&nbsp;					if (p.gen &gt; jj_gen) {</b>
+<b class="nc">&nbsp;						jj_la = p.arg;</b>
+<b class="nc">&nbsp;						jj_lastpos = jj_scanpos = p.first;</b>
+<b class="nc">&nbsp;						switch (i) {</b>
+&nbsp;						case 0:
+<b class="nc">&nbsp;							jj_3_1();</b>
+<b class="nc">&nbsp;							break;</b>
+&nbsp;						case 1:
+<b class="nc">&nbsp;							jj_3_2();</b>
+&nbsp;							break;
+&nbsp;						}
+&nbsp;					}
+<b class="nc">&nbsp;					p = p.next;</b>
+<b class="nc">&nbsp;				} while (p != null);</b>
+<b class="nc">&nbsp;			} catch (LookaheadSuccess ls) {</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;		}
+<b class="nc">&nbsp;		jj_rescan = false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void jj_save(int index, int xla) {
+<b class="nc">&nbsp;		JJCalls p = jj_2_rtns[index];</b>
+<b class="nc">&nbsp;		while (p.gen &gt; jj_gen) {</b>
+<b class="nc">&nbsp;			if (p.next == null) {</b>
+<b class="nc">&nbsp;				p = p.next = new JJCalls();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			p = p.next;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		p.gen = jj_gen + xla - jj_la;</b>
+<b class="nc">&nbsp;		p.first = token;</b>
+<b class="nc">&nbsp;		p.arg = xla;</b>
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	static final class JJCalls {</b>
+&nbsp;		int gen;
+&nbsp;		Token first;
+&nbsp;		int arg;
+&nbsp;		JJCalls next;
+&nbsp;	}
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

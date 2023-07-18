@@ -1,0 +1,383 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > LinLogNodeParticle</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.layout.springbox.implementations</a>
+</div>
+
+<h1>Coverage Summary for Class: LinLogNodeParticle (org.graphstream.ui.layout.springbox.implementations)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LinLogNodeParticle</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/121)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2012-06-19
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.layout.springbox.implementations;
+&nbsp;
+&nbsp;import java.util.Iterator;
+&nbsp;
+&nbsp;import org.graphstream.ui.geom.Vector3;
+&nbsp;import org.graphstream.ui.layout.springbox.EdgeSpring;
+&nbsp;import org.graphstream.ui.layout.springbox.Energies;
+&nbsp;import org.graphstream.ui.layout.springbox.GraphCellData;
+&nbsp;import org.graphstream.ui.layout.springbox.NodeParticle;
+&nbsp;import org.miv.pherd.Particle;
+&nbsp;import org.miv.pherd.ParticleBox;
+&nbsp;import org.miv.pherd.ntree.Cell;
+&nbsp;
+&nbsp;public class LinLogNodeParticle extends NodeParticle {
+&nbsp;	/**
+&nbsp;	 * New node.
+&nbsp;	 * 
+&nbsp;	 * The node is placed at random in the space of the simulation.
+&nbsp;	 * 
+&nbsp;	 * @param box
+&nbsp;	 *            The spring box.
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 */
+&nbsp;	public LinLogNodeParticle(LinLog box, String id) {
+<b class="nc">&nbsp;		this(box, id, (box.getRandom().nextDouble() * 2 * box.k) - box.k,</b>
+<b class="nc">&nbsp;				(box.getRandom().nextDouble() * 2 * box.k) - box.k,</b>
+<b class="nc">&nbsp;				box.is3D() ? (box.getRandom().nextDouble() * 2 * box.k) - box.k : 0);</b>
+&nbsp;
+<b class="nc">&nbsp;		this.box = box;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New node at a given position.
+&nbsp;	 * 
+&nbsp;	 * @param box
+&nbsp;	 *            The spring box.
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 * @param x
+&nbsp;	 *            The abscissa.
+&nbsp;	 * @param y
+&nbsp;	 *            The ordinate.
+&nbsp;	 * @param z
+&nbsp;	 *            The depth.
+&nbsp;	 */
+&nbsp;	public LinLogNodeParticle(LinLog box, String id, double x, double y, double z) {
+<b class="nc">&nbsp;		super(box, id, x, y, z);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void repulsionN2(Vector3 delta) {
+<b class="nc">&nbsp;		LinLog box = (LinLog) this.box;</b>
+<b class="nc">&nbsp;		boolean is3D = box.is3D();</b>
+<b class="nc">&nbsp;		ParticleBox nodes = box.getSpatialIndex();</b>
+<b class="nc">&nbsp;		Energies energies = box.getEnergies();</b>
+<b class="nc">&nbsp;		Iterator&lt;Object&gt; i = nodes.getParticleIdIterator();</b>
+<b class="nc">&nbsp;		int deg = neighbours.size();</b>
+&nbsp;
+<b class="nc">&nbsp;		while (i.hasNext()) {</b>
+<b class="nc">&nbsp;			LinLogNodeParticle node = (LinLogNodeParticle) nodes.getParticle(i.next());</b>
+&nbsp;
+<b class="nc">&nbsp;			if (node != this) {</b>
+<b class="nc">&nbsp;				delta.set(node.pos.x - pos.x, node.pos.y - pos.y, is3D ? node.pos.z - pos.z : 0);</b>
+&nbsp;
+&nbsp;				// double len = delta.normalize();
+<b class="nc">&nbsp;				double len = delta.length();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (len &gt; 0) {</b>
+<b class="nc">&nbsp;					double degFactor = box.edgeBased ? deg * node.neighbours.size() : 1;</b>
+<b class="nc">&nbsp;					double factor = 1;</b>
+<b class="nc">&nbsp;					double r = box.r;</b>
+&nbsp;
+<b class="nc">&nbsp;					factor = -degFactor * (Math.pow(len, r - 2)) * node.weight * weight * box.rFactor;</b>
+&nbsp;
+<b class="nc">&nbsp;					if (factor &lt; -box.maxR) {</b>
+<b class="nc">&nbsp;						factor = -box.maxR;</b>
+&nbsp;					}
+&nbsp;
+<b class="nc">&nbsp;					energies.accumulateEnergy(factor); // TODO check this</b>
+<b class="nc">&nbsp;					delta.scalarMult(factor);</b>
+<b class="nc">&nbsp;					disp.add(delta);</b>
+<b class="nc">&nbsp;					repE += factor;</b>
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void repulsionNLogN(Vector3 delta) {
+&nbsp;		// Explore the n-tree from the root cell and consider the contents
+&nbsp;		// of one cell only if it does intersect an area around the current
+&nbsp;		// node. Else take its (weighted) barycenter into account.
+&nbsp;
+<b class="nc">&nbsp;		recurseRepulsion(box.getSpatialIndex().getNTree().getRootCell(), delta);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void recurseRepulsion(Cell cell, Vector3 delta) {
+<b class="nc">&nbsp;		LinLog box = (LinLog) this.box;</b>
+<b class="nc">&nbsp;		boolean is3D = box.is3D();</b>
+<b class="nc">&nbsp;		Energies energies = box.getEnergies();</b>
+<b class="nc">&nbsp;		int deg = neighbours.size();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (intersection(cell)) {</b>
+<b class="nc">&nbsp;			if (cell.isLeaf()) {</b>
+<b class="nc">&nbsp;				Iterator&lt;? extends Particle&gt; i = cell.getParticles();</b>
+&nbsp;
+<b class="nc">&nbsp;				while (i.hasNext()) {</b>
+<b class="nc">&nbsp;					LinLogNodeParticle node = (LinLogNodeParticle) i.next();</b>
+&nbsp;
+<b class="nc">&nbsp;					if (node != this) {</b>
+<b class="nc">&nbsp;						delta.set(node.pos.x - pos.x, node.pos.y - pos.y, is3D ? node.pos.z - pos.z : 0);</b>
+&nbsp;
+&nbsp;						// double len = delta.normalize();
+<b class="nc">&nbsp;						double len = delta.length();</b>
+&nbsp;
+<b class="nc">&nbsp;						if (len &gt; 0) {</b>
+<b class="nc">&nbsp;							double degFactor = box.edgeBased ? deg * node.neighbours.size() : 1;</b>
+<b class="nc">&nbsp;							double factor = 1;</b>
+<b class="nc">&nbsp;							double r = box.r;</b>
+&nbsp;
+<b class="nc">&nbsp;							factor = -degFactor * (Math.pow(len, r - 2)) * node.weight * weight * box.rFactor;</b>
+&nbsp;
+<b class="nc">&nbsp;							if (factor &lt; -box.maxR) {</b>
+<b class="nc">&nbsp;								factor = -box.maxR;</b>
+&nbsp;							}
+&nbsp;
+<b class="nc">&nbsp;							energies.accumulateEnergy(factor); // TODO check this</b>
+<b class="nc">&nbsp;							delta.scalarMult(factor);</b>
+<b class="nc">&nbsp;							disp.add(delta);</b>
+<b class="nc">&nbsp;							repE += factor;</b>
+&nbsp;						}
+&nbsp;					}
+<b class="nc">&nbsp;				}</b>
+<b class="nc">&nbsp;			} else {</b>
+<b class="nc">&nbsp;				int div = cell.getSpace().getDivisions();</b>
+&nbsp;
+<b class="nc">&nbsp;				for (int i = 0; i &lt; div; i++)</b>
+<b class="nc">&nbsp;					recurseRepulsion(cell.getSub(i), delta);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			if (cell != this.cell) {</b>
+<b class="nc">&nbsp;				GraphCellData bary = (GraphCellData) cell.getData();</b>
+<b class="nc">&nbsp;				double dist = bary.distanceFrom(pos);</b>
+<b class="nc">&nbsp;				double size = cell.getSpace().getSize();</b>
+&nbsp;
+<b class="nc">&nbsp;				if ((!cell.isLeaf()) &amp;&amp; ((size / dist) &gt; box.getBarnesHutTheta())) {</b>
+<b class="nc">&nbsp;					int div = cell.getSpace().getDivisions();</b>
+&nbsp;
+<b class="nc">&nbsp;					for (int i = 0; i &lt; div; i++)</b>
+<b class="nc">&nbsp;						recurseRepulsion(cell.getSub(i), delta);</b>
+<b class="nc">&nbsp;				} else {</b>
+<b class="nc">&nbsp;					if (bary.weight != 0) {</b>
+<b class="nc">&nbsp;						delta.set(bary.center.x - pos.x, bary.center.y - pos.y, is3D ? bary.center.z - pos.z : 0);</b>
+&nbsp;
+&nbsp;						// double len = delta.normalize();
+<b class="nc">&nbsp;						double len = delta.length();</b>
+&nbsp;
+<b class="nc">&nbsp;						if (len &gt; 0) {</b>
+<b class="nc">&nbsp;							double degFactor = box.edgeBased ? deg * bary.degree : 1;</b>
+<b class="nc">&nbsp;							double factor = 1;</b>
+<b class="nc">&nbsp;							double r = box.r;</b>
+&nbsp;
+<b class="nc">&nbsp;							factor = -degFactor * (Math.pow(len, r - 2)) * bary.weight * weight * box.rFactor;</b>
+&nbsp;
+<b class="nc">&nbsp;							if (factor &lt; -box.maxR) {</b>
+<b class="nc">&nbsp;								factor = -box.maxR;</b>
+&nbsp;							}
+&nbsp;
+<b class="nc">&nbsp;							energies.accumulateEnergy(factor); // TODO check this</b>
+<b class="nc">&nbsp;							delta.scalarMult(factor);</b>
+<b class="nc">&nbsp;							disp.add(delta);</b>
+<b class="nc">&nbsp;							repE += factor;</b>
+&nbsp;						}
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void attraction(Vector3 delta) {
+<b class="nc">&nbsp;		LinLog box = (LinLog) this.box;</b>
+<b class="nc">&nbsp;		boolean is3D = box.is3D();</b>
+<b class="nc">&nbsp;		Energies energies = box.getEnergies();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (EdgeSpring edge : neighbours) {</b>
+<b class="nc">&nbsp;			if (!edge.ignored) {</b>
+<b class="nc">&nbsp;				LinLogNodeParticle other = (LinLogNodeParticle) edge.getOpposite(this);</b>
+&nbsp;
+<b class="nc">&nbsp;				delta.set(other.pos.x - pos.x, other.pos.y - pos.y, is3D ? other.pos.z - pos.z : 0);</b>
+&nbsp;
+&nbsp;				// double len = delta.normalize();
+<b class="nc">&nbsp;				double len = delta.length();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (len &gt; 0) {</b>
+<b class="nc">&nbsp;					double factor = 1;</b>
+<b class="nc">&nbsp;					double a = box.a;</b>
+&nbsp;
+<b class="nc">&nbsp;					factor = (Math.pow(len, a - 2)) * edge.weight * box.aFactor;</b>
+&nbsp;
+<b class="nc">&nbsp;					energies.accumulateEnergy(factor);</b>
+<b class="nc">&nbsp;					delta.scalarMult(factor);</b>
+<b class="nc">&nbsp;					disp.add(delta);</b>
+<b class="nc">&nbsp;					attE += factor;</b>
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void gravity(Vector3 delta) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	protected boolean intersection(Cell cell) {
+<b class="nc">&nbsp;		LinLog box = (LinLog) this.box;</b>
+&nbsp;
+<b class="nc">&nbsp;		double k = box.k;</b>
+<b class="nc">&nbsp;		double vz = box.getViewZone();</b>
+&nbsp;
+<b class="nc">&nbsp;		double x1 = cell.getSpace().getLoAnchor().x;</b>
+<b class="nc">&nbsp;		double y1 = cell.getSpace().getLoAnchor().y;</b>
+<b class="nc">&nbsp;		double z1 = cell.getSpace().getLoAnchor().z;</b>
+&nbsp;
+<b class="nc">&nbsp;		double x2 = cell.getSpace().getHiAnchor().x;</b>
+<b class="nc">&nbsp;		double y2 = cell.getSpace().getHiAnchor().y;</b>
+<b class="nc">&nbsp;		double z2 = cell.getSpace().getHiAnchor().z;</b>
+&nbsp;
+<b class="nc">&nbsp;		double X1 = pos.x - (k * vz);</b>
+<b class="nc">&nbsp;		double Y1 = pos.y - (k * vz);</b>
+<b class="nc">&nbsp;		double Z1 = pos.z - (k * vz);</b>
+<b class="nc">&nbsp;		double X2 = pos.x + (k * vz);</b>
+<b class="nc">&nbsp;		double Y2 = pos.y + (k * vz);</b>
+<b class="nc">&nbsp;		double Z2 = pos.z + (k * vz);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (X2 &lt; x1 || X1 &gt; x2)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (Y2 &lt; y1 || Y1 &gt; y2)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (Z2 &lt; z1 || Z1 &gt; z2)</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

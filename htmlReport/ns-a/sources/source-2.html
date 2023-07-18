@@ -1,0 +1,621 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GMLParser</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file.gml</a>
+</div>
+
+<h1>Coverage Summary for Class: GMLParser (org.graphstream.stream.file.gml)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GMLParser</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/33)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/228)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-07-04
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file.gml;
+&nbsp;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.Reader;
+&nbsp;
+&nbsp;import org.graphstream.stream.file.FileSourceGML;
+&nbsp;
+&nbsp;import org.graphstream.util.parser.ParseException;
+&nbsp;import org.graphstream.util.parser.Parser;
+&nbsp;import org.graphstream.util.parser.SimpleCharStream;
+&nbsp;import org.graphstream.util.parser.Token;
+&nbsp;import org.graphstream.util.parser.TokenMgrError;
+&nbsp;
+&nbsp;@SuppressWarnings(&quot;unused&quot;)
+&nbsp;public class GMLParser implements Parser, GMLParserConstants {
+<b class="nc">&nbsp;	boolean inGraph = false;</b>
+&nbsp;	GMLContext ctx;
+&nbsp;	boolean step;
+&nbsp;
+&nbsp;	public GMLParser(FileSourceGML gml, InputStream stream) {
+<b class="nc">&nbsp;		this(stream);</b>
+<b class="nc">&nbsp;		this.ctx = new GMLContext(gml);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public GMLParser(FileSourceGML gml, Reader stream) {
+<b class="nc">&nbsp;		this(stream);</b>
+<b class="nc">&nbsp;		this.ctx = new GMLContext(gml);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isInGraph() {
+<b class="nc">&nbsp;		return inGraph;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void open() throws IOException, ParseException {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public boolean next() throws IOException, ParseException {
+<b class="nc">&nbsp;		KeyValues kv = null;</b>
+<b class="nc">&nbsp;		kv = nextEvents();</b>
+<b class="nc">&nbsp;		ctx.handleKeyValues(kv);</b>
+&nbsp;
+<b class="nc">&nbsp;		return (kv != null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean step() throws IOException, ParseException {
+<b class="nc">&nbsp;		KeyValues kv = null;</b>
+<b class="nc">&nbsp;		step = false;</b>
+&nbsp;
+<b class="nc">&nbsp;		while ((kv = nextEvents()) != null &amp;&amp; !step)</b>
+<b class="nc">&nbsp;			ctx.handleKeyValues(kv);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (kv != null)</b>
+<b class="nc">&nbsp;			ctx.setNextStep(kv);</b>
+&nbsp;
+<b class="nc">&nbsp;		return (kv != null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Closes the parser, closing the opened stream.
+&nbsp;	 */
+&nbsp;	public void close() throws IOException {
+<b class="nc">&nbsp;		jj_input_stream.close();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*****************************************************************/
+&nbsp;	/* The parser. */
+&nbsp;	/*****************************************************************/
+&nbsp;
+&nbsp;	/** Unused rule, call it to slurp in the whole file. */
+&nbsp;	final public void start() throws ParseException {
+<b class="nc">&nbsp;		list();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final public void all() throws ParseException, IOException {
+<b class="nc">&nbsp;		KeyValues values = new KeyValues();</b>
+&nbsp;		String key;
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case GRAPH:
+<b class="nc">&nbsp;			graphStart();</b>
+<b class="nc">&nbsp;			ctx.setIsInGraph(true);</b>
+<b class="nc">&nbsp;			ctx.setDirected(false);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case DIGRAPH:
+<b class="nc">&nbsp;			diGraphStart();</b>
+<b class="nc">&nbsp;			ctx.setIsInGraph(true);</b>
+<b class="nc">&nbsp;			ctx.setDirected(true);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[0] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+&nbsp;		label_1: while (true) {
+<b class="nc">&nbsp;			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;			case STRING:
+&nbsp;			case KEY:
+&nbsp;			case COMMENT:
+&nbsp;				;
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				jj_la1[1] = jj_gen;</b>
+<b class="nc">&nbsp;				break label_1;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			key = keyValue(values);</b>
+<b class="nc">&nbsp;			values.key = key;</b>
+<b class="nc">&nbsp;			ctx.handleKeyValues(values);</b>
+<b class="nc">&nbsp;			values.clear();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		graphEnd();</b>
+<b class="nc">&nbsp;		values.key = null;</b>
+<b class="nc">&nbsp;		inGraph = false;</b>
+<b class="nc">&nbsp;		jj_consume_token(0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final public void graphStart() throws ParseException {
+<b class="nc">&nbsp;		jj_consume_token(GRAPH);</b>
+<b class="nc">&nbsp;		jj_consume_token(LSQBR);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final public void diGraphStart() throws ParseException {
+<b class="nc">&nbsp;		jj_consume_token(DIGRAPH);</b>
+<b class="nc">&nbsp;		jj_consume_token(LSQBR);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	final public void graphEnd() throws ParseException {
+<b class="nc">&nbsp;		jj_consume_token(RSQBR);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The top-level method to be called by the file source. Returns a set of
+&nbsp;	 * top-level key values or null if the end of the file was reached.
+&nbsp;	 * 
+&nbsp;	 * Top-level key values are nodes and edges as well as all key-values defined
+&nbsp;	 * before and after the graph.
+&nbsp;	 */
+&nbsp;	final public KeyValues nextEvents() throws ParseException {
+<b class="nc">&nbsp;		KeyValues values = new KeyValues();</b>
+&nbsp;		String key;
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case GRAPH:
+<b class="nc">&nbsp;			graphStart();</b>
+<b class="nc">&nbsp;			values.key = null;</b>
+<b class="nc">&nbsp;			ctx.setIsInGraph(true);</b>
+<b class="nc">&nbsp;			ctx.setDirected(false);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case DIGRAPH:
+<b class="nc">&nbsp;			diGraphStart();</b>
+<b class="nc">&nbsp;			values.key = null;</b>
+<b class="nc">&nbsp;			ctx.setIsInGraph(true);</b>
+<b class="nc">&nbsp;			ctx.setDirected(true);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case RSQBR:
+<b class="nc">&nbsp;			graphEnd();</b>
+<b class="nc">&nbsp;			values.key = null;</b>
+<b class="nc">&nbsp;			ctx.setIsInGraph(false);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case STRING:
+&nbsp;		case KEY:
+&nbsp;		case COMMENT:
+<b class="nc">&nbsp;			key = keyValue(values);</b>
+<b class="nc">&nbsp;			values.key = key;</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case 0:
+<b class="nc">&nbsp;			jj_consume_token(0);</b>
+<b class="nc">&nbsp;			values = null;</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[2] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+&nbsp;		{
+&nbsp;			if (true)
+<b class="nc">&nbsp;				return values;</b>
+&nbsp;		}
+&nbsp;		throw new Error(&quot;Missing return statement in function&quot;);
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A list of key values, all values are stored in a KeyValues object.
+&nbsp;	 */
+&nbsp;	final public KeyValues list() throws ParseException {
+<b class="nc">&nbsp;		KeyValues values = new KeyValues();</b>
+&nbsp;		label_2: while (true) {
+<b class="nc">&nbsp;			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;			case STRING:
+&nbsp;			case KEY:
+&nbsp;			case COMMENT:
+&nbsp;				;
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				jj_la1[3] = jj_gen;</b>
+<b class="nc">&nbsp;				break label_2;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			keyValue(values);</b>
+&nbsp;		}
+&nbsp;		{
+&nbsp;			if (true)
+<b class="nc">&nbsp;				return values;</b>
+&nbsp;		}
+&nbsp;		throw new Error(&quot;Missing return statement in function&quot;);
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A set of key and value, the value can recursively be a list of key-values.
+&nbsp;	 * Only the key-value list &quot;graph [ ... ]&quot; is not parsed by this rule, and
+&nbsp;	 * parsed by another rules, so that the nextEvent() rule can be called
+&nbsp;	 * repeatedly.
+&nbsp;	 */
+&nbsp;	final public String keyValue(KeyValues values) throws ParseException {
+&nbsp;		Token k;
+&nbsp;		String key;
+&nbsp;		Object v;
+<b class="nc">&nbsp;		boolean isGraph = false;</b>
+&nbsp;		label_3: while (true) {
+<b class="nc">&nbsp;			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;			case COMMENT:
+&nbsp;				;
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				jj_la1[4] = jj_gen;</b>
+<b class="nc">&nbsp;				break label_3;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			jj_consume_token(COMMENT);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case KEY:
+<b class="nc">&nbsp;			k = jj_consume_token(KEY);</b>
+<b class="nc">&nbsp;			key = k.image;</b>
+<b class="nc">&nbsp;			if (key.equalsIgnoreCase(&quot;step&quot;))</b>
+<b class="nc">&nbsp;				step = true;</b>
+&nbsp;			break;
+&nbsp;		case STRING:
+<b class="nc">&nbsp;			k = jj_consume_token(STRING);</b>
+<b class="nc">&nbsp;			key = k.image.substring(1, k.image.length() - 2);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[5] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		v = value(key);</b>
+<b class="nc">&nbsp;		values.put(key, v);</b>
+<b class="nc">&nbsp;		values.line = k.beginLine;</b>
+<b class="nc">&nbsp;		values.column = k.beginColumn;</b>
+&nbsp;		{
+&nbsp;			if (true)
+<b class="nc">&nbsp;				return key;</b>
+&nbsp;		}
+&nbsp;		throw new Error(&quot;Missing return statement in function&quot;);
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A value for a key, either a number, a string or a recursive list of
+&nbsp;	 * key-values.
+&nbsp;	 */
+&nbsp;	final public Object value(String key) throws ParseException {
+&nbsp;		Token t;
+&nbsp;		Object val;
+&nbsp;		KeyValues kv;
+<b class="nc">&nbsp;		switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {</b>
+&nbsp;		case REAL:
+<b class="nc">&nbsp;			t = jj_consume_token(REAL);</b>
+<b class="nc">&nbsp;			if (t.image.indexOf(&#39;.&#39;) &lt; 0)</b>
+<b class="nc">&nbsp;				val = Integer.valueOf(t.image);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				val = Double.valueOf(t.image);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case STRING:
+<b class="nc">&nbsp;			t = jj_consume_token(STRING);</b>
+<b class="nc">&nbsp;			val = t.image.substring(1, t.image.length() - 1);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case KEY:
+<b class="nc">&nbsp;			t = jj_consume_token(KEY);</b>
+<b class="nc">&nbsp;			val = t.image;</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case LSQBR:
+<b class="nc">&nbsp;			jj_consume_token(LSQBR);</b>
+<b class="nc">&nbsp;			kv = list();</b>
+<b class="nc">&nbsp;			val = kv;</b>
+<b class="nc">&nbsp;			jj_consume_token(RSQBR);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			jj_la1[6] = jj_gen;</b>
+<b class="nc">&nbsp;			jj_consume_token(-1);</b>
+<b class="nc">&nbsp;			throw new ParseException();</b>
+&nbsp;		}
+&nbsp;		{
+&nbsp;			if (true)
+<b class="nc">&nbsp;				return val;</b>
+&nbsp;		}
+&nbsp;		throw new Error(&quot;Missing return statement in function&quot;);
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Generated Token Manager. */
+&nbsp;	public GMLParserTokenManager token_source;
+&nbsp;	SimpleCharStream jj_input_stream;
+&nbsp;	/** Current token. */
+&nbsp;	public Token token;
+&nbsp;	/** Next token. */
+&nbsp;	public Token jj_nt;
+&nbsp;	private int jj_ntk;
+&nbsp;	private int jj_gen;
+<b class="nc">&nbsp;	final private int[] jj_la1 = new int[7];</b>
+&nbsp;	static private int[] jj_la1_0;
+&nbsp;	static {
+<b class="nc">&nbsp;		jj_la1_init_0();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static void jj_la1_init_0() {
+<b class="nc">&nbsp;		jj_la1_0 = new int[] { 0x3000, 0xc800, 0xfa01, 0xc800, 0x8000, 0x4800, 0x4d00, };</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Constructor with InputStream. */
+&nbsp;	public GMLParser(java.io.InputStream stream) {
+<b class="nc">&nbsp;		this(stream, null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Constructor with InputStream and supplied encoding */
+<b class="nc">&nbsp;	public GMLParser(java.io.InputStream stream, String encoding) {</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1);</b>
+<b class="nc">&nbsp;		} catch (java.io.UnsupportedEncodingException e) {</b>
+<b class="nc">&nbsp;			throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		token_source = new GMLParserTokenManager(jj_input_stream);</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 7; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reinitialise. */
+&nbsp;	public void ReInit(java.io.InputStream stream) {
+<b class="nc">&nbsp;		ReInit(stream, null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reinitialise. */
+&nbsp;	public void ReInit(java.io.InputStream stream, String encoding) {
+&nbsp;		try {
+<b class="nc">&nbsp;			jj_input_stream.ReInit(stream, encoding, 1, 1);</b>
+<b class="nc">&nbsp;		} catch (java.io.UnsupportedEncodingException e) {</b>
+<b class="nc">&nbsp;			throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		token_source.ReInit(jj_input_stream);</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 7; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Constructor. */
+<b class="nc">&nbsp;	public GMLParser(java.io.Reader stream) {</b>
+<b class="nc">&nbsp;		jj_input_stream = new SimpleCharStream(stream, 1, 1);</b>
+<b class="nc">&nbsp;		token_source = new GMLParserTokenManager(jj_input_stream);</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 7; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reinitialise. */
+&nbsp;	public void ReInit(java.io.Reader stream) {
+<b class="nc">&nbsp;		jj_input_stream.ReInit(stream, 1, 1);</b>
+<b class="nc">&nbsp;		token_source.ReInit(jj_input_stream);</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 7; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Constructor with generated Token Manager. */
+<b class="nc">&nbsp;	public GMLParser(GMLParserTokenManager tm) {</b>
+<b class="nc">&nbsp;		token_source = tm;</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 7; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Reinitialise. */
+&nbsp;	public void ReInit(GMLParserTokenManager tm) {
+<b class="nc">&nbsp;		token_source = tm;</b>
+<b class="nc">&nbsp;		token = new Token();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 7; i++)</b>
+<b class="nc">&nbsp;			jj_la1[i] = -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private Token jj_consume_token(int kind) throws ParseException {
+&nbsp;		Token oldToken;
+<b class="nc">&nbsp;		if ((oldToken = token).next != null)</b>
+<b class="nc">&nbsp;			token = token.next;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			token = token.next = token_source.getNextToken();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		if (token.kind == kind) {</b>
+<b class="nc">&nbsp;			jj_gen++;</b>
+<b class="nc">&nbsp;			return token;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		token = oldToken;</b>
+<b class="nc">&nbsp;		jj_kind = kind;</b>
+<b class="nc">&nbsp;		throw generateParseException();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the next Token. */
+&nbsp;	final public Token getNextToken() {
+<b class="nc">&nbsp;		if (token.next != null)</b>
+<b class="nc">&nbsp;			token = token.next;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			token = token.next = token_source.getNextToken();</b>
+<b class="nc">&nbsp;		jj_ntk = -1;</b>
+<b class="nc">&nbsp;		jj_gen++;</b>
+<b class="nc">&nbsp;		return token;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Get the specific Token. */
+&nbsp;	final public Token getToken(int index) {
+<b class="nc">&nbsp;		Token t = token;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; index; i++) {</b>
+<b class="nc">&nbsp;			if (t.next != null)</b>
+<b class="nc">&nbsp;				t = t.next;</b>
+&nbsp;			else
+<b class="nc">&nbsp;				t = t.next = token_source.getNextToken();</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return t;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private int jj_ntk() {
+<b class="nc">&nbsp;		if ((jj_nt = token.next) == null)</b>
+<b class="nc">&nbsp;			return (jj_ntk = (token.next = token_source.getNextToken()).kind);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return (jj_ntk = jj_nt.kind);</b>
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	private java.util.List&lt;int[]&gt; jj_expentries = new java.util.ArrayList&lt;int[]&gt;();</b>
+&nbsp;	private int[] jj_expentry;
+<b class="nc">&nbsp;	private int jj_kind = -1;</b>
+&nbsp;
+&nbsp;	/** Generate ParseException. */
+&nbsp;	public ParseException generateParseException() {
+<b class="nc">&nbsp;		jj_expentries.clear();</b>
+<b class="nc">&nbsp;		boolean[] la1tokens = new boolean[16];</b>
+<b class="nc">&nbsp;		if (jj_kind &gt;= 0) {</b>
+<b class="nc">&nbsp;			la1tokens[jj_kind] = true;</b>
+<b class="nc">&nbsp;			jj_kind = -1;</b>
+&nbsp;		}
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 7; i++) {</b>
+<b class="nc">&nbsp;			if (jj_la1[i] == jj_gen) {</b>
+<b class="nc">&nbsp;				for (int j = 0; j &lt; 32; j++) {</b>
+<b class="nc">&nbsp;					if ((jj_la1_0[i] &amp; (1 &lt;&lt; j)) != 0) {</b>
+<b class="nc">&nbsp;						la1tokens[j] = true;</b>
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		for (int i = 0; i &lt; 16; i++) {</b>
+<b class="nc">&nbsp;			if (la1tokens[i]) {</b>
+<b class="nc">&nbsp;				jj_expentry = new int[1];</b>
+<b class="nc">&nbsp;				jj_expentry[0] = i;</b>
+<b class="nc">&nbsp;				jj_expentries.add(jj_expentry);</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		int[][] exptokseq = new int[jj_expentries.size()][];</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; jj_expentries.size(); i++) {</b>
+<b class="nc">&nbsp;			exptokseq[i] = jj_expentries.get(i);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return new ParseException(token, exptokseq, tokenImage);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Enable tracing. */
+&nbsp;	final public void enable_tracing() {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/** Disable tracing. */
+&nbsp;	final public void disable_tracing() {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

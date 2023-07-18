@@ -1,0 +1,304 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSinkDGSFiltered</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSinkDGSFiltered (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileSinkDGSFiltered</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/45)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2014-11-03
+&nbsp; * 
+&nbsp; * @author Thibaut Démare &lt;fdhp_76@hotmail.com&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.PrintWriter;
+&nbsp;import java.util.Locale;
+&nbsp;
+&nbsp;/**
+&nbsp; * &lt;p&gt;
+&nbsp; * File output for the DGS (Dynamic Graph Stream) file format. It includes also
+&nbsp; * the possibility to filter dynamic events such as :
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;Addition or deletion of nodes or edges.&lt;/li&gt;
+&nbsp; * &lt;li&gt;Addition/deletion/modification of attributes of nodes, edges or the graph
+&nbsp; * itself.&lt;/li&gt;
+&nbsp; * &lt;li&gt;A step event.&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/p&gt;
+&nbsp; *
+&nbsp; * &lt;p&gt;
+&nbsp; * For instance :
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;pre&gt;
+&nbsp; * Graph graph = new SingleGraph(&quot;My_Graph&quot;);
+&nbsp; * FileSinkDGSFiltered fileSink = new FileSinkDGSFiltered();
+&nbsp; * graph.addSink(fileSink);
+&nbsp; * 
+&nbsp; * // No need to save the attribute &quot;attr1&quot; of any edges
+&nbsp; * fileSink.addEdgeAttributeFiltered(&quot;attr1&quot;);
+&nbsp; * // No need to save graph attributes
+&nbsp; * fileSink.setNoFilterGraphAttributeAdded(false);
+&nbsp; * 
+&nbsp; * // Start to listen event
+&nbsp; * fileSink.begin(&quot;./my_graph.dgs&quot;);
+&nbsp; * 
+&nbsp; * // Make some modifications on the graph and generate events
+&nbsp; * graph.stepBegins(0); // this event will be saved
+&nbsp; * graph.setAttribute(&quot;attr2&quot;, 2); // this event will not be saved
+&nbsp; * Node a = graph.addNode(&quot;A&quot;); // this event will be saved
+&nbsp; * a.setAttribute(&quot;attr3&quot;, 3); // this event will be saved
+&nbsp; * 
+&nbsp; * // and now, no more need to save modification on nodes attributes
+&nbsp; * fileSink.setNoFilterNodeAttributeChanged(false);
+&nbsp; * 
+&nbsp; * Node b = graph.addNode(&quot;B&quot;); // this event will be saved
+&nbsp; * b.setAttribute(&quot;attr4&quot;, 4); // this event will not be saved
+&nbsp; * 
+&nbsp; * Edge ab = graph.addEdge(&quot;AB&quot;, a, b); // this event will be saved
+&nbsp; * ab.setAttribute(&quot;attr1&quot;, 1); // this event will not be saved
+&nbsp; * ab.setAttribute(&quot;attr5&quot;, 5); // this event will be saved
+&nbsp; * 
+&nbsp; * fileSink.end();
+&nbsp; * &lt;/pre&gt;
+&nbsp; */
+<b class="nc">&nbsp;public class FileSinkDGSFiltered extends FileSinkBaseFiltered {</b>
+&nbsp;
+&nbsp;	// Attribute
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A shortcut to the output.
+&nbsp;	 */
+&nbsp;	protected PrintWriter out;
+<b class="nc">&nbsp;	protected String graphName = &quot;&quot;;</b>
+&nbsp;
+&nbsp;	// Command
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void outputHeader() throws IOException {
+<b class="nc">&nbsp;		out = (PrintWriter) output;</b>
+<b class="nc">&nbsp;		out.printf(&quot;DGS004%n&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (graphName.length() &lt;= 0)</b>
+<b class="nc">&nbsp;			out.printf(&quot;null 0 0%n&quot;);</b>
+&nbsp;		else
+<b class="nc">&nbsp;			out.printf(&quot;\&quot;%s\&quot; 0 0%n&quot;, FileSinkDGSUtility.formatStringForQuoting(graphName));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void outputEndOfFile() throws IOException {
+&nbsp;		// NOP
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value) {
+<b class="nc">&nbsp;		if (noFilterEdgeAttributeAdded &amp;&amp; !edgeAttributesFiltered.contains(attribute))</b>
+<b class="nc">&nbsp;			edgeAttributeChanged(graphId, timeId, edgeId, attribute, null, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;		if (noFilterEdgeAttributeChanged &amp;&amp; !edgeAttributesFiltered.contains(attribute))</b>
+<b class="nc">&nbsp;			out.printf(&quot;ce \&quot;%s\&quot; %s%n&quot;, FileSinkDGSUtility.formatStringForQuoting(edgeId),</b>
+<b class="nc">&nbsp;					FileSinkDGSUtility.attributeString(attribute, newValue, false));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute) {
+<b class="nc">&nbsp;		if (noFilterEdgeAttributeRemoved &amp;&amp; !edgeAttributesFiltered.contains(attribute))</b>
+<b class="nc">&nbsp;			out.printf(&quot;ce \&quot;%s\&quot; %s%n&quot;, FileSinkDGSUtility.formatStringForQuoting(edgeId),</b>
+<b class="nc">&nbsp;					FileSinkDGSUtility.attributeString(attribute, null, true));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value) {
+<b class="nc">&nbsp;		if (noFilterGraphAttributeAdded &amp;&amp; !graphAttributesFiltered.contains(attribute))</b>
+<b class="nc">&nbsp;			graphAttributeChanged(graphId, timeId, attribute, null, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue) {
+<b class="nc">&nbsp;		if (noFilterGraphAttributeChanged &amp;&amp; !graphAttributesFiltered.contains(attribute))</b>
+<b class="nc">&nbsp;			out.printf(&quot;cg %s%n&quot;, FileSinkDGSUtility.attributeString(attribute, newValue, false));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphAttributeRemoved(String graphId, long timeId, String attribute) {
+<b class="nc">&nbsp;		if (noFilterGraphAttributeRemoved &amp;&amp; !graphAttributesFiltered.contains(attribute))</b>
+<b class="nc">&nbsp;			out.printf(&quot;cg %s%n&quot;, FileSinkDGSUtility.attributeString(attribute, null, true));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value) {
+<b class="nc">&nbsp;		if (noFilterNodeAttributeAdded &amp;&amp; !nodeAttributesFiltered.contains(attribute))</b>
+<b class="nc">&nbsp;			nodeAttributeChanged(graphId, timeId, nodeId, attribute, null, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;		if (noFilterNodeAttributeChanged &amp;&amp; !nodeAttributesFiltered.contains(attribute))</b>
+<b class="nc">&nbsp;			out.printf(&quot;cn \&quot;%s\&quot; %s%n&quot;, FileSinkDGSUtility.formatStringForQuoting(nodeId),</b>
+<b class="nc">&nbsp;					FileSinkDGSUtility.attributeString(attribute, newValue, false));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute) {
+<b class="nc">&nbsp;		if (noFilterNodeAttributeRemoved &amp;&amp; !nodeAttributesFiltered.contains(attribute))</b>
+<b class="nc">&nbsp;			out.printf(&quot;cn \&quot;%s\&quot; %s%n&quot;, FileSinkDGSUtility.formatStringForQuoting(nodeId),</b>
+<b class="nc">&nbsp;					FileSinkDGSUtility.attributeString(attribute, null, true));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+&nbsp;			boolean directed) {
+<b class="nc">&nbsp;		if (noFilterEdgeAdded) {</b>
+<b class="nc">&nbsp;			edgeId = FileSinkDGSUtility.formatStringForQuoting(edgeId);</b>
+<b class="nc">&nbsp;			fromNodeId = FileSinkDGSUtility.formatStringForQuoting(fromNodeId);</b>
+<b class="nc">&nbsp;			toNodeId = FileSinkDGSUtility.formatStringForQuoting(toNodeId);</b>
+<b class="nc">&nbsp;			out.printf(&quot;ae \&quot;%s\&quot; \&quot;%s\&quot; %s \&quot;%s\&quot;%n&quot;, edgeId, fromNodeId, directed ? &quot;&gt;&quot; : &quot;&quot;, toNodeId);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public void edgeRemoved(String graphId, long timeId, String edgeId) {
+<b class="nc">&nbsp;		if (noFilterEdgeRemoved)</b>
+<b class="nc">&nbsp;			out.printf(&quot;de \&quot;%s\&quot;%n&quot;, FileSinkDGSUtility.formatStringForQuoting(edgeId));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphCleared(String graphId, long timeId) {
+<b class="nc">&nbsp;		if (noFilterGraphCleared)</b>
+<b class="nc">&nbsp;			out.printf(&quot;cl%n&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeAdded(String graphId, long timeId, String nodeId) {
+<b class="nc">&nbsp;		if (noFilterNodeAdded)</b>
+<b class="nc">&nbsp;			out.printf(&quot;an \&quot;%s\&quot;%n&quot;, FileSinkDGSUtility.formatStringForQuoting(nodeId));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeRemoved(String graphId, long timeId, String nodeId) {
+<b class="nc">&nbsp;		if (noFilterNodeRemoved)</b>
+<b class="nc">&nbsp;			out.printf(&quot;dn \&quot;%s\&quot;%n&quot;, FileSinkDGSUtility.formatStringForQuoting(nodeId));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void stepBegins(String graphId, long timeId, double step) {
+<b class="nc">&nbsp;		if (noFilterStepBegins)</b>
+<b class="nc">&nbsp;			out.printf(Locale.US, &quot;st %f%n&quot;, step);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

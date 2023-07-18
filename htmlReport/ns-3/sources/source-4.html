@@ -1,0 +1,385 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AbstractNode</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.graph.implementations</a>
+</div>
+
+<h1>Coverage Summary for Class: AbstractNode (org.graphstream.graph.implementations)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AbstractNode</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.5%
+  </span>
+  <span class="absValue">
+    (2/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    17.6%
+  </span>
+  <span class="absValue">
+    (3/17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-07-22
+&nbsp; * 
+&nbsp; * @author Stefan Balev &lt;stefan.balev@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.graph.implementations;
+&nbsp;
+&nbsp;import java.util.Iterator;
+&nbsp;
+&nbsp;import org.graphstream.graph.BreadthFirstIterator;
+&nbsp;import org.graphstream.graph.DepthFirstIterator;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.stream.SourceBase;
+&nbsp;
+&nbsp;/**
+&nbsp; * &lt;p&gt;
+&nbsp; * This class provides a basic implementation of {@code Node} interface, to
+&nbsp; * minimize the effort required to implement this interface.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * This class implements all the methods of
+&nbsp; * {@link org.graphstream.graph.implementations.AbstractElement} and most of the
+&nbsp; * methods of {@link org.graphstream.graph.Node} (there are &quot;only&quot; ten abstract
+&nbsp; * methods). In addition to these, subclasses must provide implementations for
+&nbsp; * {@link #addEdgeCallback(AbstractEdge)} and
+&nbsp; * {@link #removeEdgeCallback(AbstractEdge)} which are called by the parent
+&nbsp; * graph when an edge incident to this node is added to or removed from the
+&nbsp; * graph. This class has a low memory overhead (one reference as field).
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public abstract class AbstractNode extends AbstractElement implements Node {
+&nbsp;
+&nbsp;	// *** Fields ***
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The graph to which this node belongs
+&nbsp;	 */
+&nbsp;	protected AbstractGraph graph;
+&nbsp;
+&nbsp;	// *** Constructors
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Constructs a new node. This constructor copies the parameters into the
+&nbsp;	 * corresponding fields
+&nbsp;	 * 
+&nbsp;	 * @param graph
+&nbsp;	 *            The graph to which this node belongs.
+&nbsp;	 * @param id
+&nbsp;	 *            Unique identifier of this node.
+&nbsp;	 */
+&nbsp;	protected AbstractNode(AbstractGraph graph, String id) {
+<b class="fc">&nbsp;		super(id);</b>
+<b class="fc">&nbsp;		this.graph = graph;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Inherited from abstract element ***
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue, Object newValue) {
+<b class="nc">&nbsp;		graph.listeners.sendAttributeChangedEvent(id, SourceBase.ElementType.NODE, attribute, event, oldValue,</b>
+&nbsp;				newValue);
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Inherited from Node ***
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation returns {@link #graph}.
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getGraph()
+&nbsp;	 */
+&nbsp;	public Graph getGraph() {
+<b class="fc">&nbsp;		return graph;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// [has|get]Edge[Toward|From|Between](Node|int|String) -&gt; 2 * 3 * 3 = 18
+&nbsp;	// methods
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation uses {@link #getEdgeToward(Node)}
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getEdgeToward(int)
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Edge getEdgeToward(int index) {
+<b class="nc">&nbsp;		return getEdgeToward(graph.getNode(index));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation uses {@link #getEdgeToward(Node)}
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getEdgeToward(java.lang.String)
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Edge getEdgeToward(String id) {
+<b class="nc">&nbsp;		return getEdgeToward(graph.getNode(id));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation uses {@link #getEdgeFrom(Node)}
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getEdgeFrom(int)
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Edge getEdgeFrom(int index) {
+<b class="nc">&nbsp;		return getEdgeFrom(graph.getNode(index));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation uses {@link #getEdgeFrom(Node)}
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getEdgeFrom(java.lang.String)
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Edge getEdgeFrom(String id) {
+<b class="nc">&nbsp;		return getEdgeFrom(graph.getNode(id));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation uses {@link #getEdgeBetween(Node)}
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getEdgeBetween(int)
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Edge getEdgeBetween(int index) {
+<b class="nc">&nbsp;		return getEdgeBetween(graph.getNode(index));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation uses {@link #getEdgeBetween(Node)}
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getEdgeBetween(java.lang.String)
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Edge getEdgeBetween(String id) {
+<b class="nc">&nbsp;		return getEdgeBetween(graph.getNode(id));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation creates an instance of
+&nbsp;	 * {@link org.graphstream.graph.BreadthFirstIterator} and returns it.
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getBreadthFirstIterator()
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Iterator&lt;Node&gt; getBreadthFirstIterator() {
+&nbsp;		// XXX change it when the old iterator disappears
+&nbsp;		// XXX change the return type to have access to the other methods
+<b class="nc">&nbsp;		return new BreadthFirstIterator(this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation creates an instance of
+&nbsp;	 * {@link org.graphstream.graph.BreadthFirstIterator} and returns it.
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getBreadthFirstIterator(boolean)
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Iterator&lt;Node&gt; getBreadthFirstIterator(boolean directed) {
+&nbsp;		// XXX change it when the old iterator disappears
+&nbsp;		// XXX change the return type to have access to the other methods
+<b class="nc">&nbsp;		return new BreadthFirstIterator(this, directed);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation creates an instance of
+&nbsp;	 * {@link org.graphstream.graph.DepthFirstIterator} and returns it.
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getDepthFirstIterator()
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Iterator&lt;Node&gt; getDepthFirstIterator() {
+&nbsp;		// XXX change it when the old iterator disappears
+&nbsp;		// XXX change the return type to have access to the other methods
+<b class="nc">&nbsp;		return new DepthFirstIterator(this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This implementation creates an instance of
+&nbsp;	 * {@link org.graphstream.graph.DepthFirstIterator} and returns it.
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Node#getDepthFirstIterator(boolean)
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Iterator&lt;Node&gt; getDepthFirstIterator(boolean directed) {
+&nbsp;		// XXX change it when the old iterator disappears
+&nbsp;		// XXX change the return type to have access to the other methods
+<b class="nc">&nbsp;		return new DepthFirstIterator(this, directed);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Other methods ***
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This method is called automatically when an edge incident to this node is
+&nbsp;	 * created. Subclasses use it to add the edge to their data structure.
+&nbsp;	 * 
+&nbsp;	 * @param edge
+&nbsp;	 *            a new edge incident to this node
+&nbsp;	 */
+&nbsp;	protected abstract boolean addEdgeCallback(AbstractEdge edge);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This method is called automatically before removing an edge incident to this
+&nbsp;	 * node. Subclasses use it to remove the edge from their data structure.
+&nbsp;	 * 
+&nbsp;	 * @param edge
+&nbsp;	 *            an edge incident to this node that will be removed
+&nbsp;	 */
+&nbsp;	protected abstract void removeEdgeCallback(AbstractEdge edge);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This method is called for each node when the graph is cleared. Subclasses may
+&nbsp;	 * use it to clear their data structures in order to facilitate the garbage
+&nbsp;	 * collection.
+&nbsp;	 */
+&nbsp;	protected abstract void clearCallback();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Checks if an edge enters this node. Utility method that can be useful in
+&nbsp;	 * subclasses.
+&nbsp;	 * 
+&nbsp;	 * @param e
+&nbsp;	 *            an edge
+&nbsp;	 * @return {@code true} if {@code e} is entering edge for this node.
+&nbsp;	 */
+&nbsp;	public boolean isEnteringEdge(Edge e) {
+<b class="nc">&nbsp;		return e.getTargetNode() == this || (!e.isDirected() &amp;&amp; e.getSourceNode() == this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Checks if an edge leaves this node. Utility method that can be useful in
+&nbsp;	 * subclasses.
+&nbsp;	 * 
+&nbsp;	 * @param e
+&nbsp;	 *            an edge
+&nbsp;	 * @return {@code true} if {@code e} is leaving edge for this node.
+&nbsp;	 */
+&nbsp;	public boolean isLeavingEdge(Edge e) {
+<b class="nc">&nbsp;		return e.getSourceNode() == this || (!e.isDirected() &amp;&amp; e.getTargetNode() == this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Checks if an edge is incident to this node. Utility method that can be useful
+&nbsp;	 * in subclasses.
+&nbsp;	 * 
+&nbsp;	 * @param e
+&nbsp;	 *            an edge
+&nbsp;	 * @return {@code true} if {@code e} is incident edge for this node.
+&nbsp;	 */
+&nbsp;	public boolean isIncidentEdge(Edge e) {
+<b class="nc">&nbsp;		return e.getSourceNode() == this || e.getTargetNode() == this;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

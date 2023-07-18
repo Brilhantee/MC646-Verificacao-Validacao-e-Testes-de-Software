@@ -1,0 +1,456 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GraphicSprite</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.graphicGraph</a>
+</div>
+
+<h1>Coverage Summary for Class: GraphicSprite (org.graphstream.ui.graphicGraph)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GraphicSprite</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/103)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.graphicGraph;
+&nbsp;
+&nbsp;import org.graphstream.stream.SourceBase.ElementType;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Selector;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Style;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Values;
+&nbsp;
+&nbsp;/**
+&nbsp; * A small gentle sprite.
+&nbsp; */
+&nbsp;public class GraphicSprite extends GraphicElement {
+&nbsp;	// Attributes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The node this sprite is attached to.
+&nbsp;	 */
+&nbsp;	protected GraphicNode node;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The edge this sprite is attached to.
+&nbsp;	 */
+&nbsp;	protected GraphicEdge edge;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Sprite position.
+&nbsp;	 */
+<b class="nc">&nbsp;	public Values position = new Values(StyleConstants.Units.GU, 0, 0, 0);</b>
+&nbsp;
+&nbsp;	// Constructors
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New sprite.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The sprite unique identifier.
+&nbsp;	 * @param graph
+&nbsp;	 *            The graph containing this sprite.
+&nbsp;	 */
+&nbsp;	public GraphicSprite(String id, GraphicGraph graph) {
+<b class="nc">&nbsp;		super(id, graph);</b>
+&nbsp;
+&nbsp;		// Get the position of a random node.
+&nbsp;
+<b class="nc">&nbsp;		if (graph.getNodeCount() &gt; 0) {</b>
+<b class="nc">&nbsp;			GraphicNode node = (GraphicNode) graph.nodes().findFirst().get();</b>
+&nbsp;
+<b class="nc">&nbsp;			position.setValue(0, node.x);</b>
+<b class="nc">&nbsp;			position.setValue(1, node.y);</b>
+<b class="nc">&nbsp;			position.setValue(2, node.z);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		String myPrefix = String.format(&quot;ui.sprite.%s&quot;, id);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (mygraph.getAttribute(myPrefix) == null)</b>
+<b class="nc">&nbsp;			mygraph.setAttribute(myPrefix, position);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The node this sprite is attached to or null if not attached to an edge.
+&nbsp;	 * 
+&nbsp;	 * @return A graphic node.
+&nbsp;	 */
+&nbsp;	public GraphicNode getNodeAttachment() {
+<b class="nc">&nbsp;		return node;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The edge this sprite is attached to or null if not attached to an edge.
+&nbsp;	 * 
+&nbsp;	 * @return A graphic edge.
+&nbsp;	 */
+&nbsp;	public GraphicEdge getEdgeAttachment() {
+<b class="nc">&nbsp;		return edge;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Return the graphic object this sprite is attached to or null if not attached.
+&nbsp;	 * 
+&nbsp;	 * @return A graphic object or null if no attachment.
+&nbsp;	 */
+&nbsp;	public GraphicElement getAttachment() {
+<b class="nc">&nbsp;		GraphicNode n = getNodeAttachment();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (n != null)</b>
+<b class="nc">&nbsp;			return n;</b>
+&nbsp;
+<b class="nc">&nbsp;		return getEdgeAttachment();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the sprite is attached to a node or edge.
+&nbsp;	 */
+&nbsp;	public boolean isAttached() {
+<b class="nc">&nbsp;		return (edge != null || node != null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the sprite is attached to a node.
+&nbsp;	 */
+&nbsp;	public boolean isAttachedToNode() {
+<b class="nc">&nbsp;		return node != null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the node is attached to an edge.
+&nbsp;	 */
+&nbsp;	public boolean isAttachedToEdge() {
+<b class="nc">&nbsp;		return edge != null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Selector.Type getSelectorType() {
+<b class="nc">&nbsp;		return Selector.Type.SPRITE;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public double getX() {
+<b class="nc">&nbsp;		return position.get(0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public double getY() {
+<b class="nc">&nbsp;		return position.get(1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public double getZ() {
+<b class="nc">&nbsp;		return position.get(2);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Style.Units getUnits() {
+<b class="nc">&nbsp;		return position.getUnits();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Commands
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void move(double x, double y, double z) {
+&nbsp;
+<b class="nc">&nbsp;		if (isAttachedToNode()) {</b>
+<b class="nc">&nbsp;			GraphicNode n = getNodeAttachment();</b>
+<b class="nc">&nbsp;			x -= n.x;</b>
+<b class="nc">&nbsp;			y -= n.y;</b>
+<b class="nc">&nbsp;			z -= n.z;</b>
+<b class="nc">&nbsp;			setPosition(x, y, z, Style.Units.GU);</b>
+&nbsp;
+<b class="nc">&nbsp;		} else if (isAttachedToEdge()) {</b>
+<b class="nc">&nbsp;			GraphicEdge e = getEdgeAttachment();</b>
+<b class="nc">&nbsp;			double len = e.to.x - e.from.x;</b>
+<b class="nc">&nbsp;			double diff = x - e.from.x;</b>
+<b class="nc">&nbsp;			x = diff / len;</b>
+<b class="nc">&nbsp;			setPosition(x);</b>
+&nbsp;
+<b class="nc">&nbsp;		} else {</b>
+<b class="nc">&nbsp;			setPosition(x, y, z, Style.Units.GU);</b>
+&nbsp;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Attach this sprite to the given node.
+&nbsp;	 * 
+&nbsp;	 * @param node
+&nbsp;	 *            A graphic node.
+&nbsp;	 */
+&nbsp;	public void attachToNode(GraphicNode node) {
+<b class="nc">&nbsp;		this.edge = null;</b>
+<b class="nc">&nbsp;		this.node = node;</b>
+&nbsp;
+<b class="nc">&nbsp;		String prefix = String.format(&quot;ui.sprite.%s&quot;, getId());</b>
+&nbsp;
+<b class="nc">&nbsp;		if (this.node.getAttribute(prefix) == null)</b>
+<b class="nc">&nbsp;			this.node.setAttribute(prefix);</b>
+&nbsp;
+<b class="nc">&nbsp;		mygraph.graphChanged = true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Attach this sprite to the given edge.
+&nbsp;	 * 
+&nbsp;	 * @param edge
+&nbsp;	 *            A graphic edge.
+&nbsp;	 */
+&nbsp;	public void attachToEdge(GraphicEdge edge) {
+<b class="nc">&nbsp;		this.node = null;</b>
+<b class="nc">&nbsp;		this.edge = edge;</b>
+&nbsp;
+<b class="nc">&nbsp;		String prefix = String.format(&quot;ui.sprite.%s&quot;, getId());</b>
+&nbsp;
+<b class="nc">&nbsp;		if (this.edge.getAttribute(prefix) == null)</b>
+<b class="nc">&nbsp;			this.edge.setAttribute(prefix);</b>
+&nbsp;
+<b class="nc">&nbsp;		mygraph.graphChanged = true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Detach this sprite from the edge or node it was attached to.
+&nbsp;	 */
+&nbsp;	public void detach() {
+<b class="nc">&nbsp;		String prefix = String.format(&quot;ui.sprite.%s&quot;, getId());</b>
+&nbsp;
+<b class="nc">&nbsp;		if (this.node != null)</b>
+<b class="nc">&nbsp;			this.node.removeAttribute(prefix);</b>
+<b class="nc">&nbsp;		else if (this.edge != null)</b>
+<b class="nc">&nbsp;			this.edge.removeAttribute(prefix);</b>
+&nbsp;
+<b class="nc">&nbsp;		this.edge = null;</b>
+<b class="nc">&nbsp;		this.node = null;</b>
+<b class="nc">&nbsp;		mygraph.graphChanged = true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Reposition this sprite.
+&nbsp;	 * 
+&nbsp;	 * @param value
+&nbsp;	 *            The coordinate.
+&nbsp;	 */
+&nbsp;	public void setPosition(double value) {
+<b class="nc">&nbsp;		setPosition(value, 0, 0, getUnits());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Reposition this sprite.
+&nbsp;	 * 
+&nbsp;	 * @param x
+&nbsp;	 *            First coordinate.
+&nbsp;	 * @param y
+&nbsp;	 *            Second coordinate.
+&nbsp;	 * @param z
+&nbsp;	 *            Third coordinate.
+&nbsp;	 * @param units
+&nbsp;	 *            The units to use for lengths and radii, null means &quot;unchanged&quot;.
+&nbsp;	 */
+&nbsp;	public void setPosition(double x, double y, double z, Style.Units units) {
+&nbsp;		/*
+&nbsp;		 * if( node != null ) { y = checkAngle( y ); z = checkAngle( z ); } else
+<b class="nc">&nbsp;		 */if (edge != null) {</b>
+<b class="nc">&nbsp;			if (x &lt; 0)</b>
+<b class="nc">&nbsp;				x = 0;</b>
+<b class="nc">&nbsp;			else if (x &gt; 1)</b>
+<b class="nc">&nbsp;				x = 1;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		boolean changed = false;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (getX() != x) {</b>
+<b class="nc">&nbsp;			changed = true;</b>
+<b class="nc">&nbsp;			position.setValue(0, x);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (getY() != y) {</b>
+<b class="nc">&nbsp;			changed = true;</b>
+<b class="nc">&nbsp;			position.setValue(1, y);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (getZ() != z) {</b>
+<b class="nc">&nbsp;			changed = true;</b>
+<b class="nc">&nbsp;			position.setValue(2, z);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (getUnits() != units) {</b>
+<b class="nc">&nbsp;			changed = true;</b>
+<b class="nc">&nbsp;			position.setUnits(units);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (changed) {</b>
+<b class="nc">&nbsp;			mygraph.graphChanged = true;</b>
+<b class="nc">&nbsp;			mygraph.boundsChanged = true;</b>
+&nbsp;
+<b class="nc">&nbsp;			String prefix = String.format(&quot;ui.sprite.%s&quot;, getId());</b>
+&nbsp;
+<b class="nc">&nbsp;			mygraph.setAttribute(prefix, position);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setPosition(Values values) {
+<b class="nc">&nbsp;		double x = 0;</b>
+<b class="nc">&nbsp;		double y = 0;</b>
+<b class="nc">&nbsp;		double z = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (values.getValueCount() &gt; 0)</b>
+<b class="nc">&nbsp;			x = values.get(0);</b>
+<b class="nc">&nbsp;		if (values.getValueCount() &gt; 1)</b>
+<b class="nc">&nbsp;			y = values.get(1);</b>
+<b class="nc">&nbsp;		if (values.getValueCount() &gt; 2)</b>
+<b class="nc">&nbsp;			z = values.get(2);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (x == 1 &amp;&amp; y == 1 &amp;&amp; z == 1)</b>
+<b class="nc">&nbsp;			throw new RuntimeException(&quot;WTF !!!&quot;);</b>
+<b class="nc">&nbsp;		setPosition(x, y, z, values.units);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected double checkAngle(double angle) {
+<b class="nc">&nbsp;		if (angle &gt; Math.PI * 2)</b>
+<b class="nc">&nbsp;			angle = angle % (Math.PI * 2);</b>
+<b class="nc">&nbsp;		else if (angle &lt; 0)</b>
+<b class="nc">&nbsp;			angle = (Math.PI * 2) - (angle % (Math.PI * 2));</b>
+&nbsp;
+<b class="nc">&nbsp;		return angle;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue, Object newValue) {
+<b class="nc">&nbsp;		super.attributeChanged(event, attribute, oldValue, newValue);</b>
+&nbsp;
+&nbsp;		// if( attribute.equals( &quot;ui.clicked&quot; ) ) // Filter the clicks to avoid
+&nbsp;		// loops XXX BAD !!! XXX
+&nbsp;		// return;
+&nbsp;
+<b class="nc">&nbsp;		String completeAttr = String.format(&quot;ui.sprite.%s.%s&quot;, getId(), attribute);</b>
+&nbsp;
+<b class="nc">&nbsp;		mygraph.listeners.sendAttributeChangedEvent(mygraph.getId(), ElementType.GRAPH, completeAttr, event, oldValue,</b>
+&nbsp;				newValue);
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void removed() {
+<b class="nc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

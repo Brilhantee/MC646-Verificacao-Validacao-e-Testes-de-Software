@@ -1,0 +1,1374 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSourceBase</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSourceBase (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileSourceBase</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/67)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/374)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">FileSourceBase$CurrentFile</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/68)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/378)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Richard O. Legendi &lt;richard.legendi@gmail.com&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.FileNotFoundException;
+&nbsp;import java.io.FileReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.io.Reader;
+&nbsp;import java.io.StreamTokenizer;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.HashMap;
+&nbsp;
+&nbsp;import org.graphstream.stream.SourceBase;
+&nbsp;import org.graphstream.ui.geom.Point3;
+&nbsp;
+&nbsp;/**
+&nbsp; * Base for various graph file input.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * This class is a piece of crap. However it is still used in many places... :-(
+&nbsp; * TODO use a parser generator to replace it.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * This class provides parsing utilities to help the creation of new graph
+&nbsp; * readers/parsers. It handles a stack of input files that allow to easily
+&nbsp; * implements &quot;includes&quot; (that is interrupting the parsing of a file to input
+&nbsp; * another one). It wraps stream tokenizers allowing to eat or get specific
+&nbsp; * token types easily.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * It is well suited for graph formats using text (not binary), but not for XML
+&nbsp; * based files where a real XML parser would probably be better.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public abstract class FileSourceBase extends SourceBase implements FileSource {
+&nbsp;	// Attributes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The quote character. Can be changed in descendants.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected int QUOTE_CHAR = &#39;&quot;&#39;;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The comment character. Can be changed in descendants.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected int COMMENT_CHAR = &#39;#&#39;;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Is EOL significant?.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected boolean eol_is_significant = false;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Stack of tokenizers/filenames. Each tokenizer is open on a file. When an
+&nbsp;	 * include is found, the current tokenizer is pushed on the stack and a new one
+&nbsp;	 * for the included file is created. Once the included file is parsed, the
+&nbsp;	 * tokenizer is popped of the stack and the previous one is used.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected ArrayList&lt;CurrentFile&gt; tok_stack = new ArrayList&lt;CurrentFile&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Current tokenizer.
+&nbsp;	 */
+&nbsp;	protected StreamTokenizer st;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Current file name.
+&nbsp;	 */
+&nbsp;	protected String filename;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Map of unknown attributes to corresponding classes.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected HashMap&lt;String, String&gt; attribute_classes = new HashMap&lt;String, String&gt;();</b>
+&nbsp;
+&nbsp;	// Constructors
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * No-op constructor.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected FileSourceBase() {</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Setup the reader End-Of-Line policy.
+&nbsp;	 * 
+&nbsp;	 * @param eol_is_significant
+&nbsp;	 *            If true EOL will be returned as a token, else it is ignored.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected FileSourceBase(boolean eol_is_significant) {</b>
+<b class="nc">&nbsp;		this.eol_is_significant = eol_is_significant;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Setup the reader End-Of-Line policy and specific comment and quote
+&nbsp;	 * characters.
+&nbsp;	 * 
+&nbsp;	 * @param eol_is_significant
+&nbsp;	 *            If true EOL will be returned as a token, else it is ignored.
+&nbsp;	 * @param commentChar
+&nbsp;	 *            Character used for one line comments.
+&nbsp;	 * @param quoteChar
+&nbsp;	 *            Character used to enclose quotations.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected FileSourceBase(boolean eol_is_significant, int commentChar, int quoteChar) {</b>
+<b class="nc">&nbsp;		this.eol_is_significant = eol_is_significant;</b>
+&nbsp;
+<b class="nc">&nbsp;		this.COMMENT_CHAR = commentChar;</b>
+<b class="nc">&nbsp;		this.QUOTE_CHAR = quoteChar;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	// Command -- Complete modeField.
+&nbsp;
+&nbsp;	public void readAll(String filename) throws IOException {
+<b class="nc">&nbsp;		begin(filename);</b>
+<b class="nc">&nbsp;		while (nextEvents())</b>
+<b class="nc">&nbsp;			;</b>
+<b class="nc">&nbsp;		end();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void readAll(URL url) throws IOException {
+<b class="nc">&nbsp;		begin(url);</b>
+<b class="nc">&nbsp;		while (nextEvents())</b>
+<b class="nc">&nbsp;			;</b>
+<b class="nc">&nbsp;		end();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void readAll(InputStream stream) throws IOException {
+<b class="nc">&nbsp;		begin(stream);</b>
+<b class="nc">&nbsp;		while (nextEvents())</b>
+<b class="nc">&nbsp;			;</b>
+<b class="nc">&nbsp;		end();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void readAll(Reader reader) throws IOException {
+<b class="nc">&nbsp;		begin(reader);</b>
+<b class="nc">&nbsp;		while (nextEvents())</b>
+<b class="nc">&nbsp;			;</b>
+<b class="nc">&nbsp;		end();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Commands -- By-event modeField.
+&nbsp;
+&nbsp;	public void begin(String filename) throws IOException {
+<b class="nc">&nbsp;		pushTokenizer(filename);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void begin(InputStream stream) throws IOException {
+<b class="nc">&nbsp;		pushTokenizer(stream);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void begin(URL url) throws IOException {
+<b class="nc">&nbsp;		pushTokenizer(url);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void begin(Reader reader) throws IOException {
+<b class="nc">&nbsp;		pushTokenizer(reader);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public abstract boolean nextEvents() throws IOException;
+&nbsp;
+&nbsp;	public void end() throws IOException {
+<b class="nc">&nbsp;		popTokenizer();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Command
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Declare that when &lt;code&gt;attribute&lt;/code&gt; is found, the corresponding
+&nbsp;	 * &lt;code&gt;attribute_class&lt;/code&gt; must be instantiated and inserted in the current
+&nbsp;	 * element being parsed. This is equivalent to the &quot;map&quot; keyword of the GML
+&nbsp;	 * file. An attribute appears in a GML file as a name followed by a &quot;[...]&quot;
+&nbsp;	 * block. The contents of this block defines sub-attributes that must map to
+&nbsp;	 * public fields of the attribute. Only attributes that are not handled
+&nbsp;	 * specifically by this parser can be added.
+&nbsp;	 * 
+&nbsp;	 * @param attribute
+&nbsp;	 *            must name the attribute.
+&nbsp;	 * @param attribute_class
+&nbsp;	 *            must be the complete name of a Java class that will represent the
+&nbsp;	 *            attribute.
+&nbsp;	 */
+&nbsp;	public void addAttributeClass(String attribute, String attribute_class) {
+<b class="nc">&nbsp;		attribute_classes.put(attribute, attribute_class);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Command -- Parsing -- Include mechanism
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Include the content of a &lt;code&gt;file&lt;/code&gt;. This pushes a new tokenizer on
+&nbsp;	 * the input stack, calls the {@link #continueParsingInInclude()} method (that
+&nbsp;	 * must be implemented to read the include contents) and when finished pops the
+&nbsp;	 * tokenizer of the input stack.
+&nbsp;	 */
+&nbsp;	protected void include(String file) throws IOException {
+<b class="nc">&nbsp;		pushTokenizer(file);</b>
+<b class="nc">&nbsp;		continueParsingInInclude();</b>
+<b class="nc">&nbsp;		popTokenizer();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Must be implemented to read the content of an include. The current tokenizer
+&nbsp;	 * will be set to the included file. When this method returns, the include file
+&nbsp;	 * will be closed an parsing will continue where it was before inclusion.
+&nbsp;	 */
+&nbsp;	protected abstract void continueParsingInInclude() throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Push a tokenizer created from a file name on the file stack and make it
+&nbsp;	 * current.
+&nbsp;	 * 
+&nbsp;	 * @param file
+&nbsp;	 *            Name of the file used as source for the tokenizer.
+&nbsp;	 */
+&nbsp;	protected void pushTokenizer(String file) throws IOException {
+&nbsp;		StreamTokenizer tok;
+&nbsp;		CurrentFile cur;
+&nbsp;		Reader reader;
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			reader = createReaderFrom(file);</b>
+<b class="nc">&nbsp;			tok = createTokenizer(reader);</b>
+&nbsp;
+<b class="nc">&nbsp;			cur = new CurrentFile(file, tok, reader);</b>
+<b class="nc">&nbsp;		} catch (FileNotFoundException e) {</b>
+<b class="nc">&nbsp;			throw new IOException(&quot;cannot read file &#39;&quot; + file + &quot;&#39;, not found: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		configureTokenizer(tok);</b>
+<b class="nc">&nbsp;		tok_stack.add(cur);</b>
+&nbsp;
+<b class="nc">&nbsp;		st = tok;</b>
+<b class="nc">&nbsp;		filename = file;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a reader for by the tokenizer.
+&nbsp;	 * 
+&nbsp;	 * @param file
+&nbsp;	 *            File name to be opened.
+&nbsp;	 * @return a reader for the tokenizer.
+&nbsp;	 * @throws FileNotFoundException
+&nbsp;	 *             If the given file does not exist or un readable.
+&nbsp;	 */
+&nbsp;	protected Reader createReaderFrom(String file) throws FileNotFoundException {
+<b class="nc">&nbsp;		return new BufferedReader(new FileReader(file));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a stream that can be read by the tokenizer.
+&nbsp;	 * 
+&nbsp;	 * @param stream
+&nbsp;	 *            Input stream to be open as a reader.
+&nbsp;	 * @return a reader for the tokenizer.
+&nbsp;	 */
+&nbsp;	protected Reader createReaderFrom(InputStream stream) {
+<b class="nc">&nbsp;		return new BufferedReader(new InputStreamReader(stream));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Push a tokenizer created from a stream on the file stack and make it current.
+&nbsp;	 * 
+&nbsp;	 * @param url
+&nbsp;	 *            The URL used as source for the tokenizer.
+&nbsp;	 */
+&nbsp;	protected void pushTokenizer(URL url) throws IOException {
+<b class="nc">&nbsp;		pushTokenizer(url.openStream(), url.toString());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Push a tokenizer created from a stream on the file stack and make it current.
+&nbsp;	 * 
+&nbsp;	 * @param stream
+&nbsp;	 *            The stream used as source for the tokenizer.
+&nbsp;	 */
+&nbsp;	protected void pushTokenizer(InputStream stream) throws IOException {
+<b class="nc">&nbsp;		pushTokenizer(stream, &quot;&lt;?input-stream?&gt;&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Push a tokenizer created from a stream on the file stack and make it current.
+&nbsp;	 * 
+&nbsp;	 * @param stream
+&nbsp;	 *            The stream used as source for the tokenizer.
+&nbsp;	 * @param name
+&nbsp;	 *            The name of the input stream.
+&nbsp;	 */
+&nbsp;	protected void pushTokenizer(InputStream stream, String name) throws IOException {
+&nbsp;		StreamTokenizer tok;
+&nbsp;		CurrentFile cur;
+&nbsp;		Reader reader;
+&nbsp;
+<b class="nc">&nbsp;		reader = createReaderFrom(stream);</b>
+<b class="nc">&nbsp;		tok = createTokenizer(reader);</b>
+<b class="nc">&nbsp;		cur = new CurrentFile(name, tok, reader);</b>
+&nbsp;
+<b class="nc">&nbsp;		configureTokenizer(tok);</b>
+<b class="nc">&nbsp;		tok_stack.add(cur);</b>
+&nbsp;
+<b class="nc">&nbsp;		st = tok;</b>
+<b class="nc">&nbsp;		filename = name;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Push a tokenizer created from a reader on the file stack and make it current.
+&nbsp;	 * 
+&nbsp;	 * @param reader
+&nbsp;	 *            The reader used as source for the tokenizer.
+&nbsp;	 */
+&nbsp;	protected void pushTokenizer(Reader reader) throws IOException {
+&nbsp;		StreamTokenizer tok;
+&nbsp;		CurrentFile cur;
+&nbsp;
+<b class="nc">&nbsp;		tok = createTokenizer(reader);</b>
+<b class="nc">&nbsp;		cur = new CurrentFile(&quot;&lt;?reader?&gt;&quot;, tok, reader);</b>
+<b class="nc">&nbsp;		configureTokenizer(tok);</b>
+<b class="nc">&nbsp;		tok_stack.add(cur);</b>
+&nbsp;
+<b class="nc">&nbsp;		st = tok;</b>
+<b class="nc">&nbsp;		filename = &quot;&lt;?reader?&gt;&quot;;</b>
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a tokenizer from an input source.
+&nbsp;	 * 
+&nbsp;	 * @param reader
+&nbsp;	 *            The reader.
+&nbsp;	 * @return The new tokenizer.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             For any I/O error.
+&nbsp;	 */
+&nbsp;	private StreamTokenizer createTokenizer(Reader reader) throws IOException {
+<b class="nc">&nbsp;		return new StreamTokenizer(new BufferedReader(reader));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Method to override to configure the tokenizer behaviour. It is called each
+&nbsp;	 * time a tokenizer is created (for the parsed file and all included files).
+&nbsp;	 */
+&nbsp;	protected void configureTokenizer(StreamTokenizer tok) throws IOException {
+<b class="nc">&nbsp;		if (COMMENT_CHAR &gt; 0)</b>
+<b class="nc">&nbsp;			tok.commentChar(COMMENT_CHAR);</b>
+<b class="nc">&nbsp;		tok.quoteChar(QUOTE_CHAR);</b>
+<b class="nc">&nbsp;		tok.eolIsSignificant(eol_is_significant);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;_&#39;, &#39;_&#39;);</b>
+<b class="nc">&nbsp;		tok.parseNumbers();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove the current tokenizer from the stack and restore the previous one (if
+&nbsp;	 * any).
+&nbsp;	 */
+&nbsp;	protected void popTokenizer() throws IOException {
+<b class="nc">&nbsp;		int n = tok_stack.size();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (n &lt;= 0)</b>
+<b class="nc">&nbsp;			throw new RuntimeException(&quot;poped one too many tokenizer&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		n -= 1;</b>
+&nbsp;
+<b class="nc">&nbsp;		CurrentFile cur = tok_stack.remove(n);</b>
+<b class="nc">&nbsp;		cur.reader.close();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (n &gt; 0) {</b>
+<b class="nc">&nbsp;			n -= 1;</b>
+&nbsp;
+<b class="nc">&nbsp;			cur = tok_stack.get(n);</b>
+&nbsp;
+<b class="nc">&nbsp;			st = cur.tok;</b>
+<b class="nc">&nbsp;			filename = cur.file;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Low level parsing
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Push back the last read thing, so that it can be read anew. This allows to
+&nbsp;	 * explore one token ahead, and if not corresponding to what is expected, go
+&nbsp;	 * back.
+&nbsp;	 */
+&nbsp;	protected void pushBack() {
+<b class="nc">&nbsp;		st.pushBack();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read EOF or report garbage at end of file.
+&nbsp;	 */
+&nbsp;	protected void eatEof() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			parseError(&quot;garbage at end of file, expecting EOF, &quot; + gotWhat(tok));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read EOL.
+&nbsp;	 */
+&nbsp;	protected void eatEol() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_EOL)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting EOL, &quot; + gotWhat(tok));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read EOL or EOF.
+&nbsp;	 * 
+&nbsp;	 * @return The token read StreamTokenizer.TT_EOL or StreamTokenizer.TT_EOF.
+&nbsp;	 */
+&nbsp;	protected int eatEolOrEof() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_EOL &amp;&amp; tok != StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting EOL or EOF, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		return tok;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read an expected &lt;code&gt;word&lt;/code&gt; token or generate a parse error.
+&nbsp;	 */
+&nbsp;	protected void eatWord(String word) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting `&quot; + word + &quot;&#39;, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!st.sval.equals(word))</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting `&quot; + word + &quot;&#39; got `&quot; + st.sval + &quot;&#39;&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read an expected word among the given word list or generate a parse error.
+&nbsp;	 * 
+&nbsp;	 * @param words
+&nbsp;	 *            The expected words.
+&nbsp;	 */
+&nbsp;	protected void eatWords(String... words) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting one of `[&quot; + Arrays.toString(words) + &quot;]&#39;, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		boolean found = false;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String word : words) {</b>
+<b class="nc">&nbsp;			if (st.sval.equals(word)) {</b>
+<b class="nc">&nbsp;				found = true;</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (!found)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting one of `[&quot; + Arrays.toString(words) + &quot;]&#39;, got `&quot; + st.sval + &quot;&#39;&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Eat either a word or another, and return the eated one.
+&nbsp;	 * 
+&nbsp;	 * @param word1
+&nbsp;	 *            The first word to eat.
+&nbsp;	 * @param word2
+&nbsp;	 *            The alternative word to eat.
+&nbsp;	 * @return The word eaten.
+&nbsp;	 */
+&nbsp;	protected String eatOneOfTwoWords(String word1, String word2) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting `&quot; + word1 + &quot;&#39; or  `&quot; + word2 + &quot;&#39;, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (st.sval.equals(word1))</b>
+<b class="nc">&nbsp;			return word1;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (st.sval.equals(word2))</b>
+<b class="nc">&nbsp;			return word2;</b>
+&nbsp;
+<b class="nc">&nbsp;		parseError(&quot;expecting `&quot; + word1 + &quot;&#39; or `&quot; + word2 + &quot;&#39; got `&quot; + st.sval + &quot;&#39;&quot;);</b>
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Eat the expected symbol or generate a parse error.
+&nbsp;	 */
+&nbsp;	protected void eatSymbol(char symbol) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != symbol)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting symbol `&quot; + symbol + &quot;&#39;, &quot; + gotWhat(tok));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Eat one of the list of expected &lt;code&gt;symbols&lt;/code&gt; or generate a parse
+&nbsp;	 * error none of &lt;code&gt;symbols&lt;/code&gt; can be found.
+&nbsp;	 */
+&nbsp;	protected int eatSymbols(String symbols) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+<b class="nc">&nbsp;		int n = symbols.length();</b>
+<b class="nc">&nbsp;		boolean f = false;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; n; ++i) {</b>
+<b class="nc">&nbsp;			if (tok == symbols.charAt(i)) {</b>
+<b class="nc">&nbsp;				f = true;</b>
+<b class="nc">&nbsp;				i = n;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (!f)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting one of symbols `&quot; + symbols + &quot;&#39;, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		return tok;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Eat the expected &lt;code&gt;word&lt;/code&gt; or push back what was read so that it can
+&nbsp;	 * be read anew.
+&nbsp;	 */
+&nbsp;	protected void eatWordOrPushbak(String word) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			pushBack();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!st.sval.equals(word))</b>
+<b class="nc">&nbsp;			pushBack();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Eat the expected &lt;code&gt;symbol&lt;/code&gt; or push back what was read so that it
+&nbsp;	 * can be read anew.
+&nbsp;	 */
+&nbsp;	protected void eatSymbolOrPushback(char symbol) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != symbol)</b>
+<b class="nc">&nbsp;			pushBack();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Eat all until an EOL is found. The EOL is also eaten. This works only if EOL
+&nbsp;	 * is significant (else it does nothing).
+&nbsp;	 */
+&nbsp;	protected void eatAllUntilEol() throws IOException {
+<b class="nc">&nbsp;		if (!eol_is_significant)</b>
+&nbsp;			return;
+&nbsp;
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOF)</b>
+&nbsp;			return;
+&nbsp;
+<b class="nc">&nbsp;		while ((tok != StreamTokenizer.TT_EOL) &amp;&amp; (tok != StreamTokenizer.TT_EOF)) {</b>
+<b class="nc">&nbsp;			tok = st.nextToken();</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Eat all availables EOLs.
+&nbsp;	 */
+&nbsp;	protected void eatAllEols() throws IOException {
+<b class="nc">&nbsp;		if (!eol_is_significant)</b>
+&nbsp;			return;
+&nbsp;
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		while (tok == StreamTokenizer.TT_EOL)</b>
+<b class="nc">&nbsp;			tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		pushBack();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or generate a parse error.
+&nbsp;	 */
+&nbsp;	protected String getWord() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a word, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		return st.sval;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get a symbol.
+&nbsp;	 */
+&nbsp;	protected char getSymbol() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok &gt; 0 &amp;&amp; tok != StreamTokenizer.TT_WORD &amp;&amp; tok != StreamTokenizer.TT_NUMBER</b>
+&nbsp;				&amp;&amp; tok != StreamTokenizer.TT_EOL &amp;&amp; tok != StreamTokenizer.TT_EOF &amp;&amp; tok != QUOTE_CHAR
+&nbsp;				&amp;&amp; tok != COMMENT_CHAR) {
+<b class="nc">&nbsp;			return (char) tok;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		parseError(&quot;expecting a symbol, &quot; + gotWhat(tok));</b>
+<b class="nc">&nbsp;		return (char) 0; // Never reached.</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get a symbol or push back what was read so that it can be read anew. If no
+&nbsp;	 * symbol is found, 0 is returned.
+&nbsp;	 */
+&nbsp;	protected char getSymbolOrPushback() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok &gt; 0 &amp;&amp; tok != StreamTokenizer.TT_WORD &amp;&amp; tok != StreamTokenizer.TT_NUMBER</b>
+&nbsp;				&amp;&amp; tok != StreamTokenizer.TT_EOL &amp;&amp; tok != StreamTokenizer.TT_EOF &amp;&amp; tok != QUOTE_CHAR
+&nbsp;				&amp;&amp; tok != COMMENT_CHAR) {
+<b class="nc">&nbsp;			return (char) tok;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		pushBack();</b>
+&nbsp;
+<b class="nc">&nbsp;		return (char) 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a string constant (between quotes) or generate a parse error. Return the
+&nbsp;	 * content of the string without the quotes.
+&nbsp;	 */
+&nbsp;	protected String getString() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != QUOTE_CHAR)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a string constant, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		return st.sval;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or number or generate a parse error. If it is a number it is
+&nbsp;	 * converted to a string before being returned.
+&nbsp;	 */
+&nbsp;	protected String getWordOrNumber() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_WORD &amp;&amp; tok != StreamTokenizer.TT_NUMBER)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a word or number, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER) {</b>
+&nbsp;			// If st.nval is an integer, as it is stored into a double,
+&nbsp;			// toString() will transform it by automatically adding &quot;.0&quot;, we
+&nbsp;			// prevent this. The tokenizer does not allow to read integers.
+&nbsp;
+<b class="nc">&nbsp;			if ((st.nval - ((int) st.nval)) == 0)</b>
+<b class="nc">&nbsp;				return Integer.toString((int) st.nval);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return Double.toString(st.nval);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a string or number or generate a parse error. If it is a number it is
+&nbsp;	 * converted to a string before being returned.
+&nbsp;	 */
+&nbsp;	protected String getStringOrNumber() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != QUOTE_CHAR &amp;&amp; tok != StreamTokenizer.TT_NUMBER)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a string constant or a number, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER) {</b>
+<b class="nc">&nbsp;			if ((st.nval - ((int) st.nval)) == 0)</b>
+<b class="nc">&nbsp;				return Integer.toString((int) st.nval);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return Double.toString(st.nval);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a string or number or pushback and return null. If it is a number it is
+&nbsp;	 * converted to a string before being returned.
+&nbsp;	 */
+&nbsp;	protected String getStringOrWordOrNumberOrPushback() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOL || tok == StreamTokenizer.TT_EOF) {</b>
+<b class="nc">&nbsp;			pushBack();</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER) {</b>
+<b class="nc">&nbsp;			if ((st.nval - ((int) st.nval)) == 0)</b>
+<b class="nc">&nbsp;				return Integer.toString((int) st.nval);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return Double.toString(st.nval);</b>
+<b class="nc">&nbsp;		} else if (tok == StreamTokenizer.TT_WORD || tok == QUOTE_CHAR) {</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			pushBack();</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a string or number or generate a parse error. If it is a number it is
+&nbsp;	 * converted to a string before being returned.
+&nbsp;	 */
+&nbsp;	protected String getStringOrWordOrNumber() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOL || tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting word, string or number, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER) {</b>
+<b class="nc">&nbsp;			if ((st.nval - ((int) st.nval)) == 0)</b>
+<b class="nc">&nbsp;				return Integer.toString((int) st.nval);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return Double.toString(st.nval);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a string or number or generate a parse error. The returned value is
+&nbsp;	 * converted to a Number of a String depending on its type.
+&nbsp;	 */
+&nbsp;	protected Object getStringOrWordOrNumberO() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOL || tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting word, string or number, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER) {</b>
+<b class="nc">&nbsp;			return st.nval;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a string or number or generate a parse error. The returned value is
+&nbsp;	 * converted to a Number of a String depending on its type.
+&nbsp;	 */
+&nbsp;	protected Object getStringOrWordOrSymbolOrNumberO() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOL || tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting word, string or number, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER) {</b>
+<b class="nc">&nbsp;			return st.nval;</b>
+<b class="nc">&nbsp;		} else if (tok == StreamTokenizer.TT_WORD) {</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		} else
+<b class="nc">&nbsp;			return Character.toString((char) tok);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or string or generate a parse error.
+&nbsp;	 */
+&nbsp;	protected String getWordOrString() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD || tok == QUOTE_CHAR)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		parseError(&quot;expecting a word or string, &quot; + gotWhat(tok));</b>
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or symbol or generate a parse error.
+&nbsp;	 */
+&nbsp;	protected String getWordOrSymbol() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER || tok == QUOTE_CHAR || tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a word or symbol, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return Character.toString((char) tok);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or symbol or push back the read thing so that it is readable
+&nbsp;	 * anew. In the second case, null is returned.
+&nbsp;	 */
+&nbsp;	protected String getWordOrSymbolOrPushback() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER || tok == QUOTE_CHAR || tok == StreamTokenizer.TT_EOF) {</b>
+<b class="nc">&nbsp;			pushBack();</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return Character.toString((char) tok);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or symbol or string or generate a parse error.
+&nbsp;	 */
+&nbsp;	protected String getWordOrSymbolOrString() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER || tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a word, symbol or string, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == QUOTE_CHAR)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return Character.toString((char) tok);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or symbol or string or number or generate a parse error.
+&nbsp;	 */
+&nbsp;	protected String getAllExceptedEof() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting all excepted EOF, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER || tok == StreamTokenizer.TT_EOF) {</b>
+<b class="nc">&nbsp;			if ((st.nval - ((int) st.nval)) == 0)</b>
+<b class="nc">&nbsp;				return Integer.toString((int) st.nval);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return Double.toString(st.nval);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (tok == QUOTE_CHAR)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return Character.toString((char) tok);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word, a symbol or EOF, or generate a parse error. If this is EOF, the
+&nbsp;	 * string &quot;EOF&quot; is returned.
+&nbsp;	 */
+&nbsp;	protected String getWordOrSymbolOrEof() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER || tok == QUOTE_CHAR)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a word or symbol, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+<b class="nc">&nbsp;		else if (tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			return &quot;EOF&quot;;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			return Character.toString((char) tok);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or symbol or string or EOL/EOF or generate a parse error. If EOL
+&nbsp;	 * is read the &quot;EOL&quot; string is returned. If EOF is read the &quot;EOF&quot; string is
+&nbsp;	 * returned.
+&nbsp;	 * 
+&nbsp;	 * @return A string.
+&nbsp;	 */
+&nbsp;	protected String getWordOrSymbolOrStringOrEolOrEof() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a word, symbol or string, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == QUOTE_CHAR)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			return &quot;EOF&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOL)</b>
+<b class="nc">&nbsp;			return &quot;EOL&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		return Character.toString((char) tok);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or number or string or EOL/EOF or generate a parse error. If EOL
+&nbsp;	 * is read the &quot;EOL&quot; string is returned. If EOF is read the &quot;EOF&quot; string is
+&nbsp;	 * returned. If a number is returned, it is converted to a string as follows: if
+&nbsp;	 * it is an integer, only the integer part is converted to a string without dot
+&nbsp;	 * or comma and no leading zeros. If it is a float the fractional part is also
+&nbsp;	 * converted and the dot is used as separator.
+&nbsp;	 * 
+&nbsp;	 * @return A string.
+&nbsp;	 */
+&nbsp;	protected String getWordOrNumberOrStringOrEolOrEof() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER) {</b>
+<b class="nc">&nbsp;			if (st.nval - ((int) st.nval) != 0)</b>
+<b class="nc">&nbsp;				return Double.toString(st.nval);</b>
+&nbsp;
+<b class="nc">&nbsp;			return Integer.toString((int) st.nval);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (tok == QUOTE_CHAR)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			return &quot;EOF&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOL)</b>
+<b class="nc">&nbsp;			return &quot;EOL&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		parseError(&quot;expecting a word, a number, a string, EOL or EOF, &quot; + gotWhat(tok));</b>
+<b class="nc">&nbsp;		return null; // Never happen, parseError throws unconditionally an</b>
+&nbsp;						// exception.
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or string or EOL/EOF or generate a parse error. If EOL is read
+&nbsp;	 * the &quot;EOL&quot; string is returned. If EOF is read the &quot;EOF&quot; string is returned.
+&nbsp;	 * 
+&nbsp;	 * @return A string.
+&nbsp;	 */
+&nbsp;	protected String getWordOrStringOrEolOrEof() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == QUOTE_CHAR)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOL)</b>
+<b class="nc">&nbsp;			return &quot;EOL&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			return &quot;EOF&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		parseError(&quot;expecting a word, a string, EOL or EOF, &quot; + gotWhat(tok));</b>
+<b class="nc">&nbsp;		return null; // Never happen, parseError throws unconditionally an</b>
+&nbsp;						// exception.
+&nbsp;	}
+&nbsp;
+&nbsp;	// Order: Word | String | Symbol | Number | Eol | Eof
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a word or number or string or EOL/EOF or generate a parse error. If EOL
+&nbsp;	 * is read the &quot;EOL&quot; string is returned. If EOF is read the &quot;EOF&quot; string is
+&nbsp;	 * returned. If a number is returned, it is converted to a string as follows: if
+&nbsp;	 * it is an integer, only the integer part is converted to a string without dot
+&nbsp;	 * or comma and no leading zeros. If it is a float the fractional part is also
+&nbsp;	 * converted and the dot is used as separator.
+&nbsp;	 * 
+&nbsp;	 * @return A string.
+&nbsp;	 */
+&nbsp;	protected String getWordOrSymbolOrNumberOrStringOrEolOrEof() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_NUMBER) {</b>
+<b class="nc">&nbsp;			if (st.nval - ((int) st.nval) != 0)</b>
+<b class="nc">&nbsp;				return Double.toString(st.nval);</b>
+&nbsp;
+<b class="nc">&nbsp;			return Integer.toString((int) st.nval);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (tok == QUOTE_CHAR)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;			return &quot;EOF&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_EOL)</b>
+<b class="nc">&nbsp;			return &quot;EOL&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		return Character.toString((char) tok);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a number or generate a parse error.
+&nbsp;	 */
+&nbsp;	protected double getNumber() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_NUMBER)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a number, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		return st.nval;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a number (possibly with an exponent) or generate a parse error.
+&nbsp;	 */
+&nbsp;	protected double getNumberExp() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok != StreamTokenizer.TT_NUMBER)</b>
+<b class="nc">&nbsp;			parseError(&quot;expecting a number, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;		double nb = st.nval;</b>
+&nbsp;
+<b class="nc">&nbsp;		tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD &amp;&amp; (st.sval.startsWith(&quot;e-&quot;) || st.sval.startsWith(&quot;e+&quot;))) {</b>
+<b class="nc">&nbsp;			double exp = Double.parseDouble(st.sval.substring(2));</b>
+<b class="nc">&nbsp;			return Math.pow(nb, exp);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			st.pushBack();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return nb;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Return a string containing &quot;got &quot; then the content of the current
+&nbsp;	 * &lt;code&gt;token&lt;/code&gt;.
+&nbsp;	 */
+&nbsp;	protected String gotWhat(int token) {
+<b class="nc">&nbsp;		switch (token) {</b>
+&nbsp;		case StreamTokenizer.TT_NUMBER:
+<b class="nc">&nbsp;			return &quot;got number `&quot; + st.nval + &quot;&#39;&quot;;</b>
+&nbsp;		case StreamTokenizer.TT_WORD:
+<b class="nc">&nbsp;			return &quot;got word `&quot; + st.sval + &quot;&#39;&quot;;</b>
+&nbsp;		case StreamTokenizer.TT_EOF:
+<b class="nc">&nbsp;			return &quot;got EOF&quot;;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			if (token == QUOTE_CHAR)</b>
+<b class="nc">&nbsp;				return &quot;got string constant `&quot; + st.sval + &quot;&#39;&quot;;</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return &quot;unknown symbol `&quot; + token + &quot;&#39; (&quot; + ((char) token) + &quot;)&quot;;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Generate a parse error.
+&nbsp;	 */
+&nbsp;	protected void parseError(String message) throws IOException {
+<b class="nc">&nbsp;		throw new IOException(&quot;parse error: &quot; + filename + &quot;: &quot; + st.lineno() + &quot;: &quot; + message);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the &lt;code&gt;string&lt;/code&gt; represents a truth statement (&quot;1&quot;, &quot;true&quot;,
+&nbsp;	 * &quot;yes&quot;, &quot;on&quot;).
+&nbsp;	 */
+&nbsp;	protected boolean isTrue(String string) {
+<b class="nc">&nbsp;		string = string.toLowerCase();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (string.equals(&quot;1&quot;))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (string.equals(&quot;true&quot;))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (string.equals(&quot;yes&quot;))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (string.equals(&quot;on&quot;))</b>
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the &lt;code&gt;string&lt;/code&gt; represents a false statement (&quot;0&quot;, &quot;false&quot;,
+&nbsp;	 * &quot;no&quot;, &quot;off&quot;).
+&nbsp;	 */
+&nbsp;	protected boolean isFalse(String string) {
+<b class="nc">&nbsp;		string = string.toLowerCase();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (string.equals(&quot;0&quot;))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (string.equals(&quot;false&quot;))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (string.equals(&quot;no&quot;))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (string.equals(&quot;off&quot;))</b>
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Uses {@link #isTrue(String)} and {@link #isFalse(String)} to determine if
+&nbsp;	 * &lt;code&gt;value&lt;/code&gt; is a truth value and return the corresponding boolean.
+&nbsp;	 * 
+&nbsp;	 * @throws NumberFormatException
+&nbsp;	 *             if the &lt;code&gt;value&lt;/code&gt; is not a truth value.
+&nbsp;	 */
+&nbsp;	protected boolean getBoolean(String value) throws NumberFormatException {
+<b class="nc">&nbsp;		if (isTrue(value))</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (isFalse(value))</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		throw new NumberFormatException(&quot;not a truth value `&quot; + value + &quot;&#39;&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Try to transform &lt;code&gt;value&lt;/code&gt; into a double.
+&nbsp;	 * 
+&nbsp;	 * @throws NumberFormatException
+&nbsp;	 *             if the &lt;code&gt;value&lt;/code&gt; is not a double.
+&nbsp;	 */
+&nbsp;	protected double getReal(String value) throws NumberFormatException {
+<b class="nc">&nbsp;		return Double.parseDouble(value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Try to transform &lt;code&gt;value&lt;/code&gt; into a long.
+&nbsp;	 * 
+&nbsp;	 * @throws NumberFormatException
+&nbsp;	 *             if the &lt;code&gt;value&lt;/code&gt; is not a long.
+&nbsp;	 */
+&nbsp;	protected long getInteger(String value) throws NumberFormatException {
+<b class="nc">&nbsp;		return Long.parseLong(value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get a number triplet with numbers separated by comas and return a new point
+&nbsp;	 * for it. For example &quot;0,1,2&quot;.
+&nbsp;	 */
+&nbsp;	protected Point3 getPoint3(String value) throws NumberFormatException {
+<b class="nc">&nbsp;		int p0 = value.indexOf(&#39;,&#39;);</b>
+<b class="nc">&nbsp;		int p1 = value.indexOf(&#39;,&#39;, p0 + 1);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (p0 &gt; 0 &amp;&amp; p1 &gt; 0) {</b>
+&nbsp;			String n0, n1, n2;
+&nbsp;			float v0, v1, v2;
+&nbsp;
+<b class="nc">&nbsp;			n0 = value.substring(0, p0);</b>
+<b class="nc">&nbsp;			n1 = value.substring(p0 + 1, p1);</b>
+<b class="nc">&nbsp;			n2 = value.substring(p1 + 1);</b>
+&nbsp;
+<b class="nc">&nbsp;			v0 = Float.parseFloat(n0);</b>
+<b class="nc">&nbsp;			v1 = Float.parseFloat(n1);</b>
+<b class="nc">&nbsp;			v2 = Float.parseFloat(n2);</b>
+&nbsp;
+<b class="nc">&nbsp;			return new Point3(v0, v1, v2);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		throw new NumberFormatException(&quot;value &#39;&quot; + value + &quot;&#39; not in a valid point3 format&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * Get a number triplet with numbers separated by comas and return new bounds
+&nbsp;	 * for it. For example &quot;0,1,2&quot;. protected Bounds3 getBounds3(String value)
+&nbsp;	 * throws NumberFormatException { int p0 = value.indexOf(&#39;,&#39;); int p1 =
+&nbsp;	 * value.indexOf(&#39;,&#39;, p0 + 1);
+&nbsp;	 * 
+&nbsp;	 * if (p0 &gt; 0 &amp;&amp; p1 &gt; 0) { String n0, n1, n2; float v0, v1, v2;
+&nbsp;	 * 
+&nbsp;	 * n0 = value.substring(0, p0); n1 = value.substring(p0 + 1, p1); n2 =
+&nbsp;	 * value.substring(p1 + 1);
+&nbsp;	 * 
+&nbsp;	 * v0 = Float.parseFloat(n0); v1 = Float.parseFloat(n1); v2 =
+&nbsp;	 * Float.parseFloat(n2);
+&nbsp;	 * 
+&nbsp;	 * return new Bounds3(v0, v1, v2); }
+&nbsp;	 * 
+&nbsp;	 * throw new NumberFormatException(&quot;value &#39;&quot; + value +
+&nbsp;	 * &quot;&#39; not in a valid point3 format&quot;); }
+&nbsp;	 */
+&nbsp;
+&nbsp;	// Nested classes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Currently processed file.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The graph reader base can process includes in files, and handles a stack of
+&nbsp;	 * files.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 */
+&nbsp;	protected static class CurrentFile {
+&nbsp;		/**
+&nbsp;		 * The file name.
+&nbsp;		 */
+&nbsp;		public String file;
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The stream tokenizer.
+&nbsp;		 */
+&nbsp;		public StreamTokenizer tok;
+&nbsp;
+&nbsp;		public Reader reader;
+&nbsp;
+<b class="nc">&nbsp;		public CurrentFile(String f, StreamTokenizer t, Reader reader) {</b>
+<b class="nc">&nbsp;			file = f;</b>
+<b class="nc">&nbsp;			tok = t;</b>
+<b class="nc">&nbsp;			this.reader = reader;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,304 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > View</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.view</a>
+</div>
+
+<h1>Coverage Summary for Class: View (org.graphstream.ui.view)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">View</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2014-08-08
+&nbsp; * 
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Beau Tremblay &lt;trembb01@nightcrawler.pfizer.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.view;
+&nbsp;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.EnumSet;
+&nbsp;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicElement;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicGraph;
+&nbsp;import org.graphstream.ui.view.camera.Camera;
+&nbsp;import org.graphstream.ui.view.util.InteractiveElement;
+&nbsp;import org.graphstream.ui.view.util.MouseManager;
+&nbsp;import org.graphstream.ui.view.util.ShortcutManager;
+&nbsp;
+&nbsp;/**
+&nbsp; * A view on a graphic graph.
+&nbsp; */
+&nbsp;public interface View {
+&nbsp;	/**
+&nbsp;	 * Get the unique view id.
+&nbsp;	 *
+&nbsp;	 * @return a view id
+&nbsp;	 */
+&nbsp;	String getIdView();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get a camera object to provide control commands on the view.
+&nbsp;	 *
+&nbsp;	 * @return a Camera instance
+&nbsp;	 */
+&nbsp;	Camera getCamera();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Search for the first GraphicElement among the specified types (precedence:
+&nbsp;	 * node, edge, sprite) that contains the point at coordinates (x, y).
+&nbsp;	 *
+&nbsp;	 * @param types
+&nbsp;	 *            The types to check
+&nbsp;	 * @param x
+&nbsp;	 *            The point abscissa.
+&nbsp;	 * @param y
+&nbsp;	 *            The point ordinate.
+&nbsp;	 * @return The first GraphicElement among the specified types at the given
+&nbsp;	 *         coordinates or null if nothing found.
+&nbsp;	 */
+&nbsp;	GraphicElement findGraphicElementAt(EnumSet&lt;InteractiveElement&gt; types, double x, double y);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Search for all the graphic elements contained inside the rectangle
+&nbsp;	 * (x1,y1)-(x2,y2).
+&nbsp;	 *
+&nbsp;	 * @param types
+&nbsp;	 *            The set of types to check
+&nbsp;	 * @param x1
+&nbsp;	 *            The rectangle lowest point abscissa.
+&nbsp;	 * @param y1
+&nbsp;	 *            The rectangle lowest point ordinate.
+&nbsp;	 * @param x2
+&nbsp;	 *            The rectangle highest point abscissa.
+&nbsp;	 * @param y2
+&nbsp;	 *            The rectangle highest point ordinate.
+&nbsp;	 * @return The set of sprites, nodes, and edges in the given rectangle.
+&nbsp;	 */
+&nbsp;	Collection&lt;GraphicElement&gt; allGraphicElementsIn(EnumSet&lt;InteractiveElement&gt; types, double x1, double y1, double x2,
+&nbsp;			double y2);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Redisplay or update the view contents. Called by the Viewer.
+&nbsp;	 *
+&nbsp;	 * @param graph
+&nbsp;	 *            The graphic graph to represent.
+&nbsp;	 * @param graphChanged
+&nbsp;	 *            True if the graph changed since the last call to this method.
+&nbsp;	 */
+&nbsp;	void display(GraphicGraph graph, boolean graphChanged);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Open this view in a frame. The argument allows to put the view in a new frame
+&nbsp;	 * or to remove it from the frame (if it already exists). Called by the Viewer.
+&nbsp;	 *
+&nbsp;	 * @param on
+&nbsp;	 *            Add the view in its own frame or remove it if it already was in
+&nbsp;	 *            its own frame.
+&nbsp;	 */
+&nbsp;	void openInAFrame(boolean on);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Close definitively this view. Called by the Viewer.
+&nbsp;	 *
+&nbsp;	 * @param graph
+&nbsp;	 *            The graphic graph.
+&nbsp;	 */
+&nbsp;	void close(GraphicGraph graph);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Called by the mouse manager to specify where a node and sprite selection
+&nbsp;	 * started.
+&nbsp;	 *
+&nbsp;	 * @param x1
+&nbsp;	 *            The selection start abscissa.
+&nbsp;	 * @param y1
+&nbsp;	 *            The selection start ordinate.
+&nbsp;	 */
+&nbsp;	void beginSelectionAt(double x1, double y1);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The selection already started grows toward position (x, y).
+&nbsp;	 *
+&nbsp;	 * @param x
+&nbsp;	 *            The new end selection abscissa.
+&nbsp;	 * @param y
+&nbsp;	 *            The new end selection ordinate.
+&nbsp;	 */
+&nbsp;	void selectionGrowsAt(double x, double y);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Called by the mouse manager to specify where a node and spite selection
+&nbsp;	 * stopped.
+&nbsp;	 *
+&nbsp;	 * @param x2
+&nbsp;	 *            The selection stop abscissa.
+&nbsp;	 * @param y2
+&nbsp;	 *            The selection stop ordinate.
+&nbsp;	 */
+&nbsp;	void endSelectionAt(double x2, double y2);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Freeze an element so that the optional layout cannot move it.
+&nbsp;	 *
+&nbsp;	 * @param element
+&nbsp;	 *            The element.
+&nbsp;	 * @param frozen
+&nbsp;	 *            If true the element cannot be moved automatically.
+&nbsp;	 */
+&nbsp;	void freezeElement(GraphicElement element, boolean frozen);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Force an element to move at the given location in pixels.
+&nbsp;	 *
+&nbsp;	 * @param element
+&nbsp;	 *            The element.
+&nbsp;	 * @param x
+&nbsp;	 *            The requested position abscissa in pixels.
+&nbsp;	 * @param y
+&nbsp;	 *            The requested position ordinate in pixels.
+&nbsp;	 */
+&nbsp;	void moveElementAtPx(GraphicElement element, double x, double y);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Change the manager for mouse events on this view. If the value for the new
+&nbsp;	 * manager is null, a default manager is installed. The
+&nbsp;	 * {@link org.graphstream.ui.view.util.MouseManager#init(org.graphstream.ui.graphicGraph.GraphicGraph, View)}
+&nbsp;	 * method must not yet have been called.
+&nbsp;	 *
+&nbsp;	 * @param manager
+&nbsp;	 *            The new manager, or null to set the default manager.
+&nbsp;	 * @see org.graphstream.ui.view.util.MouseManager
+&nbsp;	 */
+&nbsp;	void setMouseManager(MouseManager manager);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Change the manager for key and shortcuts events on this view. If the value
+&nbsp;	 * for the new manager is null, a default manager is installed. The
+&nbsp;	 * {@link org.graphstream.ui.view.util.ShortcutManager#init(org.graphstream.ui.graphicGraph.GraphicGraph, View)}
+&nbsp;	 * method must not yet have been called.
+&nbsp;	 *
+&nbsp;	 * @param manager
+&nbsp;	 *            The new manager, or null to set the default manager
+&nbsp;	 * @see org.graphstream.ui.view.util.ShortcutManager
+&nbsp;	 */
+&nbsp;	void setShortcutManager(ShortcutManager manager);
+&nbsp;	
+&nbsp;	/**
+&nbsp;	 * This is a shortcut to a call setShortcutManager with a MouseOverMouseManager instance and with
+&nbsp;	 * (InteractiveElement.EDGE, InteractiveElement.NODE, InteractiveElement.SPRITE).
+&nbsp;	 */
+&nbsp;	void enableMouseOptions();
+&nbsp;	
+&nbsp;	/**
+&nbsp;	 * Request ui focus.
+&nbsp;	 * 
+&nbsp;	 * @return optional object used to confirm the request
+&nbsp;	 */
+&nbsp;	Object requireFocus();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Generic method for add a new Listener.
+&nbsp;	 *
+&nbsp;	 * @param T
+&nbsp;	 *            Describe the listener
+&nbsp;	 * @param U
+&nbsp;	 *            Listener
+&nbsp;	 */
+&nbsp;	&lt;T, U&gt; void addListener(T descriptor, U listener);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Generic method for remove a Listener.
+&nbsp;	 *
+&nbsp;	 * @param T
+&nbsp;	 *            Describe the listener
+&nbsp;	 * @param U
+&nbsp;	 *            Listener
+&nbsp;	 */
+&nbsp;	&lt;T, U&gt; void removeListener(T descriptor, U listener);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

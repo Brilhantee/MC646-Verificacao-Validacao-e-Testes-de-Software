@@ -1,0 +1,997 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > StyleGroup</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.graphicGraph</a>
+</div>
+
+<h1>Coverage Summary for Class: StyleGroup (org.graphstream.ui.graphicGraph)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StyleGroup</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/36)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/106)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">StyleGroup$BulkElements</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">StyleGroup$BulkIterator</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">StyleGroup$ElementEvents</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/41)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/51)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/168)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-07-05
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.graphicGraph;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Iterator;
+&nbsp;
+&nbsp;import org.graphstream.graph.Element;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicElement.SwingElementRenderer;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Rule;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Selector;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Style;
+&nbsp;
+&nbsp;/**
+&nbsp; * A group of graph elements that share the same style.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The purpose of a style group is to allow retrieving all elements with the
+&nbsp; * same style easily. Most of the time, with graphic engines, pushing the
+&nbsp; * graphic state (the style, colors, line width, textures, gradients) is a
+&nbsp; * costly operation. Doing it once for several elements can speed up things a
+&nbsp; * lot. This is the purpose of the style group.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The action of drawing elements in group (first push style, then draw all
+&nbsp; * elements) are called bulk drawing. All elements that can be drawn at once
+&nbsp; * this way are called bulk elements.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * In a style group it is not always possible do draw elements in a such a
+&nbsp; * &quot;bulk&quot; operation. If the style contains &quot;dynamic values&quot; for example, that is
+&nbsp; * value that depend on the value of an attribute stored on the element, or if
+&nbsp; * the element is modified by an event (clicked, selected), the element will not
+&nbsp; * be drawn the same as others.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The style group provides iterators on each of these categories of elements :
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;{@link #elements()} allows to browse all elements contained in the group
+&nbsp; * without exception.&lt;/li&gt;
+&nbsp; * &lt;li&gt;{@link #dynamicElements()} allows to browse the subset of elements having
+&nbsp; * a attribute that modify their style.&lt;/li&gt;
+&nbsp; * &lt;li&gt;{@link #elementsEvents()} allows to browse the subset of elements
+&nbsp; * modified by an event.&lt;/li&gt;
+&nbsp; * &lt;li&gt;{@link #bulkElements()} allows to browse all remaining elements that have
+&nbsp; * no dynamic attribute or event.&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * The calling the three last iterators would yield the same elements as calling
+&nbsp; * the first one. When drawing you can optimise the drawing by first pushing the
+&nbsp; * graphic state and then drawing at once all bulk elements. If the dynamic and
+&nbsp; * event subsets are not empty you then must draw such elements modifying the
+&nbsp; * graphic state for each one.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public class StyleGroup extends Style implements Iterable&lt;Element&gt; {
+&nbsp;	// Attribute
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The group unique identifier.
+&nbsp;	 */
+&nbsp;	protected String id;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The set of style rules.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected ArrayList&lt;Rule&gt; rules = new ArrayList&lt;Rule&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Graph elements of this group.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected HashMap&lt;String, Element&gt; elements = new HashMap&lt;String, Element&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The global events actually occurring.
+&nbsp;	 */
+&nbsp;	protected StyleGroupSet.EventSet eventSet;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set of elements whose style is actually modified individually by an event.
+&nbsp;	 * Such elements must be rendered one by one, not in groups like others.
+&nbsp;	 */
+&nbsp;	protected HashMap&lt;Element, ElementEvents&gt; eventsFor;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set of elements that have some dynamic style values. Such elements must be
+&nbsp;	 * rendered one by one, not in groups, like others.
+&nbsp;	 */
+&nbsp;	protected HashSet&lt;Element&gt; dynamicOnes;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A set of events actually pushed only for this group.
+&nbsp;	 */
+&nbsp;	protected String[] curEvents;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The set of bulk elements.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected BulkElements bulkElements = new BulkElements();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Associated renderers.
+&nbsp;	 */
+&nbsp;	public HashMap&lt;String, SwingElementRenderer&gt; renderers;
+&nbsp;
+&nbsp;	// Construction
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New style group for a first graph element and the set of style rules that
+&nbsp;	 * matches it. More graph elements can be added later.
+&nbsp;	 * 
+&nbsp;	 * @param identifier
+&nbsp;	 *            The unique group identifier (see
+&nbsp;	 *            {@link org.graphstream.ui.graphicGraph.stylesheet.StyleSheet#getStyleGroupIdFor(Element, ArrayList)}
+&nbsp;	 *            ).
+&nbsp;	 * @param rules
+&nbsp;	 *            The set of style rules for the style group (see
+&nbsp;	 *            {@link org.graphstream.ui.graphicGraph.stylesheet.StyleSheet#getRulesFor(Element)}
+&nbsp;	 *            ).
+&nbsp;	 * @param firstElement
+&nbsp;	 *            The first element to construct the group.
+&nbsp;	 */
+&nbsp;	public StyleGroup(String identifier, Collection&lt;Rule&gt; rules, Element firstElement,
+<b class="nc">&nbsp;			StyleGroupSet.EventSet eventSet) {</b>
+<b class="nc">&nbsp;		this.id = identifier;</b>
+<b class="nc">&nbsp;		this.rules.addAll(rules);</b>
+<b class="nc">&nbsp;		this.elements.put(firstElement.getId(), firstElement);</b>
+<b class="nc">&nbsp;		this.values = null; // To avoid consume memory since this style will not</b>
+&nbsp;							// store anything.
+<b class="nc">&nbsp;		this.eventSet = eventSet;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (Rule rule : rules)</b>
+<b class="nc">&nbsp;			rule.addGroup(identifier);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The group unique identifier.
+&nbsp;	 * 
+&nbsp;	 * @return A style group identifier.
+&nbsp;	 */
+&nbsp;	public String getId() {
+<b class="nc">&nbsp;		return id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Type of graph element concerned by this style (node, edge, sprite, graph).
+&nbsp;	 * 
+&nbsp;	 * @return The type of the style group elements.
+&nbsp;	 */
+&nbsp;	public Selector.Type getType() {
+<b class="nc">&nbsp;		return rules.get(0).selector.type;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if at least one of the style properties is dynamic (set according to an
+&nbsp;	 * attribute of the element to draw). Such elements cannot therefore be drawn in
+&nbsp;	 * a group operation, but one by one.
+&nbsp;	 * 
+&nbsp;	 * @return True if one property is dynamic.
+&nbsp;	 */
+&nbsp;	public boolean hasDynamicElements() {
+<b class="nc">&nbsp;		return (dynamicOnes != null &amp;&amp; dynamicOnes.size() &gt; 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If true this group contains some elements that are actually changed by an
+&nbsp;	 * event. Such elements cannot therefore be drawn in a group operation, but one
+&nbsp;	 * by one.
+&nbsp;	 * 
+&nbsp;	 * @return True if the group contains some elements changed by an event.
+&nbsp;	 */
+&nbsp;	public boolean hasEventElements() {
+<b class="nc">&nbsp;		return (eventsFor != null &amp;&amp; eventsFor.size() &gt; 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the given element actually has active events.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element to test.
+&nbsp;	 * @return True if the element has actually active events.
+&nbsp;	 */
+&nbsp;	public boolean elementHasEvents(Element element) {
+<b class="nc">&nbsp;		return (eventsFor != null &amp;&amp; eventsFor.containsKey(element));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the given element has dynamic style values provided by specific
+&nbsp;	 * attributes.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element to test.
+&nbsp;	 * @return True if the element has actually specific style attributes.
+&nbsp;	 */
+&nbsp;	public boolean elementIsDynamic(Element element) {
+<b class="nc">&nbsp;		return (dynamicOnes != null &amp;&amp; dynamicOnes.contains(element));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the value of a given property.
+&nbsp;	 * 
+&nbsp;	 * This is a redefinition of the method in {@link Style} to consider the fact a
+&nbsp;	 * style group aggregates several style rules.
+&nbsp;	 * 
+&nbsp;	 * @param property
+&nbsp;	 *            The style property the value is searched for.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Object getValue(String property, String... events) {
+<b class="nc">&nbsp;		int n = rules.size();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (events == null || events.length == 0) {</b>
+<b class="nc">&nbsp;			if (curEvents != null &amp;&amp; curEvents.length &gt; 0) {</b>
+<b class="nc">&nbsp;				events = curEvents;</b>
+<b class="nc">&nbsp;			} else if (eventSet.events != null &amp;&amp; eventSet.events.length &gt; 0) {</b>
+<b class="nc">&nbsp;				events = eventSet.events;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 1; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;			Style style = rules.get(i).getStyle();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (style.hasValue(property, events))</b>
+<b class="nc">&nbsp;				return style.getValue(property, events);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return rules.get(0).getStyle().getValue(property, events);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if there are no elements in the group.
+&nbsp;	 * 
+&nbsp;	 * @return True if the group is empty of elements.
+&nbsp;	 */
+&nbsp;	public boolean isEmpty() {
+<b class="nc">&nbsp;		return elements.isEmpty();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the group contains the element whose identifier is given.
+&nbsp;	 * 
+&nbsp;	 * @param elementId
+&nbsp;	 *            The element to search.
+&nbsp;	 * @return true if the element is in the group.
+&nbsp;	 */
+&nbsp;	public boolean contains(String elementId) {
+<b class="nc">&nbsp;		return elements.containsKey(elementId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the group contains the element given.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element to search.
+&nbsp;	 * @return true if the element is in the group.
+&nbsp;	 */
+&nbsp;	public boolean contains(Element element) {
+<b class="nc">&nbsp;		return elements.containsKey(element.getId());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Return an element of the group, knowing its identifier.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The searched element identifier.
+&nbsp;	 * @return The element corresponding to the identifier or null if not found.
+&nbsp;	 */
+&nbsp;	public Element getElement(String id) {
+<b class="nc">&nbsp;		return elements.get(id);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The number of elements of the group.
+&nbsp;	 * 
+&nbsp;	 * @return The element count.
+&nbsp;	 */
+&nbsp;	public int getElementCount() {
+<b class="nc">&nbsp;		return elements.size();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Iterator on the set of graph elements of this group.
+&nbsp;	 * 
+&nbsp;	 * @return The elements iterator.
+&nbsp;	 */
+&nbsp;	public Iterator&lt;? extends Element&gt; getElementIterator() {
+<b class="nc">&nbsp;		return elements.values().iterator();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Iterable set of elements. This the complete set of elements contained in this
+&nbsp;	 * group without regard to the fact they are modified by an event or are
+&nbsp;	 * dynamic. If you plan to respect events or dynamic elements, you must check
+&nbsp;	 * the elements are not modified by events using
+&nbsp;	 * {@link #elementHasEvents(Element)} and are not dynamic by using
+&nbsp;	 * {@link #elementIsDynamic(Element)} and then draw modified elements using
+&nbsp;	 * {@link #elementsEvents()} and {@link #dynamicElements()}. But the easiest way
+&nbsp;	 * of drawing is to use first {@link #bulkElements()} for all non dynamic non
+&nbsp;	 * event elements, then the {@link #dynamicElements()} and
+&nbsp;	 * {@link #elementsEvents()} to draw all dynamic and event elements.
+&nbsp;	 * 
+&nbsp;	 * @return All the elements in no particular order.
+&nbsp;	 */
+&nbsp;	public Iterable&lt;? extends Element&gt; elements() {
+<b class="nc">&nbsp;		return elements.values();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Iterable set of elements that can be drawn in a bulk operation, that is the
+&nbsp;	 * subset of all elements that are not dynamic or modified by an event.
+&nbsp;	 * 
+&nbsp;	 * @return The iterable set of bulk elements.
+&nbsp;	 */
+&nbsp;	public Iterable&lt;? extends Element&gt; bulkElements() {
+<b class="nc">&nbsp;		return bulkElements;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Subset of elements that are actually modified by one or more events. The
+&nbsp;	 * {@link ElementEvents} class contains the element and an array of events that
+&nbsp;	 * can be pushed on the style group set.
+&nbsp;	 * 
+&nbsp;	 * @return The subset of elements modified by one or more events.
+&nbsp;	 */
+&nbsp;	public Iterable&lt;ElementEvents&gt; elementsEvents() {
+<b class="nc">&nbsp;		return eventsFor.values();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Subset of elements that have dynamic style values and therefore must be
+&nbsp;	 * rendered one by one, not in groups like others. Even though elements style
+&nbsp;	 * can specify some dynamics, the elements must individually have attributes
+&nbsp;	 * that specify the dynamic value. If the elements do not have these attributes
+&nbsp;	 * they can be rendered in bulk operations.
+&nbsp;	 * 
+&nbsp;	 * @return The subset of dynamic elements of the group.
+&nbsp;	 */
+&nbsp;	public Iterable&lt;Element&gt; dynamicElements() {
+<b class="nc">&nbsp;		return dynamicOnes;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Iterator&lt;Element&gt; iterator() {
+<b class="nc">&nbsp;		return elements.values().iterator();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The associated renderers.
+&nbsp;	 * 
+&nbsp;	 * @return A renderer or null if not found.
+&nbsp;	 */
+&nbsp;	public SwingElementRenderer getRenderer(String id) {
+<b class="nc">&nbsp;		if (renderers != null)</b>
+<b class="nc">&nbsp;			return renderers.get(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set of events for a given element or null if the element has not currently
+&nbsp;	 * occurring events.
+&nbsp;	 * 
+&nbsp;	 * @return A set of events or null if none occurring at that time.
+&nbsp;	 */
+&nbsp;	public ElementEvents getEventsFor(Element element) {
+<b class="nc">&nbsp;		if (eventsFor != null)</b>
+<b class="nc">&nbsp;			return eventsFor.get(element);</b>
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Test if an element is pushed as dynamic.
+&nbsp;	 */
+&nbsp;	public boolean isElementDynamic(Element element) {
+<b class="nc">&nbsp;		if (dynamicOnes != null)</b>
+<b class="nc">&nbsp;			return dynamicOnes.contains(element);</b>
+&nbsp;
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Command
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a new graph element to the group.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The new graph element to add.
+&nbsp;	 */
+&nbsp;	public void addElement(Element element) {
+<b class="nc">&nbsp;		elements.put(element.getId(), element);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove a graph element from the group.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element to remove.
+&nbsp;	 * @return The removed element, or null if the element was not found.
+&nbsp;	 */
+&nbsp;	public Element removeElement(Element element) {
+<b class="nc">&nbsp;		if (eventsFor != null &amp;&amp; eventsFor.containsKey(element))</b>
+<b class="nc">&nbsp;			eventsFor.remove(element); // Remove an eventual remaining event.</b>
+&nbsp;
+<b class="nc">&nbsp;		if (dynamicOnes != null &amp;&amp; dynamicOnes.contains(element))</b>
+<b class="nc">&nbsp;			dynamicOnes.remove(element); // Remove an eventual remaining dynamic</b>
+&nbsp;											// information.
+&nbsp;
+<b class="nc">&nbsp;		return elements.remove(element.getId());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Push an event specifically for the given element. Events are stacked in
+&nbsp;	 * order. Called by the GraphicElement.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element to modify with an event.
+&nbsp;	 * @param event
+&nbsp;	 *            The event to push.
+&nbsp;	 */
+&nbsp;	protected void pushEventFor(Element element, String event) {
+<b class="nc">&nbsp;		if (elements.containsKey(element.getId())) {</b>
+<b class="nc">&nbsp;			if (eventsFor == null)</b>
+<b class="nc">&nbsp;				eventsFor = new HashMap&lt;Element, ElementEvents&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;			ElementEvents evs = eventsFor.get(element);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (evs == null) {</b>
+<b class="nc">&nbsp;				evs = new ElementEvents(element, this, event);</b>
+<b class="nc">&nbsp;				eventsFor.put(element, evs);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				evs.pushEvent(event);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Pop an event for the given element. Called by the GraphicElement.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element.
+&nbsp;	 * @param event
+&nbsp;	 *            The event.
+&nbsp;	 */
+&nbsp;	protected void popEventFor(Element element, String event) {
+<b class="nc">&nbsp;		if (elements.containsKey(element.getId())) {</b>
+<b class="nc">&nbsp;			if ( eventsFor != null ) {</b>
+<b class="nc">&nbsp;				ElementEvents evs = eventsFor.get(element);</b>
+&nbsp;				
+<b class="nc">&nbsp;				if (evs != null) {</b>
+<b class="nc">&nbsp;					evs.popEvent(event);</b>
+&nbsp;
+<b class="nc">&nbsp;					if (evs.eventCount() == 0)</b>
+<b class="nc">&nbsp;						eventsFor.remove(element);</b>
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				if (eventsFor.isEmpty())</b>
+<b class="nc">&nbsp;					eventsFor = null;</b>
+&nbsp;	
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Before drawing an element that has events, use this method to activate the
+&nbsp;	 * events, the style values will be modified accordingly. Events for this
+&nbsp;	 * element must have been registered via {@link #pushEventFor(Element, String)}.
+&nbsp;	 * After rendering the {@link #deactivateEvents()} MUST be called.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element to push events for.
+&nbsp;	 */
+&nbsp;	public void activateEventsFor(Element element) {
+<b class="nc">&nbsp;		ElementEvents evs = eventsFor.get(element);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (evs != null &amp;&amp; curEvents == null)</b>
+<b class="nc">&nbsp;			curEvents = evs.events();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * De-activate any events activated for an element. This method MUST be called
+&nbsp;	 * if {@link #activateEventsFor(Element)} has been called.
+&nbsp;	 */
+&nbsp;	public void deactivateEvents() {
+<b class="nc">&nbsp;		curEvents = null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Indicate the element has dynamic values and thus cannot be drawn in bulk
+&nbsp;	 * operations. Called by the GraphicElement.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element.
+&nbsp;	 */
+&nbsp;	protected void pushElementAsDynamic(Element element) {
+<b class="nc">&nbsp;		if (dynamicOnes == null)</b>
+<b class="nc">&nbsp;			dynamicOnes = new HashSet&lt;Element&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		dynamicOnes.add(element);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Indicate the element has no more dynamic values and can be drawn in bulk
+&nbsp;	 * operations. Called by the GraphicElement.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element.
+&nbsp;	 */
+&nbsp;	protected void popElementAsDynamic(Element element) {
+<b class="nc">&nbsp;		dynamicOnes.remove(element);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (dynamicOnes.isEmpty())</b>
+<b class="nc">&nbsp;			dynamicOnes = null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove all graph elements of this group, and remove this group from the group
+&nbsp;	 * list of each style rule.
+&nbsp;	 */
+&nbsp;	public void release() {
+<b class="nc">&nbsp;		for (Rule rule : rules)</b>
+<b class="nc">&nbsp;			rule.removeGroup(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		elements.clear();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Redefinition of the {@link Style} to forbid changing the values.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public void setValue(String property, Object value) {
+<b class="nc">&nbsp;		throw new RuntimeException(&quot;you cannot change the values of a style group.&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a renderer to this group.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The renderer identifier.
+&nbsp;	 * @param renderer
+&nbsp;	 *            The renderer.
+&nbsp;	 */
+&nbsp;	public void addRenderer(String id, SwingElementRenderer renderer) {
+<b class="nc">&nbsp;		if (renderers == null)</b>
+<b class="nc">&nbsp;			renderers = new HashMap&lt;String, SwingElementRenderer&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		renderers.put(id, renderer);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove a renderer.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The renderer identifier.
+&nbsp;	 * @return The removed renderer or null if not found.
+&nbsp;	 */
+&nbsp;	public SwingElementRenderer removeRenderer(String id) {
+<b class="nc">&nbsp;		return renderers.remove(id);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		return toString(-1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString(int level) {
+<b class="nc">&nbsp;		StringBuilder builder = new StringBuilder();</b>
+<b class="nc">&nbsp;		String prefix = &quot;&quot;;</b>
+<b class="nc">&nbsp;		String sprefix = &quot;    &quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; level; i++)</b>
+<b class="nc">&nbsp;			prefix += sprefix;</b>
+&nbsp;
+<b class="nc">&nbsp;		builder.append(String.format(&quot;%s%s%n&quot;, prefix, id));</b>
+<b class="nc">&nbsp;		builder.append(String.format(&quot;%s%sContains : &quot;, prefix, sprefix));</b>
+&nbsp;
+<b class="nc">&nbsp;		for (Element element : elements.values()) {</b>
+<b class="nc">&nbsp;			builder.append(String.format(&quot;%s &quot;, element.getId()));</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		builder.append(String.format(&quot;%n%s%sStyle : &quot;, prefix, sprefix));</b>
+&nbsp;
+<b class="nc">&nbsp;		for (Rule rule : rules) {</b>
+<b class="nc">&nbsp;			builder.append(String.format(&quot;%s &quot;, rule.selector.toString()));</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		builder.append(String.format(&quot;%n&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;		return builder.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Nested classes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Description of an element that is actually modified by one or more events
+&nbsp;	 * occurring on it.
+&nbsp;	 */
+&nbsp;	public static class ElementEvents {
+&nbsp;		// Attribute
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Set of events on the element.
+&nbsp;		 */
+&nbsp;		protected String events[];
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The element.
+&nbsp;		 */
+&nbsp;		protected Element element;
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The group the element pertains to.
+&nbsp;		 */
+&nbsp;		protected StyleGroup group;
+&nbsp;
+&nbsp;		// Construction
+&nbsp;
+<b class="nc">&nbsp;		protected ElementEvents(Element element, StyleGroup group, String event) {</b>
+<b class="nc">&nbsp;			this.element = element;</b>
+<b class="nc">&nbsp;			this.group = group;</b>
+<b class="nc">&nbsp;			this.events = new String[1];</b>
+&nbsp;
+<b class="nc">&nbsp;			events[0] = event;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// Access
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The element on which the events are occurring.
+&nbsp;		 * 
+&nbsp;		 * @return an element.
+&nbsp;		 */
+&nbsp;		public Element getElement() {
+<b class="nc">&nbsp;			return element;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Number of events actually affecting the element.
+&nbsp;		 * 
+&nbsp;		 * @return The number of events affecting the element.
+&nbsp;		 */
+&nbsp;		public int eventCount() {
+<b class="nc">&nbsp;			if (events == null)</b>
+<b class="nc">&nbsp;				return 0;</b>
+&nbsp;
+<b class="nc">&nbsp;			return events.length;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The set of events actually occurring on the element.
+&nbsp;		 * 
+&nbsp;		 * @return A set of strings.
+&nbsp;		 */
+&nbsp;		public String[] events() {
+<b class="nc">&nbsp;			return events;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// Command
+&nbsp;
+&nbsp;		public void activate() {
+<b class="nc">&nbsp;			group.activateEventsFor(element);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void deactivate() {
+<b class="nc">&nbsp;			group.deactivateEvents();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		protected void pushEvent(String event) {
+<b class="nc">&nbsp;			int n = events.length + 1;</b>
+<b class="nc">&nbsp;			String e[] = new String[n];</b>
+<b class="nc">&nbsp;			boolean found = false;</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0; i &lt; events.length; i++) {</b>
+<b class="nc">&nbsp;				if (!events[i].equals(event))</b>
+<b class="nc">&nbsp;					e[i] = events[i];</b>
+&nbsp;				else
+<b class="nc">&nbsp;					found = true;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			e[events.length] = event;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (!found)</b>
+<b class="nc">&nbsp;				events = e;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		protected void popEvent(String event) {
+<b class="nc">&nbsp;			if (events.length &gt; 1) {</b>
+<b class="nc">&nbsp;				String e[] = new String[events.length - 1];</b>
+<b class="nc">&nbsp;				boolean found = false;</b>
+&nbsp;
+<b class="nc">&nbsp;				for (int i = 0, j = 0; i &lt; events.length; i++) {</b>
+<b class="nc">&nbsp;					if (!events[i].equals(event)) {</b>
+<b class="nc">&nbsp;						if (j &lt; e.length) {</b>
+<b class="nc">&nbsp;							e[j++] = events[i];</b>
+&nbsp;						}
+&nbsp;					} else {
+<b class="nc">&nbsp;						found = true;</b>
+&nbsp;					}
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				if (found)</b>
+<b class="nc">&nbsp;					events = e;</b>
+<b class="nc">&nbsp;			} else {</b>
+<b class="nc">&nbsp;				if (events[0].equals(event)) {</b>
+<b class="nc">&nbsp;					events = null;</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public String toString() {
+<b class="nc">&nbsp;			StringBuilder builder = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;			builder.append(String.format(&quot;%s events {&quot;, element.getId()));</b>
+<b class="nc">&nbsp;			for (String event : events)</b>
+<b class="nc">&nbsp;				builder.append(String.format(&quot; %s&quot;, event));</b>
+<b class="nc">&nbsp;			builder.append(&quot; }&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			return builder.toString();</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Virtual set on the elements that have not dynamic style value or event.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected class BulkElements implements Iterable&lt;Element&gt; {</b>
+&nbsp;		public Iterator&lt;Element&gt; iterator() {
+<b class="nc">&nbsp;			return new BulkIterator(elements.values().iterator());</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Iterator on the set of elements that have no event or dynamic style values.
+&nbsp;	 */
+&nbsp;	protected class BulkIterator implements Iterator&lt;Element&gt; {
+&nbsp;		/**
+&nbsp;		 * Iterator on the set of all elements.
+&nbsp;		 */
+&nbsp;		protected Iterator&lt;Element&gt; iterator;
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The next element without event or dynamic style.value.
+&nbsp;		 */
+&nbsp;		Element next;
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * New bulk iterator positioned on the first element with no event or dynamic
+&nbsp;		 * style attribute.
+&nbsp;		 * 
+&nbsp;		 * @param iterator
+&nbsp;		 *            Iterator on the set of all elements.
+&nbsp;		 */
+<b class="nc">&nbsp;		public BulkIterator(Iterator&lt;Element&gt; iterator) {</b>
+<b class="nc">&nbsp;			this.iterator = iterator;</b>
+<b class="nc">&nbsp;			boolean loop = true;</b>
+&nbsp;
+<b class="nc">&nbsp;			while (loop &amp;&amp; iterator.hasNext()) {</b>
+<b class="nc">&nbsp;				next = iterator.next();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (!elementHasEvents(next) &amp;&amp; !elementIsDynamic(next))</b>
+<b class="nc">&nbsp;					loop = false;</b>
+&nbsp;				else
+<b class="nc">&nbsp;					next = null;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		public boolean hasNext() {
+<b class="nc">&nbsp;			return (next != null);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public Element next() {
+<b class="nc">&nbsp;			Element e = next;</b>
+<b class="nc">&nbsp;			boolean loop = true;</b>
+&nbsp;
+<b class="nc">&nbsp;			next = null;</b>
+&nbsp;
+<b class="nc">&nbsp;			while (loop &amp;&amp; iterator.hasNext()) {</b>
+<b class="nc">&nbsp;				next = iterator.next();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (!elementIsDynamic(next) &amp;&amp; !elementHasEvents(next))</b>
+<b class="nc">&nbsp;					loop = false;</b>
+&nbsp;				else
+<b class="nc">&nbsp;					next = null;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return e;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void remove() {
+<b class="nc">&nbsp;			throw new UnsupportedOperationException(&quot;this iterator does not allows removing elements&quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

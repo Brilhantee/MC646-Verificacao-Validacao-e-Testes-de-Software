@@ -1,0 +1,932 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > NetStreamUtils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.netstream</a>
+</div>
+
+<h1>Coverage Summary for Class: NetStreamUtils (org.graphstream.stream.netstream)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NetStreamUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/48)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/358)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">NetStreamUtils$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/51)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/361)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2016-02-01
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.netstream;
+&nbsp;
+&nbsp;import org.graphstream.stream.binary.ByteDecoder;
+&nbsp;import org.graphstream.stream.binary.ByteEncoder;
+&nbsp;import org.graphstream.stream.binary.ByteFactory;
+&nbsp;
+&nbsp;import java.lang.reflect.Array;
+&nbsp;import java.nio.BufferUnderflowException;
+&nbsp;import java.nio.ByteBuffer;
+&nbsp;import java.nio.charset.Charset;
+&nbsp;import java.util.logging.Logger;
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 22/01/16.
+&nbsp; */
+<b class="nc">&nbsp;public class NetStreamUtils {</b>
+<b class="nc">&nbsp;	private static ByteBuffer NULL_BUFFER = ByteBuffer.allocate(0);</b>
+<b class="nc">&nbsp;	private static final Logger LOGGER = Logger.getLogger(NetStreamUtils.class.getName());</b>
+&nbsp;
+&nbsp;	public static ByteFactory getDefaultNetStreamFactory() {
+<b class="nc">&nbsp;		return new ByteFactory() {</b>
+&nbsp;			@Override
+&nbsp;			public ByteEncoder createByteEncoder() {
+<b class="nc">&nbsp;				return new NetStreamEncoder();</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			@Override
+&nbsp;			public ByteDecoder createByteDecoder() {
+<b class="nc">&nbsp;				return new NetStreamDecoder();</b>
+&nbsp;			}
+&nbsp;		};
+&nbsp;	}
+&nbsp;
+&nbsp;	public static int getType(Object value) {
+<b class="nc">&nbsp;		int valueType = NetStreamConstants.TYPE_UNKNOWN;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (value == null)</b>
+<b class="nc">&nbsp;			return NetStreamConstants.TYPE_NULL;</b>
+&nbsp;
+<b class="nc">&nbsp;		Class&lt;?&gt; valueClass = value.getClass();</b>
+<b class="nc">&nbsp;		boolean isArray = valueClass.isArray();</b>
+<b class="nc">&nbsp;		if (isArray) {</b>
+<b class="nc">&nbsp;			if (Array.getLength(value) &gt; 0) {</b>
+<b class="nc">&nbsp;				valueClass = Array.get(value, 0).getClass();</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				return NetStreamConstants.TYPE_ARRAY;</b>
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		if (valueClass.equals(Boolean.class)) {</b>
+<b class="nc">&nbsp;			if (isArray) {</b>
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_BOOLEAN_ARRAY;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_BOOLEAN;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (valueClass.equals(Byte.class)) {</b>
+<b class="nc">&nbsp;			if (isArray) {</b>
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_BYTE_ARRAY;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_BYTE;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (valueClass.equals(Short.class)) {</b>
+<b class="nc">&nbsp;			if (isArray) {</b>
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_SHORT_ARRAY;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_SHORT;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (valueClass.equals(Integer.class)) {</b>
+<b class="nc">&nbsp;			if (isArray) {</b>
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_INT_ARRAY;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_INT;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (valueClass.equals(Long.class)) {</b>
+<b class="nc">&nbsp;			if (isArray) {</b>
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_LONG_ARRAY;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_LONG;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (valueClass.equals(Float.class)) {</b>
+<b class="nc">&nbsp;			if (isArray) {</b>
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_FLOAT_ARRAY;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_FLOAT;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (valueClass.equals(Double.class)) {</b>
+<b class="nc">&nbsp;			if (isArray) {</b>
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_DOUBLE_ARRAY;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_DOUBLE;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (valueClass.equals(String.class)) {</b>
+<b class="nc">&nbsp;			if (isArray) {</b>
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_STRING_ARRAY;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				valueType = NetStreamConstants.TYPE_STRING;</b>
+&nbsp;			}
+&nbsp;		} else
+<b class="nc">&nbsp;			LOGGER.warning(String.format(&quot;can not find type of %s.&quot;, valueClass));</b>
+&nbsp;
+<b class="nc">&nbsp;		return valueType;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static int getVarintSize(long data) {
+&nbsp;		// 7 bits -&gt; 127
+<b class="nc">&nbsp;		if (data &lt; (1L &lt;&lt; 7)) {</b>
+<b class="nc">&nbsp;			return 1;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// 14 bits -&gt; 16383
+<b class="nc">&nbsp;		if (data &lt; (1L &lt;&lt; 14)) {</b>
+<b class="nc">&nbsp;			return 2;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// 21 bits -&gt; 2097151
+<b class="nc">&nbsp;		if (data &lt; (1L &lt;&lt; 21)) {</b>
+<b class="nc">&nbsp;			return 3;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// 28 bits -&gt; 268435455
+<b class="nc">&nbsp;		if (data &lt; (1L &lt;&lt; 28)) {</b>
+<b class="nc">&nbsp;			return 4;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// 35 bits -&gt; 34359738367
+<b class="nc">&nbsp;		if (data &lt; (1L &lt;&lt; 35)) {</b>
+<b class="nc">&nbsp;			return 5;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// 42 bits -&gt; 4398046511103
+<b class="nc">&nbsp;		if (data &lt; (1L &lt;&lt; 42)) {</b>
+<b class="nc">&nbsp;			return 6;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// 49 bits -&gt; 562949953421311
+<b class="nc">&nbsp;		if (data &lt; (1L &lt;&lt; 49)) {</b>
+<b class="nc">&nbsp;			return 7;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// 56 bits -&gt; 72057594037927935
+<b class="nc">&nbsp;		if (data &lt; (1L &lt;&lt; 56)) {</b>
+<b class="nc">&nbsp;			return 8;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return 9;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static void putVarint(ByteBuffer buffer, long number, int byteSize) {
+<b class="nc">&nbsp;		for (int i = 0; i &lt; byteSize; i++) {</b>
+<b class="nc">&nbsp;			int head = 128;</b>
+<b class="nc">&nbsp;			if (i == byteSize - 1)</b>
+<b class="nc">&nbsp;				head = 0;</b>
+<b class="nc">&nbsp;			long b = ((number &gt;&gt; (7 * i)) &amp; 127) ^ head;</b>
+<b class="nc">&nbsp;			buffer.put((byte) (b &amp; 255));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	//
+&nbsp;	// ENCODING METHODS
+&nbsp;	//
+&nbsp;
+&nbsp;	public static ByteBuffer encodeValue(Object in, int valueType) {
+<b class="nc">&nbsp;		if (NetStreamConstants.TYPE_BOOLEAN == valueType) {</b>
+<b class="nc">&nbsp;			return encodeBoolean(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_BOOLEAN_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return encodeBooleanArray(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_BYTE == valueType) {</b>
+<b class="nc">&nbsp;			return encodeByte(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_BYTE_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return encodeByteArray(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_SHORT == valueType) {</b>
+<b class="nc">&nbsp;			return encodeShort(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_SHORT_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return encodeShortArray(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_INT == valueType) {</b>
+<b class="nc">&nbsp;			return encodeInt(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_INT_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return encodeIntArray(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_LONG == valueType) {</b>
+<b class="nc">&nbsp;			return encodeLong(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_LONG_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return encodeLongArray(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_FLOAT == valueType) {</b>
+<b class="nc">&nbsp;			return encodeFloat(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_FLOAT_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return encodeFloatArray(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_DOUBLE == valueType) {</b>
+<b class="nc">&nbsp;			return encodeDouble(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_DOUBLE_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return encodeDoubleArray(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_STRING == valueType) {</b>
+<b class="nc">&nbsp;			return encodeString(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_STRING_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return encodeStringArray(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return encodeArray(in);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_NULL == valueType) {</b>
+<b class="nc">&nbsp;			return NULL_BUFFER;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static ByteBuffer encodeUnsignedVarint(Object in) {
+<b class="nc">&nbsp;		long data = ((Number) in).longValue();</b>
+<b class="nc">&nbsp;		int size = getVarintSize(data);</b>
+&nbsp;
+<b class="nc">&nbsp;		ByteBuffer buff = ByteBuffer.allocate(size);</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; size; i++) {</b>
+<b class="nc">&nbsp;			int head = 128;</b>
+<b class="nc">&nbsp;			if (i == size - 1)</b>
+<b class="nc">&nbsp;				head = 0;</b>
+<b class="nc">&nbsp;			long b = ((data &gt;&gt; (7 * i)) &amp; 127) ^ head;</b>
+<b class="nc">&nbsp;			buff.put((byte) (b &amp; 255));</b>
+&nbsp;		}
+<b class="nc">&nbsp;		buff.rewind();</b>
+&nbsp;
+<b class="nc">&nbsp;		return buff;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static ByteBuffer encodeVarint(Object in) {
+<b class="nc">&nbsp;		long data = ((Number) in).longValue();</b>
+&nbsp;
+&nbsp;		// signed integers encoding
+&nbsp;		// (n &lt;&lt; 1) ^ (n &gt;&gt; 31)
+&nbsp;		// OK but java&#39;s negative values are two&#39;s complements...
+&nbsp;
+<b class="nc">&nbsp;		return encodeUnsignedVarint(data &gt;= 0 ? (data &lt;&lt; 1) : ((Math.abs(data) &lt;&lt; 1) ^ 1));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static ByteBuffer encodeString(Object in) {
+<b class="nc">&nbsp;		String s = (String) in;</b>
+<b class="nc">&nbsp;		byte[] data = s.getBytes(Charset.forName(&quot;UTF-8&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;		ByteBuffer lenBuff = encodeUnsignedVarint(data.length);</b>
+&nbsp;		// outBuffer(lenBuff);
+<b class="nc">&nbsp;		ByteBuffer bb = ByteBuffer.allocate(lenBuff.capacity() + data.length);</b>
+<b class="nc">&nbsp;		bb.put(lenBuff).put(data);</b>
+<b class="nc">&nbsp;		bb.rewind();</b>
+&nbsp;		// outBuffer(bb);
+&nbsp;
+<b class="nc">&nbsp;		return bb;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static ByteBuffer encodeArray(Object in) {
+&nbsp;		// TODO...
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static ByteBuffer encodeDoubleArray(Object in) {
+<b class="nc">&nbsp;		Object[] data = (Object[]) in;</b>
+&nbsp;
+<b class="nc">&nbsp;		int ssize = getVarintSize(data.length);</b>
+&nbsp;
+<b class="nc">&nbsp;		ByteBuffer b = ByteBuffer.allocate(ssize + data.length * 8);</b>
+&nbsp;
+<b class="nc">&nbsp;		putVarint(b, data.length, ssize);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; data.length; i++) {</b>
+<b class="nc">&nbsp;			b.putDouble((Double) data[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		b.rewind();</b>
+<b class="nc">&nbsp;		return b;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static ByteBuffer encodeStringArray(Object in) {
+<b class="nc">&nbsp;		Object[] data = (Object[]) in;</b>
+&nbsp;
+<b class="nc">&nbsp;		int ssize = getVarintSize(data.length);</b>
+&nbsp;
+<b class="nc">&nbsp;		byte[][] dataArray = new byte[data.length][];</b>
+<b class="nc">&nbsp;		ByteBuffer[] lenBuffArray = new ByteBuffer[data.length];</b>
+<b class="nc">&nbsp;		int bufferSize = 0;</b>
+<b class="nc">&nbsp;		for(int i = 0; i &lt; data.length; i++){</b>
+<b class="nc">&nbsp;			byte[] bs = ((String)data[i]).getBytes(Charset.forName(&quot;UTF-8&quot;));</b>
+<b class="nc">&nbsp;			dataArray[i] = bs;</b>
+&nbsp;
+<b class="nc">&nbsp;			ByteBuffer lenBuff = encodeUnsignedVarint(bs.length);</b>
+<b class="nc">&nbsp;			lenBuffArray[i] = lenBuff;</b>
+&nbsp;
+<b class="nc">&nbsp;			bufferSize += lenBuff.capacity() +bs.length;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;		ByteBuffer bb = ByteBuffer.allocate(ssize + bufferSize);</b>
+&nbsp;
+<b class="nc">&nbsp;		putVarint(bb, data.length, ssize);</b>
+&nbsp;
+<b class="nc">&nbsp;		for(int i = 0; i &lt; data.length; i++) {</b>
+<b class="nc">&nbsp;			bb.put(lenBuffArray[i]).put(dataArray[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		bb.rewind();</b>
+&nbsp;
+<b class="nc">&nbsp;		return bb;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 *            The double to encode
+&nbsp;	 * @return ByteBuffer with encoded double in it
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeDouble(Object in) {
+<b class="nc">&nbsp;		ByteBuffer bb = ByteBuffer.allocate(8).putDouble((Double) in);</b>
+<b class="nc">&nbsp;		bb.rewind();</b>
+<b class="nc">&nbsp;		return bb;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 *            The float array to encode
+&nbsp;	 * @return ByteBuffer with encoded float array in it
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeFloatArray(Object in) {
+<b class="nc">&nbsp;		Object[] data = (Object[]) in;</b>
+&nbsp;
+<b class="nc">&nbsp;		int ssize = getVarintSize(data.length);</b>
+&nbsp;
+<b class="nc">&nbsp;		ByteBuffer b = ByteBuffer.allocate(ssize + data.length * 4);</b>
+&nbsp;
+<b class="nc">&nbsp;		putVarint(b, data.length, ssize);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; data.length; i++) {</b>
+<b class="nc">&nbsp;			b.putFloat((Float) data[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		b.rewind();</b>
+<b class="nc">&nbsp;		return b;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 *            The float to encode
+&nbsp;	 * @return ByteBuffer with encoded float in it
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeFloat(Object in) {
+<b class="nc">&nbsp;		ByteBuffer b = ByteBuffer.allocate(4);</b>
+<b class="nc">&nbsp;		b.putFloat(((Float) in));</b>
+<b class="nc">&nbsp;		b.rewind();</b>
+<b class="nc">&nbsp;		return b;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 *            The long array to encode
+&nbsp;	 * @return ByteBuffer with encoded long array in it
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeLongArray(Object in) {
+<b class="nc">&nbsp;		return encodeVarintArray(in);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 *            The long to encode
+&nbsp;	 * @return ByteBuffer with encoded long in it
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeLong(Object in) {
+<b class="nc">&nbsp;		return encodeVarint(in);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 *            The integer array to encode
+&nbsp;	 * @return ByteBuffer with encoded integer array in it
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeIntArray(Object in) {
+<b class="nc">&nbsp;		return encodeVarintArray(in);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 *            The integer to encode
+&nbsp;	 * @return ByteBuffer with encoded integer in it
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeInt(Object in) {
+<b class="nc">&nbsp;		return encodeVarint(in);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 * @return
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeShortArray(Object in) {
+<b class="nc">&nbsp;		return encodeVarintArray(in);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 * @return
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeShort(Object in) {
+<b class="nc">&nbsp;		return encodeVarint(in);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 * @return
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeByteArray(Object in) {
+<b class="nc">&nbsp;		Object[] data = (Object[]) in;</b>
+&nbsp;
+<b class="nc">&nbsp;		int ssize = getVarintSize(data.length);</b>
+&nbsp;
+<b class="nc">&nbsp;		ByteBuffer b = ByteBuffer.allocate(ssize + data.length);</b>
+&nbsp;
+<b class="nc">&nbsp;		putVarint(b, data.length, ssize);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; data.length; i++) {</b>
+<b class="nc">&nbsp;			b.put((Byte) data[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		b.rewind();</b>
+<b class="nc">&nbsp;		return b;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 * @return
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeByte(Object in) {
+<b class="nc">&nbsp;		ByteBuffer b = ByteBuffer.allocate(1);</b>
+<b class="nc">&nbsp;		b.put(((Byte) in));</b>
+<b class="nc">&nbsp;		b.rewind();</b>
+<b class="nc">&nbsp;		return b;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 * @return
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeBooleanArray(Object in) {
+<b class="nc">&nbsp;		Object[] data = (Object[]) in;</b>
+&nbsp;
+<b class="nc">&nbsp;		int ssize = getVarintSize(data.length);</b>
+&nbsp;
+<b class="nc">&nbsp;		ByteBuffer b = ByteBuffer.allocate(ssize + data.length);</b>
+&nbsp;
+<b class="nc">&nbsp;		putVarint(b, data.length, ssize);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; data.length; i++) {</b>
+<b class="nc">&nbsp;			b.put((byte) ((Boolean) data[i] == false ? 0 : 1));</b>
+&nbsp;		}
+<b class="nc">&nbsp;		b.rewind();</b>
+<b class="nc">&nbsp;		return b;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param in
+&nbsp;	 * @return
+&nbsp;	 */
+&nbsp;	public static ByteBuffer encodeBoolean(Object in) {
+<b class="nc">&nbsp;		ByteBuffer b = ByteBuffer.allocate(1);</b>
+<b class="nc">&nbsp;		b.put((byte) (((Boolean) in) == false ? 0 : 1));</b>
+<b class="nc">&nbsp;		b.rewind();</b>
+<b class="nc">&nbsp;		return b;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static ByteBuffer encodeVarintArray(Object in) {
+<b class="nc">&nbsp;		Object[] data = (Object[]) in;</b>
+<b class="nc">&nbsp;		int[] sizes = new int[data.length];</b>
+<b class="nc">&nbsp;		long[] zigzags = new long[data.length];</b>
+<b class="nc">&nbsp;		int sumsizes = 0;</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; data.length; i++) {</b>
+<b class="nc">&nbsp;			long datum = ((Number) data[i]).longValue();</b>
+&nbsp;			// signed integers encoding
+&nbsp;			// (n &lt;&lt; 1) ^ (n &gt;&gt; 31)
+&nbsp;			// OK but java&#39;s negative values are two&#39;s complements...
+<b class="nc">&nbsp;			zigzags[i] = datum &gt; 0 ? (datum &lt;&lt; 1) : ((Math.abs(datum) &lt;&lt; 1) ^ 1);</b>
+&nbsp;
+<b class="nc">&nbsp;			sizes[i] = getVarintSize(zigzags[i]);</b>
+<b class="nc">&nbsp;			sumsizes += sizes[i];</b>
+&nbsp;			// System.out.printf(&quot;i=%d, zigzag=%d, size=%d\n&quot;,i, zigzags[i], sizes[i]);
+&nbsp;		}
+&nbsp;
+&nbsp;		// the size of the size!
+<b class="nc">&nbsp;		int ssize = getVarintSize(data.length);</b>
+&nbsp;
+<b class="nc">&nbsp;		ByteBuffer b = ByteBuffer.allocate(ssize + sumsizes);</b>
+&nbsp;
+<b class="nc">&nbsp;		putVarint(b, data.length, ssize);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; data.length; i++) {</b>
+<b class="nc">&nbsp;			putVarint(b, zigzags[i], sizes[i]);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		b.rewind();</b>
+&nbsp;		// outBuffer(b);
+<b class="nc">&nbsp;		return b;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	//
+&nbsp;	// DECODING METHODS
+&nbsp;	//
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param bb
+&nbsp;	 * @return
+&nbsp;	 */
+&nbsp;	public static int decodeType(ByteBuffer bb) {
+&nbsp;		try {
+<b class="nc">&nbsp;			return bb.get();</b>
+<b class="nc">&nbsp;		} catch (BufferUnderflowException e) {</b>
+<b class="nc">&nbsp;			LOGGER.info(&quot;decodeType: could not decode type&quot;);</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Object decodeValue(ByteBuffer bb, int valueType) {
+<b class="nc">&nbsp;		if (NetStreamConstants.TYPE_BOOLEAN == valueType) {</b>
+<b class="nc">&nbsp;			return decodeBoolean(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_BOOLEAN_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return decodeBooleanArray(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_BYTE == valueType) {</b>
+<b class="nc">&nbsp;			return decodeByte(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_BYTE_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return decodeByteArray(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_SHORT == valueType) {</b>
+<b class="nc">&nbsp;			return decodeShort(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_SHORT_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return decodeShortArray(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_INT == valueType) {</b>
+<b class="nc">&nbsp;			return decodeInt(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_INT_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return decodeIntArray(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_LONG == valueType) {</b>
+<b class="nc">&nbsp;			return decodeLong(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_LONG_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return decodeLongArray(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_FLOAT == valueType) {</b>
+<b class="nc">&nbsp;			return decodeFloat(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_FLOAT_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return decodeFloatArray(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_DOUBLE == valueType) {</b>
+<b class="nc">&nbsp;			return decodeDouble(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_DOUBLE_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return decodeDoubleArray(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_STRING == valueType) {</b>
+<b class="nc">&nbsp;			return decodeString(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_STRING_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return decodeStringArray(bb);</b>
+<b class="nc">&nbsp;		} else if (NetStreamConstants.TYPE_ARRAY == valueType) {</b>
+<b class="nc">&nbsp;			return decodeArray(bb);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @param bb
+&nbsp;	 * @return
+&nbsp;	 */
+&nbsp;	public static Object[] decodeArray(ByteBuffer bb) {
+&nbsp;
+<b class="nc">&nbsp;		int len = (int) decodeUnsignedVarint(bb);</b>
+&nbsp;
+<b class="nc">&nbsp;		Object[] array = new Object[len];</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; len; i++) {</b>
+<b class="nc">&nbsp;			array[i] = decodeValue(bb, decodeType(bb));</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return array;</b>
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String decodeString(ByteBuffer bb) {
+&nbsp;		try {
+<b class="nc">&nbsp;			int len = (int) decodeUnsignedVarint(bb);</b>
+<b class="nc">&nbsp;			byte[] data = new byte[len];</b>
+&nbsp;
+<b class="nc">&nbsp;			bb.get(data);</b>
+&nbsp;
+<b class="nc">&nbsp;			return new String(data, Charset.forName(&quot;UTF-8&quot;));</b>
+<b class="nc">&nbsp;		} catch (BufferUnderflowException e) {</b>
+<b class="nc">&nbsp;			LOGGER.info(&quot;decodeString: could not decode string&quot;);</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String[] decodeStringArray(ByteBuffer bb) {
+<b class="nc">&nbsp;		int len = (int) decodeUnsignedVarint(bb);</b>
+<b class="nc">&nbsp;		String[] array = new String[len];</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; len; i++) {</b>
+<b class="nc">&nbsp;			array[i] = decodeString(bb);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return array;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Boolean decodeBoolean(ByteBuffer bb) {
+<b class="nc">&nbsp;		int data = 0;</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			data = bb.get();</b>
+<b class="nc">&nbsp;		} catch (BufferUnderflowException e) {</b>
+<b class="nc">&nbsp;			LOGGER.info(&quot;decodeByte: could not decode&quot;);</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		return data != 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Byte decodeByte(ByteBuffer bb) {
+<b class="nc">&nbsp;		byte data = 0;</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			data = bb.get();</b>
+<b class="nc">&nbsp;		} catch (BufferUnderflowException e) {</b>
+<b class="nc">&nbsp;			LOGGER.info(&quot;decodeByte: could not decode&quot;);</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		return data;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static long decodeUnsignedVarint(ByteBuffer bb) {
+&nbsp;		try {
+<b class="nc">&nbsp;			int size = 0;</b>
+<b class="nc">&nbsp;			long[] data = new long[9];</b>
+&nbsp;
+&nbsp;			do {
+<b class="nc">&nbsp;				data[size] = bb.get();</b>
+&nbsp;
+<b class="nc">&nbsp;				size++;</b>
+&nbsp;
+&nbsp;				// int bt =data[size-1];
+&nbsp;				// if (bt &lt; 0) bt = (bt &amp; 127) + (bt &amp; 128);
+&nbsp;				// System.out.println(&quot;test &quot;+bt+&quot; -&gt; &quot;+(data[size - 1]&amp; 128) );
+<b class="nc">&nbsp;			} while ((data[size - 1] &amp; 128) == 128);</b>
+<b class="nc">&nbsp;			long number = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0; i &lt; size; i++) {</b>
+<b class="nc">&nbsp;				number ^= (data[i] &amp; 127L) &lt;&lt; (i * 7L);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return number;</b>
+&nbsp;
+<b class="nc">&nbsp;		} catch (BufferUnderflowException e) {</b>
+<b class="nc">&nbsp;			LOGGER.info(&quot;decodeUnsignedVarintFromInteger: could not decode&quot;);</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return 0L;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static long decodeVarint(ByteBuffer bb) {
+<b class="nc">&nbsp;		long number = decodeUnsignedVarint(bb);</b>
+<b class="nc">&nbsp;		return ((number &amp; 1) == 0) ? number &gt;&gt; 1 : -(number &gt;&gt; 1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Short decodeShort(ByteBuffer bb) {
+<b class="nc">&nbsp;		return (short) decodeVarint(bb);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Integer decodeInt(ByteBuffer bb) {
+<b class="nc">&nbsp;		return (int) decodeVarint(bb);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Long decodeLong(ByteBuffer bb) {
+<b class="nc">&nbsp;		return decodeVarint(bb);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Float decodeFloat(ByteBuffer bb) {
+<b class="nc">&nbsp;		return bb.getFloat();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Double decodeDouble(ByteBuffer bb) {
+<b class="nc">&nbsp;		return bb.getDouble();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Integer[] decodeIntArray(ByteBuffer bb) {
+<b class="nc">&nbsp;		int len = (int) decodeUnsignedVarint(bb);</b>
+&nbsp;
+<b class="nc">&nbsp;		Integer[] res = new Integer[len];</b>
+<b class="nc">&nbsp;		for (int i = 0; i &lt; len; i++) {</b>
+<b class="nc">&nbsp;			res[i] = (int) decodeVarint(bb);</b>
+&nbsp;			// System.out.printf(&quot;array[%d]=%d%n&quot;,i,res[i]);
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return res;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Boolean[] decodeBooleanArray(ByteBuffer bb) {
+&nbsp;		try {
+<b class="nc">&nbsp;			int len = (int) decodeUnsignedVarint(bb);</b>
+<b class="nc">&nbsp;			Boolean[] res = new Boolean[len];</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0; i &lt; len; i++) {</b>
+<b class="nc">&nbsp;				byte b = bb.get();</b>
+<b class="nc">&nbsp;				res[i] = b != 0;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return res;</b>
+<b class="nc">&nbsp;		} catch (BufferUnderflowException e) {</b>
+<b class="nc">&nbsp;			LOGGER.info(&quot;decodeBooleanArray: could not decode array&quot;);</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Byte[] decodeByteArray(ByteBuffer bb) {
+&nbsp;		try {
+<b class="nc">&nbsp;			int len = (int) decodeUnsignedVarint(bb);</b>
+<b class="nc">&nbsp;			Byte[] res = new Byte[len];</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0; i &lt; len; i++) {</b>
+<b class="nc">&nbsp;				res[i] = bb.get();</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return res;</b>
+<b class="nc">&nbsp;		} catch (BufferUnderflowException e) {</b>
+<b class="nc">&nbsp;			LOGGER.info(&quot;decodeBooleanArray: could not decode array&quot;);</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Double[] decodeDoubleArray(ByteBuffer bb) {
+&nbsp;		try {
+<b class="nc">&nbsp;			int len = (int) decodeUnsignedVarint(bb);</b>
+<b class="nc">&nbsp;			Double[] res = new Double[len];</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0; i &lt; len; i++) {</b>
+<b class="nc">&nbsp;				res[i] = bb.getDouble();</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return res;</b>
+<b class="nc">&nbsp;		} catch (BufferUnderflowException e) {</b>
+<b class="nc">&nbsp;			LOGGER.info(&quot;decodeDoubleArray: could not decode array&quot;);</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Float[] decodeFloatArray(ByteBuffer bb) {
+&nbsp;		try {
+<b class="nc">&nbsp;			int len = (int) decodeUnsignedVarint(bb);</b>
+<b class="nc">&nbsp;			Float[] res = new Float[len];</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0; i &lt; len; i++) {</b>
+<b class="nc">&nbsp;				res[i] = bb.getFloat();</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return res;</b>
+<b class="nc">&nbsp;		} catch (BufferUnderflowException e) {</b>
+<b class="nc">&nbsp;			LOGGER.info(&quot;decodeFloatArray: could not decode array&quot;);</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Long[] decodeLongArray(ByteBuffer bb) {
+<b class="nc">&nbsp;		int len = (int) decodeUnsignedVarint(bb);</b>
+<b class="nc">&nbsp;		Long[] res = new Long[len];</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; len; i++) {</b>
+<b class="nc">&nbsp;			res[i] = decodeVarint(bb);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return res;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static Short[] decodeShortArray(ByteBuffer bb) {
+<b class="nc">&nbsp;		int len = (int) decodeUnsignedVarint(bb);</b>
+<b class="nc">&nbsp;		Short[] res = new Short[len];</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; len; i++) {</b>
+<b class="nc">&nbsp;			res[i] = (short) decodeVarint(bb);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return res;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

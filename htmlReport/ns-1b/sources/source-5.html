@@ -1,0 +1,252 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GraphRenderer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.view</a>
+</div>
+
+<h1>Coverage Summary for Class: GraphRenderer (org.graphstream.ui.view)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">GraphRenderer</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-07-26
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Beau Tremblay &lt;trembb01@nightcrawler.pfizer.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.view;
+&nbsp;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicElement;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicGraph;
+&nbsp;import org.graphstream.ui.view.camera.Camera;
+&nbsp;import org.graphstream.ui.view.util.InteractiveElement;
+&nbsp;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.EnumSet;
+&nbsp;
+&nbsp;/**
+&nbsp; * Interface for classes that draw a GraphicGraph in a swing component.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * There are two rendering mechanisms in the Swing ui package : the viewer and
+&nbsp; * the renderers. The viewer is a complete architecture to render a graph in a
+&nbsp; * panel or frame, handling all the details. The renderer architecture is a way
+&nbsp; * to only render the graph in any surface, handled directly by the developer.
+&nbsp; * When using the render you are must handle the graphic graph by yourself, but
+&nbsp; * you have a lot more flexibility.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The viewer mechanisms uses graph renderers.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public interface GraphRenderer&lt;S, G&gt; {
+&nbsp;	// Initialisation
+&nbsp;
+&nbsp;	void open(GraphicGraph graph, S drawingSurface);
+&nbsp;
+&nbsp;	void close();
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	View createDefaultView(Viewer viewer, String id);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get a camera object to provide control commands on the view.
+&nbsp;	 * 
+&nbsp;	 * @return a Camera instance
+&nbsp;	 */
+&nbsp;	Camera getCamera();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Search for the first GraphicElement among the specified types (precedence:
+&nbsp;	 * node, edge, sprite) that contains the point at coordinates (x, y).
+&nbsp;	 *
+&nbsp;	 * @param types
+&nbsp;	 *            The types to check
+&nbsp;	 * @param x
+&nbsp;	 *            The point abscissa.
+&nbsp;	 * @param y
+&nbsp;	 *            The point ordinate.
+&nbsp;	 * @return The first GraphicElement among the specified types at the given
+&nbsp;	 *         coordinates or null if nothing found.
+&nbsp;	 */
+&nbsp;	GraphicElement findGraphicElementAt(EnumSet&lt;InteractiveElement&gt; types, double x, double y);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Search for all the graphic elements of the specified types contained inside
+&nbsp;	 * the rectangle (x1,y1)-(x2,y2).
+&nbsp;	 *
+&nbsp;	 * @param types
+&nbsp;	 *            The types to check
+&nbsp;	 * @param x1
+&nbsp;	 *            The rectangle lowest point abscissa.
+&nbsp;	 * @param y1
+&nbsp;	 *            The rectangle lowest point ordinate.
+&nbsp;	 * @param x2
+&nbsp;	 *            The rectangle highest point abscissa.
+&nbsp;	 * @param y2
+&nbsp;	 *            The rectangle highest point ordinate.
+&nbsp;	 * @return The set of GraphicElements in the given rectangle.
+&nbsp;	 */
+&nbsp;	Collection&lt;GraphicElement&gt; allGraphicElementsIn(EnumSet&lt;InteractiveElement&gt; types, double x1, double y1, double x2,
+&nbsp;			double y2);
+&nbsp;
+&nbsp;	// Command
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Redisplay or update the graph.
+&nbsp;	 */
+&nbsp;	void render(G g, int x, int y, int width, int height);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Called by the mouse manager to specify where a node and sprite selection
+&nbsp;	 * started.
+&nbsp;	 * 
+&nbsp;	 * @param x1
+&nbsp;	 *            The selection start abscissa.
+&nbsp;	 * @param y1
+&nbsp;	 *            The selection start ordinate.
+&nbsp;	 */
+&nbsp;	void beginSelectionAt(double x1, double y1);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The selection already started grows toward position (x, y).
+&nbsp;	 * 
+&nbsp;	 * @param x
+&nbsp;	 *            The new end selection abscissa.
+&nbsp;	 * @param y
+&nbsp;	 *            The new end selection ordinate.
+&nbsp;	 */
+&nbsp;	void selectionGrowsAt(double x, double y);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Called by the mouse manager to specify where a node and spite selection
+&nbsp;	 * stopped.
+&nbsp;	 * 
+&nbsp;	 * @param x2
+&nbsp;	 *            The selection stop abscissa.
+&nbsp;	 * @param y2
+&nbsp;	 *            The selection stop ordinate.
+&nbsp;	 */
+&nbsp;	void endSelectionAt(double x2, double y2);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Force an element to move at the given location in pixels.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element.
+&nbsp;	 * @param x
+&nbsp;	 *            The requested position abscissa in pixels.
+&nbsp;	 * @param y
+&nbsp;	 *            The requested position ordinate in pixels.
+&nbsp;	 */
+&nbsp;	void moveElementAtPx(GraphicElement element, double x, double y);
+&nbsp;
+&nbsp;	void screenshot(String filename, int width, int height);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set a layer renderer that will be called each time the graph needs to be
+&nbsp;	 * redrawn before the graph is rendered. Pass &quot;null&quot; to remove the layer
+&nbsp;	 * renderer.
+&nbsp;	 * 
+&nbsp;	 * @param renderer
+&nbsp;	 *            The renderer (or null to remove it).
+&nbsp;	 */
+&nbsp;	void setBackLayerRenderer(LayerRenderer&lt;G&gt; renderer);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set a layer renderer that will be called each time the graph needs to be
+&nbsp;	 * redrawn after the graph is rendered. Pass &quot;null&quot; to remove the layer
+&nbsp;	 * renderer.
+&nbsp;	 * 
+&nbsp;	 * @param renderer
+&nbsp;	 *            The renderer (or null to remove it).
+&nbsp;	 */
+&nbsp;	void setForeLayoutRenderer(LayerRenderer&lt;G&gt; renderer);
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

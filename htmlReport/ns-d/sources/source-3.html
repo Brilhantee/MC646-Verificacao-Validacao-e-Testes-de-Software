@@ -1,0 +1,388 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Graphics</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file.pajek</a>
+</div>
+
+<h1>Coverage Summary for Class: Graphics (org.graphstream.stream.file.pajek)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Graphics</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-07-23
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file.pajek;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Locale;
+&nbsp;
+&nbsp;import org.graphstream.graph.implementations.AbstractElement.AttributeChangeEvent;
+&nbsp;import org.graphstream.stream.SourceBase.ElementType;
+&nbsp;import org.graphstream.stream.file.FileSourcePajek;
+&nbsp;import org.graphstream.util.parser.ParseException;
+&nbsp;import org.graphstream.util.parser.Token;
+&nbsp;
+&nbsp;public class PajekContext {
+&nbsp;	FileSourcePajek pajek;
+&nbsp;	String sourceId;
+&nbsp;
+&nbsp;	protected boolean directed = false;
+&nbsp;
+&nbsp;	protected String weightAttributeName = &quot;weight&quot;;
+&nbsp;
+&nbsp;	public PajekContext(FileSourcePajek pajek) {
+&nbsp;		this.pajek = pajek;
+&nbsp;		this.sourceId = String.format(&quot;&lt;Pajek stream %d&gt;&quot;, System.currentTimeMillis());
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void setDirected(boolean on) {
+&nbsp;		directed = on;
+&nbsp;	}
+&nbsp;
+&nbsp;	protected int addNodes(Token nb) throws ParseException {
+&nbsp;		int n = getInt(nb);
+&nbsp;
+&nbsp;		for (int i = 1; i &lt;= n; ++i) {
+&nbsp;			pajek.sendNodeAdded(sourceId, String.format(&quot;%d&quot;, i));
+&nbsp;		}
+&nbsp;
+&nbsp;		return n;
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void addGraphAttribute(String attr, String value) {
+&nbsp;		pajek.sendAttributeChangedEvent(sourceId, sourceId, ElementType.GRAPH, attr, AttributeChangeEvent.ADD, null,
+&nbsp;				value);
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void addNodeLabel(String nb, String label) {
+&nbsp;		pajek.sendAttributeChangedEvent(sourceId, nb, ElementType.NODE, &quot;ui.label&quot;, AttributeChangeEvent.ADD, null,
+&nbsp;				label);
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void addNodeGraphics(String id, NodeGraphics graphics) {
+&nbsp;		pajek.sendAttributeChangedEvent(sourceId, id, ElementType.NODE, &quot;ui.style&quot;, AttributeChangeEvent.ADD, null,
+&nbsp;				graphics.getStyle());
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void addNodePosition(String id, Token x, Token y, Token z) throws ParseException {
+&nbsp;		Object pos[] = new Object[3];
+&nbsp;		pos[0] = (Double) getReal(x);
+&nbsp;		pos[1] = (Double) getReal(y);
+&nbsp;		pos[2] = z != null ? (Double) getReal(z) : 0;
+&nbsp;
+&nbsp;		pajek.sendAttributeChangedEvent(sourceId, id, ElementType.NODE, &quot;xyz&quot;, AttributeChangeEvent.ADD, null, pos);
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String addEdge(String src, String trg) {
+&nbsp;		String id = String.format(&quot;%s_%s_%d&quot;, src, trg, (long) (Math.random() * 100000) + System.currentTimeMillis());
+&nbsp;
+&nbsp;		pajek.sendEdgeAdded(sourceId, id, src, trg, directed);
+&nbsp;
+&nbsp;		return id;
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void addEdges(EdgeMatrix mat) {
+&nbsp;		int size = mat.size();
+&nbsp;		int edgeid = 0;
+&nbsp;
+&nbsp;		for (int line = 0; line &lt; size; line++) {
+&nbsp;			for (int col = 0; col &lt; size; col++) {
+&nbsp;				if (mat.hasEdge(line, col)) {
+&nbsp;					String id = String.format(&quot;%d_%d_%d&quot;, line + 1, col + 1, edgeid++);
+&nbsp;					if (mat.hasEdge(col, line)) {
+&nbsp;						pajek.sendEdgeAdded(sourceId, id, String.format(&quot;%d&quot;, line + 1), String.format(&quot;%d&quot;, col + 1),
+&nbsp;								false);
+&nbsp;						mat.set(col, line, false);
+&nbsp;					} else {
+&nbsp;						pajek.sendEdgeAdded(sourceId, id, String.format(&quot;%d&quot;, line + 1), String.format(&quot;%d&quot;, col + 1),
+&nbsp;								true);
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void addEdgeWeight(String id, Token nb) throws ParseException {
+&nbsp;		pajek.sendAttributeChangedEvent(sourceId, id, ElementType.EDGE, weightAttributeName, AttributeChangeEvent.ADD,
+&nbsp;				null, getReal(nb));
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void addEdgeGraphics(String id, EdgeGraphics graphics) {
+&nbsp;		pajek.sendAttributeChangedEvent(sourceId, id, ElementType.EDGE, &quot;ui.style&quot;, AttributeChangeEvent.ADD, null,
+&nbsp;				graphics.getStyle());
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static int getInt(Token nb) throws ParseException {
+&nbsp;		try {
+&nbsp;			return Integer.parseInt(nb.image);
+&nbsp;		} catch (Exception e) {
+&nbsp;			throw new ParseException(String.format(&quot;%d:%d: %s not an integer&quot;, nb.beginLine, nb.beginColumn, nb.image));
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static double getReal(Token nb) throws ParseException {
+&nbsp;		try {
+&nbsp;			return Double.parseDouble(nb.image);
+&nbsp;		} catch (Exception e) {
+&nbsp;			throw new ParseException(String.format(&quot;%d:%d: %s not a real&quot;, nb.beginLine, nb.beginColumn, nb.image));
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String toColorValue(Token R, Token G, Token B) throws ParseException {
+&nbsp;		double r = getReal(R);
+&nbsp;		double g = getReal(G);
+&nbsp;		double b = getReal(B);
+&nbsp;
+&nbsp;		return String.format(&quot;rgb(%d, %d, %d)&quot;, (int) (r * 255), (int) (g * 255), (int) (b * 255));
+&nbsp;	}
+&nbsp;}
+&nbsp;
+<b class="nc">&nbsp;abstract class Graphics {</b>
+<b class="nc">&nbsp;	protected StringBuffer graphics = new StringBuffer();</b>
+&nbsp;
+&nbsp;	public abstract void addKey(String key, String value, Token tk) throws ParseException;
+&nbsp;
+&nbsp;	public String getStyle() {
+<b class="nc">&nbsp;		return graphics.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected double getReal(String nb, Token tk) throws ParseException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return Double.parseDouble(nb);</b>
+<b class="nc">&nbsp;		} catch (Exception e) {</b>
+<b class="nc">&nbsp;			throw new ParseException(String.format(&quot;%d:%d: %s not a real&quot;, tk.beginLine, tk.beginColumn, nb));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected int getInt(String nb, Token tk) throws ParseException {
+&nbsp;		try {
+<b class="nc">&nbsp;			return Integer.parseInt(nb);</b>
+<b class="nc">&nbsp;		} catch (Exception e) {</b>
+<b class="nc">&nbsp;			throw new ParseException(String.format(&quot;%d:%d: %s not an integer&quot;, tk.beginLine, tk.beginColumn, nb));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+&nbsp;
+&nbsp;class NodeGraphics extends Graphics {
+&nbsp;	@Override
+&nbsp;	public void addKey(String key, String value, Token tk) throws ParseException {
+&nbsp;		if (key.equals(&quot;shape&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;shape: %s;&quot;, value));
+&nbsp;		} else if (key.equals(&quot;ic&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;fill-color: %s;&quot;, value));
+&nbsp;		} else if (key.equals(&quot;bc&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;stroke-color: %s; stroke-mode: plain;&quot;, value));
+&nbsp;		} else if (key.equals(&quot;bw&quot;)) {
+&nbsp;			graphics.append(String.format(Locale.US, &quot;stroke-width: %fpx;&quot;, getReal(value, tk)));
+&nbsp;		} else if (key.equals(&quot;s_size&quot;)) {
+&nbsp;			graphics.append(String.format(Locale.US, &quot;size: %fpx;&quot;, getReal(value, tk)));
+&nbsp;		} else if (key.equals(&quot;lc&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;text-color: %s;&quot;, value));
+&nbsp;		} else if (key.equals(&quot;fos&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;text-size: %d;&quot;, getInt(value, tk)));
+&nbsp;		} else if (key.equals(&quot;font&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;text-font: %s;&quot;, value));
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+&nbsp;
+&nbsp;class EdgeGraphics extends Graphics {
+&nbsp;	@Override
+&nbsp;	public void addKey(String key, String value, Token tk) throws ParseException {
+&nbsp;		if (key.equals(&quot;w&quot;)) {
+&nbsp;			graphics.append(String.format(Locale.US, &quot;size: %fpx;&quot;, getReal(value, tk)));
+&nbsp;		} else if (key.equals(&quot;c&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;fill-color: %s;&quot;, value));
+&nbsp;		} else if (key.equals(&quot;s&quot;)) {
+&nbsp;			double s = getReal(value, tk);
+&nbsp;			graphics.append(String.format(&quot;arrow-size: %spx, %spx;&quot;, s * 5, s * 3));
+&nbsp;		} else if (key.equals(&quot;l&quot;)) {
+&nbsp;			// ?
+&nbsp;		} else if (key.equals(&quot;p&quot;)) {
+&nbsp;			// ?
+&nbsp;		} else if (key.equals(&quot;lc&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;text-color: %s;&quot;, value));
+&nbsp;		} else if (key.equals(&quot;fos&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;text-size: %d;&quot;, getInt(value, tk)));
+&nbsp;		} else if (key.equals(&quot;font&quot;)) {
+&nbsp;			graphics.append(String.format(&quot;text-font: %s;&quot;, value));
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+&nbsp;
+&nbsp;class EdgeMatrix {
+&nbsp;	// Line first, col second.
+&nbsp;	// Line = from node, col = to node.
+&nbsp;	protected boolean mat[][];
+&nbsp;
+&nbsp;	protected int curLine = 0;
+&nbsp;
+&nbsp;	public EdgeMatrix(int size) {
+&nbsp;		mat = new boolean[size][size]; // Horror !
+&nbsp;	}
+&nbsp;
+&nbsp;	public int size() {
+&nbsp;		return mat.length;
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean hasEdge(int line, int col) {
+&nbsp;		return mat[line][col];
+&nbsp;	}
+&nbsp;
+&nbsp;	public void set(int line, int col, boolean value) {
+&nbsp;		mat[line][col] = value;
+&nbsp;	}
+&nbsp;
+&nbsp;	public void addLine(ArrayList&lt;String&gt; line) {
+&nbsp;		if (curLine &lt; mat.length) {
+&nbsp;			if (line.size() == mat.length) {
+&nbsp;				for (int i = 0; i &lt; mat.length; i++) {
+&nbsp;					mat[curLine][i] = line.get(i).equals(&quot;1&quot;);
+&nbsp;				}
+&nbsp;				curLine++;
+&nbsp;			} else if (line.size() == mat.length * mat.length) {
+&nbsp;				int n = mat.length * mat.length;
+&nbsp;				curLine = -1;
+&nbsp;				for (int i = 0; i &lt; n; i++) {
+&nbsp;					if (i % mat.length == 0)
+&nbsp;						curLine++;
+&nbsp;					mat[curLine][i - (curLine * mat.length)] = line.get(i).equals(&quot;1&quot;);
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+&nbsp;		StringBuffer buffer = new StringBuffer();
+&nbsp;		for (int line = 0; line &lt; mat.length; line++) {
+&nbsp;			for (int col = 0; col &lt; mat.length; col++) {
+&nbsp;				buffer.append(String.format(&quot;%s &quot;, mat[line][col] ? &quot;1&quot; : &quot;0&quot;));
+&nbsp;			}
+&nbsp;			buffer.append(String.format(&quot;%n&quot;));
+&nbsp;		}
+&nbsp;
+&nbsp;		return buffer.toString();
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

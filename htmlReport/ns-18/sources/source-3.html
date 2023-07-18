@@ -1,0 +1,292 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Energies</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.layout.springbox</a>
+</div>
+
+<h1>Coverage Summary for Class: Energies (org.graphstream.ui.layout.springbox)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Energies</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.layout.springbox;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represent the history of energy values for a force-based layout algorithm.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The main intended usage is with the various force layout algorithms that use
+&nbsp; * a an &quot;energy&quot; minimization process to compute a layout. This class allows to
+&nbsp; * store the energy at a current step of layout computation and to remember a
+&nbsp; * history of such steps.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * At a current step of layout computation, one can accumulate energy in the
+&nbsp; * current cell of the energies buffer using {@link #accumulateEnergy(double)}.
+&nbsp; * When the step finishes, one calls {@link #storeEnergy()} to store this
+&nbsp; * accumulated energy in a cell of the memory, push a new cell on the memory and
+&nbsp; * therefore start a new step.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * At any time you can get the last energy value computed with
+&nbsp; * {@link #getEnergy()}. Be careful this is not the energy currently accumulated
+&nbsp; * but the value of the last energy stored with {@link #storeEnergy()}. You can
+&nbsp; * also get at any time the average energy in the memory with
+&nbsp; * {@link #getAverageEnergy()}, as well as an estimate of the stabilization (how
+&nbsp; * much the energies are varying) using {@link #getStabilization()}.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+<b class="nc">&nbsp;public class Energies {</b>
+&nbsp;	/**
+&nbsp;	 * Global current energy (maybe actually updated). This is where users of this
+&nbsp;	 * class add energy for their current computation step. When finished this
+&nbsp;	 * energy value is stored in the energy buffer and cleared.
+&nbsp;	 */
+&nbsp;	protected double energy;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The last computed energy.
+&nbsp;	 */
+&nbsp;	protected double lastEnergy;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Memory. The number of energy values remembered.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected int energiesBuffer = 256;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A circular array of the last values of energy.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected double[] energies = new double[energiesBuffer];</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The current position in the energies array.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected int energiesPos = 0;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The sum of all memorized energies.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected double energySum = 0;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The last computed energy value.
+&nbsp;	 * 
+&nbsp;	 * @return The actual level of energy.
+&nbsp;	 */
+&nbsp;	public double getEnergy() {
+<b class="nc">&nbsp;		return lastEnergy;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The number of energy values remembered, the memory.
+&nbsp;	 */
+&nbsp;	public int getBufferSize() {
+<b class="nc">&nbsp;		return energiesBuffer;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A number in [0..1] with 1 meaning fully stabilized.
+&nbsp;	 * 
+&nbsp;	 * @return A value that indicates the level of stabilization in [0-1].
+&nbsp;	 */
+&nbsp;	public double getStabilization() {
+&nbsp;		// The stability is attained when the global energy of the graph do not
+&nbsp;		// vary anymore.
+&nbsp;
+<b class="nc">&nbsp;		int range = 200;</b>
+<b class="nc">&nbsp;		double eprev1 = getPreviousEnergyValue(range);</b>
+<b class="nc">&nbsp;		double eprev2 = getPreviousEnergyValue(range - 10);</b>
+<b class="nc">&nbsp;		double eprev3 = getPreviousEnergyValue(range - 20);</b>
+<b class="nc">&nbsp;		double eprev = (eprev1 + eprev2 + eprev3) / 3.0;</b>
+<b class="nc">&nbsp;		double diff = Math.abs(lastEnergy - eprev);</b>
+&nbsp;
+<b class="nc">&nbsp;		diff = diff &lt; 1 ? 1 : diff;</b>
+&nbsp;
+<b class="nc">&nbsp;		return 1.0 / diff;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The average energy in the whole buffer.
+&nbsp;	 * 
+&nbsp;	 * @return The average energy.
+&nbsp;	 */
+&nbsp;	public double getAverageEnergy() {
+<b class="nc">&nbsp;		return energySum / energies.length;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A previous energy value.
+&nbsp;	 * 
+&nbsp;	 * @param stepsBack
+&nbsp;	 *            The number of steps back in history. This number must not be
+&nbsp;	 *            larger than the size of the memory (energy buffer) else it is set
+&nbsp;	 *            to this size.
+&nbsp;	 * @return The energy value at stepsBack in time.
+&nbsp;	 */
+&nbsp;	public double getPreviousEnergyValue(int stepsBack) {
+<b class="nc">&nbsp;		if (stepsBack &gt;= energies.length)</b>
+<b class="nc">&nbsp;			stepsBack = energies.length - 1;</b>
+&nbsp;
+<b class="nc">&nbsp;		int pos = (energies.length + (energiesPos - stepsBack)) % energies.length;</b>
+&nbsp;
+<b class="nc">&nbsp;		return energies[pos];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Accumulate some energy in the current energy cell.
+&nbsp;	 * 
+&nbsp;	 * @param value
+&nbsp;	 *            The value to accumulate to the current cell.
+&nbsp;	 */
+&nbsp;	public void accumulateEnergy(double value) {
+<b class="nc">&nbsp;		energy += value;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a the current accumulated energy value in the set.
+&nbsp;	 */
+&nbsp;	public void storeEnergy() {
+<b class="nc">&nbsp;		energiesPos = (energiesPos + 1) % energies.length;</b>
+&nbsp;
+<b class="nc">&nbsp;		energySum -= energies[energiesPos];</b>
+<b class="nc">&nbsp;		energies[energiesPos] = energy;</b>
+<b class="nc">&nbsp;		energySum += energy;</b>
+<b class="nc">&nbsp;		lastEnergy = energy;</b>
+<b class="nc">&nbsp;		energy = 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Randomize the energies array.
+&nbsp;	 */
+&nbsp;	protected void clearEnergies() {
+<b class="nc">&nbsp;		for (int i = 0; i &lt; energies.length; ++i)</b>
+<b class="nc">&nbsp;			energies[i] = ((Math.random() * 2000) - 1000);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

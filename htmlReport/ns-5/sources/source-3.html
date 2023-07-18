@@ -1,0 +1,152 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ByteEncoder</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.binary</a>
+</div>
+
+<h1>Coverage Summary for Class: ByteEncoder (org.graphstream.stream.binary)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">ByteEncoder$Transport</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-04-17
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.binary;
+&nbsp;
+&nbsp;import org.graphstream.stream.Sink;
+&nbsp;
+&nbsp;import java.nio.ByteBuffer;
+&nbsp;
+&nbsp;/**
+&nbsp; * Define an encoder that transform received events into a binary buffer.
+&nbsp; * &lt;p/&gt;
+&nbsp; * A ByteEncoder is a sink that will produce a {@link ByteBuffer} from each
+&nbsp; * received event. Then these buffer can be sent to an end-point using a
+&nbsp; * {@link ByteEncoder.Transport}.
+&nbsp; * &lt;p/&gt;
+&nbsp; * This is a generic way to define the encoding of events into bytes buffer. The
+&nbsp; * main protocol used in GraphStream to do such things is NetStream, with is
+&nbsp; * dedicated encoder {@link org.graphstream.stream.netstream.NetStreamEncoder}.
+&nbsp; *
+&nbsp; * @since 31/01/16.
+&nbsp; */
+&nbsp;public interface ByteEncoder extends Sink {
+&nbsp;	/**
+&nbsp;	 * Add a new transport to this encoder.
+&nbsp;	 *
+&nbsp;	 * @param transport
+&nbsp;	 *            the new transport
+&nbsp;	 */
+&nbsp;	void addTransport(Transport transport);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove an existing transport from this encoder.
+&nbsp;	 *
+&nbsp;	 * @param transport
+&nbsp;	 *            the transport to remove
+&nbsp;	 */
+&nbsp;	void removeTransport(Transport transport);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Define the object that will be called after an event has been transformed
+&nbsp;	 * into a binary buffer.
+&nbsp;	 */
+&nbsp;	interface Transport {
+&nbsp;		/**
+&nbsp;		 * Called by the encoder once an event has been encoded. The buffer&#39;s position
+&nbsp;		 * and limit should be correctly set so the Transport just has to read it.
+&nbsp;		 *
+&nbsp;		 * @param buffer
+&nbsp;		 *            buffer that has to be transported
+&nbsp;		 */
+&nbsp;		void send(ByteBuffer buffer);
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

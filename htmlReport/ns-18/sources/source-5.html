@@ -1,0 +1,441 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > NodeParticle</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.layout.springbox</a>
+</div>
+
+<h1>Coverage Summary for Class: NodeParticle (org.graphstream.ui.layout.springbox)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NodeParticle</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/62)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.layout.springbox;
+&nbsp;
+&nbsp;import java.io.FileOutputStream;
+&nbsp;import java.io.PrintStream;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.Locale;
+&nbsp;
+&nbsp;import org.graphstream.ui.geom.Vector3;
+&nbsp;import org.miv.pherd.Particle;
+&nbsp;
+&nbsp;/**
+&nbsp; * Base implementation of a node particle to be used in the
+&nbsp; * {@link BarnesHutLayout} to represent nodes and choose their positions.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Several abstract methods have to be overrided to provide a computation of the
+&nbsp; * layout (all the attraction/repulsion computation is done in this class):
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;{@link #attraction(Vector3)}&lt;/li&gt;
+&nbsp; * &lt;li&gt;{@link #repulsionN2(Vector3)}&lt;/li&gt;
+&nbsp; * &lt;li&gt;{@link #repulsionNLogN(Vector3)}&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public abstract class NodeParticle extends Particle {
+&nbsp;	/**
+&nbsp;	 * Set of edge connected to this node.
+&nbsp;	 */
+<b class="nc">&nbsp;	public ArrayList&lt;EdgeSpring&gt; neighbours = new ArrayList&lt;EdgeSpring&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Should the node move?.
+&nbsp;	 */
+<b class="nc">&nbsp;	public boolean frozen = false;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Displacement vector.
+&nbsp;	 */
+&nbsp;	public Vector3 disp;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Last computed displacement vector length.
+&nbsp;	 */
+&nbsp;	public double len;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Attraction energy for this node only.
+&nbsp;	 */
+&nbsp;	public double attE;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Repulsion energy for this node only.
+&nbsp;	 */
+&nbsp;	public double repE;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If non null, all this node statistics will be output to this stream.
+&nbsp;	 */
+&nbsp;	public PrintStream out;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The box.
+&nbsp;	 */
+&nbsp;	protected BarnesHutLayout box;
+&nbsp;
+&nbsp;	// Constructors
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New node.
+&nbsp;	 * 
+&nbsp;	 * The node is placed at random in the space of the simulation.
+&nbsp;	 * 
+&nbsp;	 * @param box
+&nbsp;	 *            The spring box.
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 */
+&nbsp;	public NodeParticle(BarnesHutLayout box, String id) {
+&nbsp;		// this(box, id, box.getCenterPoint().x, box.getCenterPoint().y, box.is3D() ?
+&nbsp;		// box.getCenterPoint().z : 0);
+<b class="nc">&nbsp;		this(box, id, box.randomXInsideBounds(), box.randomYInsideBounds(), box.is3D ? box.randomZInsideBounds() : 0);</b>
+&nbsp;		// this(box, id, (box.random.nextDouble() * 2) - 1, (box.random
+&nbsp;		// .nextDouble() * 2) - 1,
+&nbsp;		// box.is3D ? (box.random.nextDouble() * 2) - 1 : 0);
+&nbsp;
+<b class="nc">&nbsp;		this.box = box;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New node at a given position.
+&nbsp;	 * 
+&nbsp;	 * @param box
+&nbsp;	 *            The spring box.
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 * @param x
+&nbsp;	 *            The abscissa.
+&nbsp;	 * @param y
+&nbsp;	 *            The ordinate.
+&nbsp;	 * @param z
+&nbsp;	 *            The depth.
+&nbsp;	 */
+&nbsp;	public NodeParticle(BarnesHutLayout box, String id, double x, double y, double z) {
+<b class="nc">&nbsp;		super(id, x, y, box.is3D ? z : 0);</b>
+<b class="nc">&nbsp;		this.box = box;</b>
+<b class="nc">&nbsp;		disp = new Vector3();</b>
+<b class="nc">&nbsp;		createDebug();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a file for statistics about this node.
+&nbsp;	 */
+&nbsp;	protected void createDebug() {
+<b class="nc">&nbsp;		if (box.outputNodeStats) {</b>
+&nbsp;			try {
+<b class="nc">&nbsp;				out = new PrintStream(new FileOutputStream(&quot;out&quot; + getId() + &quot;.data&quot;));</b>
+<b class="nc">&nbsp;			} catch (Exception e) {</b>
+<b class="nc">&nbsp;				e.printStackTrace();</b>
+<b class="nc">&nbsp;				System.exit(1);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * All the edges connected to this node.
+&nbsp;	 * 
+&nbsp;	 * @return A set of edges.
+&nbsp;	 */
+&nbsp;	public Collection&lt;EdgeSpring&gt; getEdges() {
+<b class="nc">&nbsp;		return neighbours;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void move(int time) {
+<b class="nc">&nbsp;		if (!frozen) {</b>
+<b class="nc">&nbsp;			disp.fill(0);</b>
+&nbsp;
+<b class="nc">&nbsp;			Vector3 delta = new Vector3();</b>
+&nbsp;
+<b class="nc">&nbsp;			repE = 0;</b>
+<b class="nc">&nbsp;			attE = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (box.viewZone &lt; 0)</b>
+<b class="nc">&nbsp;				repulsionN2(delta);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				repulsionNLogN(delta);</b>
+&nbsp;
+<b class="nc">&nbsp;			attraction(delta);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (box.gravity != 0)</b>
+<b class="nc">&nbsp;				gravity(delta);</b>
+&nbsp;
+<b class="nc">&nbsp;			disp.scalarMult(box.force);</b>
+&nbsp;
+<b class="nc">&nbsp;			len = disp.length();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (len &gt; (box.area / 2)) {</b>
+<b class="nc">&nbsp;				disp.scalarMult((box.area / 2) / len);</b>
+<b class="nc">&nbsp;				len = box.area / 2;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			box.avgLength += len;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (len &gt; box.maxMoveLength)</b>
+<b class="nc">&nbsp;				box.maxMoveLength = len;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void nextStep(int time) {
+<b class="nc">&nbsp;		if (!frozen) {</b>
+<b class="nc">&nbsp;			nextPos.x = pos.x + disp.data[0];</b>
+<b class="nc">&nbsp;			nextPos.y = pos.y + disp.data[1];</b>
+&nbsp;
+<b class="nc">&nbsp;			if (box.is3D)</b>
+<b class="nc">&nbsp;				nextPos.z = pos.z + disp.data[2];</b>
+&nbsp;
+<b class="nc">&nbsp;			box.nodeMoveCount++;</b>
+<b class="nc">&nbsp;			moved = true;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			nextPos.x = pos.x;</b>
+<b class="nc">&nbsp;			nextPos.y = pos.y;</b>
+<b class="nc">&nbsp;			if (box.is3D)</b>
+<b class="nc">&nbsp;				nextPos.z = pos.z;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (out != null) {</b>
+<b class="nc">&nbsp;			out.printf(Locale.US, &quot;%s %f %f %f%n&quot;, getId(), len, attE, repE);</b>
+<b class="nc">&nbsp;			out.flush();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		super.nextStep(time);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Force a node to move from a given vector.
+&nbsp;	 * 
+&nbsp;	 * @param dx
+&nbsp;	 *            The x component.
+&nbsp;	 * @param dy
+&nbsp;	 *            The y component.
+&nbsp;	 * @param dz
+&nbsp;	 *            The z component.
+&nbsp;	 */
+&nbsp;	public void moveOf(double dx, double dy, double dz) {
+<b class="nc">&nbsp;		pos.set(pos.x + dx, pos.y + dy, pos.z + dz);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Force a node to move at a given position.
+&nbsp;	 * 
+&nbsp;	 * @param x
+&nbsp;	 *            The new x.
+&nbsp;	 * @param y
+&nbsp;	 *            The new y.
+&nbsp;	 * @param z
+&nbsp;	 *            The new z.
+&nbsp;	 */
+&nbsp;	public void moveTo(double x, double y, double z) {
+<b class="nc">&nbsp;		pos.set(x, y, z);</b>
+<b class="nc">&nbsp;		moved = true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the repulsion for each other node. This is the most precise way, but
+&nbsp;	 * the algorithm is a time hog : complexity is O(n^2).
+&nbsp;	 * 
+&nbsp;	 * @param delta
+&nbsp;	 *            The computed displacement vector.
+&nbsp;	 */
+&nbsp;	protected abstract void repulsionN2(Vector3 delta);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the repulsion for each node in the viewing distance, and use the
+&nbsp;	 * n-tree to find them. For a certain distance the node repulsion is computed
+&nbsp;	 * one by one. At a larger distance the repulsion is computed using nodes
+&nbsp;	 * barycenters.
+&nbsp;	 * 
+&nbsp;	 * @param delta
+&nbsp;	 *            The computed displacement vector.
+&nbsp;	 */
+&nbsp;	protected abstract void repulsionNLogN(Vector3 delta);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the global attraction toward each connected node.
+&nbsp;	 * 
+&nbsp;	 * @param delta
+&nbsp;	 *            The computed displacement vector.
+&nbsp;	 */
+&nbsp;	protected abstract void attraction(Vector3 delta);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the global attraction toward the layout center (if enabled).
+&nbsp;	 * 
+&nbsp;	 * @param delta
+&nbsp;	 *            The computed displacement vector.
+&nbsp;	 * @see BarnesHutLayout#useGravity
+&nbsp;	 */
+&nbsp;	protected abstract void gravity(Vector3 delta);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The given edge is connected to this node.
+&nbsp;	 * 
+&nbsp;	 * @param e
+&nbsp;	 *            The edge to connect.
+&nbsp;	 */
+&nbsp;	public void registerEdge(EdgeSpring e) {
+<b class="nc">&nbsp;		neighbours.add(e);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The given edge is no more connected to this node.
+&nbsp;	 * 
+&nbsp;	 * @param e
+&nbsp;	 *            THe edge to disconnect.
+&nbsp;	 */
+&nbsp;	public void unregisterEdge(EdgeSpring e) {
+<b class="nc">&nbsp;		int i = neighbours.indexOf(e);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (i &gt;= 0) {</b>
+<b class="nc">&nbsp;			neighbours.remove(i);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove all edges connected to this node.
+&nbsp;	 */
+&nbsp;	public void removeNeighborEdges() {
+<b class="nc">&nbsp;		ArrayList&lt;EdgeSpring&gt; edges = new ArrayList&lt;EdgeSpring&gt;(neighbours);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (EdgeSpring edge : edges)</b>
+<b class="nc">&nbsp;			box.removeEdge(box.getLayoutAlgorithmName(), edge.id);</b>
+&nbsp;
+<b class="nc">&nbsp;		neighbours.clear();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void inserted() {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void removed() {
+<b class="nc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

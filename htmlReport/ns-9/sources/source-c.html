@@ -1,0 +1,288 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GEXFNodes</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file.gexf</a>
+</div>
+
+<h1>Coverage Summary for Class: GEXFNodes (org.graphstream.stream.file.gexf)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GEXFNodes</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/42)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2013-09-18
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file.gexf;
+&nbsp;
+&nbsp;import java.lang.reflect.Array;
+&nbsp;import java.util.HashMap;
+&nbsp;
+&nbsp;import javax.xml.stream.XMLStreamException;
+&nbsp;
+&nbsp;import org.graphstream.stream.SinkAdapter;
+&nbsp;
+&nbsp;public class GEXFNodes extends SinkAdapter implements GEXFElement {
+&nbsp;	GEXF root;
+&nbsp;	HashMap&lt;String, GEXFNode&gt; nodes;
+&nbsp;
+<b class="nc">&nbsp;	public GEXFNodes(GEXF root) {</b>
+<b class="nc">&nbsp;		this.root = root;</b>
+<b class="nc">&nbsp;		this.nodes = new HashMap&lt;String, GEXFNode&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		root.addSink(this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private float[] convertToXYZ(Object value) {
+<b class="nc">&nbsp;		if (value == null || !value.getClass().isArray())</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;
+<b class="nc">&nbsp;		float[] xyz = new float[Array.getLength(value)];</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = 0; i &lt; xyz.length; i++) {</b>
+<b class="nc">&nbsp;			Object o = Array.get(value, i);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o instanceof Number)</b>
+<b class="nc">&nbsp;				xyz[i] = ((Number) o).floatValue();</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return null;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return xyz;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.file.gexf.GEXFElement#export(org.graphstream.stream
+&nbsp;	 * .file.gexf.SmartXMLWriter)
+&nbsp;	 */
+&nbsp;	public void export(SmartXMLWriter stream) throws XMLStreamException {
+<b class="nc">&nbsp;		stream.startElement(&quot;nodes&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (GEXFNode node : nodes.values())</b>
+<b class="nc">&nbsp;			node.export(stream);</b>
+&nbsp;
+<b class="nc">&nbsp;		stream.endElement(); // NODES</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.SinkAdapter#nodeAdded(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeAdded(String sourceId, long timeId, String nodeId) {
+<b class="nc">&nbsp;		GEXFNode node = nodes.get(nodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (node == null) {</b>
+<b class="nc">&nbsp;			node = new GEXFNode(root, nodeId);</b>
+<b class="nc">&nbsp;			nodes.put(nodeId, node);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		node.spells.start();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.SinkAdapter#nodeRemoved(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeRemoved(String sourceId, long timeId, String nodeId) {
+<b class="nc">&nbsp;		GEXFNode node = nodes.get(nodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (node == null) {</b>
+<b class="nc">&nbsp;			System.err.printf(&quot;node removed but not added\n&quot;);</b>
+&nbsp;			return;
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		node.spells.end();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.SinkAdapter#nodeAttributeAdded(java.lang.String,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+<b class="nc">&nbsp;		GEXFNode node = nodes.get(nodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		if ((&quot;ui.label&quot;.equals(attribute) || &quot;label&quot;.equals(attribute)) &amp;&amp; value != null)</b>
+<b class="nc">&nbsp;			node.label = value.toString();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (&quot;xyz&quot;.equals(attribute)) {</b>
+<b class="nc">&nbsp;			float[] xyz = convertToXYZ(value);</b>
+&nbsp;
+<b class="nc">&nbsp;			switch (xyz.length) {</b>
+&nbsp;			default:
+<b class="nc">&nbsp;				node.z = xyz[2];</b>
+&nbsp;			case 2:
+<b class="nc">&nbsp;				node.y = xyz[1];</b>
+&nbsp;			case 1:
+<b class="nc">&nbsp;				node.x = xyz[0];</b>
+&nbsp;			case 0:
+&nbsp;				break;
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			node.position = true;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		node.attvalues.attributeUpdated(root.getNodeAttribute(attribute), value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.SinkAdapter#nodeAttributeChanged(java.lang.String,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;		nodeAttributeAdded(sourceId, timeId, nodeId, attribute, newValue);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.SinkAdapter#nodeAttributeRemoved(java.lang.String,
+&nbsp;	 * long, java.lang.String, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+<b class="nc">&nbsp;		GEXFNode node = nodes.get(nodeId);</b>
+<b class="nc">&nbsp;		node.attvalues.attributeUpdated(root.getNodeAttribute(attribute), null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.SinkAdapter#graphCleared(java.lang.String, long)
+&nbsp;	 */
+&nbsp;	public void graphCleared(String sourceId, long timeId) {
+<b class="nc">&nbsp;		for (GEXFNode node : nodes.values())</b>
+<b class="nc">&nbsp;			node.spells.end();</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

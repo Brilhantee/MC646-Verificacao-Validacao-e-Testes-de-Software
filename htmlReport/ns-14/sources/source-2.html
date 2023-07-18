@@ -1,0 +1,522 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GraphicEdge</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.graphicGraph</a>
+</div>
+
+<h1>Coverage Summary for Class: GraphicEdge (org.graphstream.ui.graphicGraph)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GraphicEdge</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/49)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GraphicEdge$EdgeGroup</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/29)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/64)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.graphicGraph;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.stream.SourceBase.ElementType;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Selector;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;
+&nbsp;/**
+&nbsp; * Graphical edge.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The graphic edge defines its source and target node as well as a direction, a
+&nbsp; * string label and a style from the style sheet.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * @see GraphicGraph
+&nbsp; */
+&nbsp;public class GraphicEdge extends GraphicElement implements Edge {
+&nbsp;	// Attributes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The first node.
+&nbsp;	 */
+&nbsp;	public GraphicNode from;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The second node.
+&nbsp;	 */
+&nbsp;	public GraphicNode to;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Is the edge directed ?.
+&nbsp;	 */
+&nbsp;	public boolean directed;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * In case of a multi-graph this is the index of the edge between to and from.
+&nbsp;	 */
+&nbsp;	public int multi;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If non null, this gives the number of edges between the two same nodes.
+&nbsp;	 */
+&nbsp;	public EdgeGroup group;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Control points for curved edges or polylines. This contains the control
+&nbsp;	 * points of an edge. If the edge is in 2D each sequence of two cells gives the
+&nbsp;	 * x and y coordinates of a control point. Else each sequence of three cells
+&nbsp;	 * gives the x, y and z coordinates. Therefore the number of control points can
+&nbsp;	 * be obtained by dividing by 2 or 3 the length of this array. For example for
+&nbsp;	 * cubic Bezier curves in 2D this array contains four cells. The control points
+&nbsp;	 * are ordered from node0 to node1.
+&nbsp;	 */
+&nbsp;	public double[] ctrl;
+&nbsp;
+&nbsp;	// Constructors
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New graphic edge.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The edge unique identifier.
+&nbsp;	 * @param from
+&nbsp;	 *            The source node.
+&nbsp;	 * @param to
+&nbsp;	 *            The target node.
+&nbsp;	 * @param dir
+&nbsp;	 *            True if the edge is directed in the direction from-to.
+&nbsp;	 * @param attributes
+&nbsp;	 *            A set of initial attributes.
+&nbsp;	 */
+&nbsp;	public GraphicEdge(String id, GraphicNode from, GraphicNode to, boolean dir, HashMap&lt;String, Object&gt; attributes) {
+<b class="nc">&nbsp;		super(id, from.mygraph);</b>
+&nbsp;
+<b class="nc">&nbsp;		this.from = from;</b>
+<b class="nc">&nbsp;		this.to = to;</b>
+<b class="nc">&nbsp;		this.directed = dir;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (this.attributes == null)</b>
+<b class="nc">&nbsp;			this.attributes = new HashMap&lt;String, Object&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (attributes != null)</b>
+<b class="nc">&nbsp;			setAttributes(attributes);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Selector.Type getSelectorType() {
+<b class="nc">&nbsp;		return Selector.Type.EDGE;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Obtain the node that is not &quot;n&quot; attached to this edge.
+&nbsp;	 * 
+&nbsp;	 * @param n
+&nbsp;	 *            One of the node of this edge.
+&nbsp;	 * @return The other node of this edge.
+&nbsp;	 */
+&nbsp;	public GraphicNode otherNode(GraphicNode n) {
+<b class="nc">&nbsp;		return (GraphicNode) getOpposite(n);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public double getX() {
+<b class="nc">&nbsp;		return from.x + ((to.x - from.x) / 2);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public double getY() {
+<b class="nc">&nbsp;		return from.y + ((to.y - from.y) / 2);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public double getZ() {
+<b class="nc">&nbsp;		return from.z + ((to.z - from.z) / 2);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Control points for curved edges or polylines. This contains the control
+&nbsp;	 * points of an edge. If the edge is in 2D each sequence of two cells gives the
+&nbsp;	 * x and y coordinates of a control point. Else each sequence of three cells
+&nbsp;	 * gives the x, y and z coordinates. Therefore the number of control points can
+&nbsp;	 * be obtained by dividing by 2 or 3 the length of this array. For example for
+&nbsp;	 * cubic Bezier curves in 2D this array contains four cells. The control points
+&nbsp;	 * are ordered from node0 to node1. The units are &quot;graph units&quot;.
+&nbsp;	 * 
+&nbsp;	 * @return The control points coordinates or null if this edge is a straight
+&nbsp;	 *         line.
+&nbsp;	 */
+&nbsp;	public double[] getControlPoints() {
+<b class="nc">&nbsp;		return ctrl;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the the edge defines control points to draw a curve or polyline. This
+&nbsp;	 * does not mean the edge style asks to paint the edge as a curve, only that
+&nbsp;	 * control points are defined.
+&nbsp;	 * 
+&nbsp;	 * @return True if control points are available.
+&nbsp;	 */
+&nbsp;	public boolean isCurve() {
+<b class="nc">&nbsp;		return ctrl != null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Change the control points array for this edge.
+&nbsp;	 * 
+&nbsp;	 * @param points
+&nbsp;	 *            The new set of points. See the {@link #getControlPoints()} method
+&nbsp;	 *            for an explanation on the organisation of this array.
+&nbsp;	 * @see #getControlPoints()
+&nbsp;	 */
+&nbsp;	public void setControlPoints(double points[]) {
+<b class="nc">&nbsp;		ctrl = points;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This edge is the i-th between the two same nodes.
+&nbsp;	 * 
+&nbsp;	 * @return The edge index between the two nodes if there are several such edges.
+&nbsp;	 */
+&nbsp;	public int getMultiIndex() {
+<b class="nc">&nbsp;		return multi;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void move(double x, double y, double z) {
+&nbsp;		// NOP on edges !!!
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue, Object newValue) {
+<b class="nc">&nbsp;		super.attributeChanged(event, attribute, oldValue, newValue);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (attribute.startsWith(&quot;ui.sprite.&quot;)) {</b>
+<b class="nc">&nbsp;			mygraph.spriteAttribute(event, this, attribute, newValue);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		mygraph.listeners.sendAttributeChangedEvent(getId(), ElementType.EDGE, attribute, event, oldValue, newValue);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Count the number of identical edges between the two nodes of this edge and
+&nbsp;	 * create or update the edge group. The edge group contains all the edges
+&nbsp;	 * between two same nodes and allows to render faster multiple edges in a
+&nbsp;	 * multigraph.
+&nbsp;	 * 
+&nbsp;	 * @param edgeList
+&nbsp;	 *            The actual set of edges between two nodes (see the connectivity in
+&nbsp;	 *            the graphic graph).
+&nbsp;	 */
+&nbsp;	protected void countSameEdges(Iterable&lt;GraphicEdge&gt; edgeList) {
+<b class="nc">&nbsp;		for (GraphicEdge other : edgeList) {</b>
+<b class="nc">&nbsp;			if (other != this) {</b>
+<b class="nc">&nbsp;				if ((other.from == from &amp;&amp; other.to == to) || (other.to == from &amp;&amp; other.from == to)) {</b>
+<b class="nc">&nbsp;					group = other.group;</b>
+&nbsp;
+<b class="nc">&nbsp;					if (group == null)</b>
+<b class="nc">&nbsp;						group = new EdgeGroup(other, this);</b>
+&nbsp;					else
+<b class="nc">&nbsp;						group.increment(this);</b>
+&nbsp;
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				}
+&nbsp;			}
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void removed() {
+<b class="nc">&nbsp;		if (group != null) {</b>
+<b class="nc">&nbsp;			group.decrement(this);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (group.getCount() == 1)</b>
+<b class="nc">&nbsp;				group = null;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Edge interface
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getNode0() {
+<b class="nc">&nbsp;		return from;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getNode1() {
+<b class="nc">&nbsp;		return to;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If there are several edges between two nodes, this edge pertains to a group.
+&nbsp;	 * Else this method returns null.
+&nbsp;	 * 
+&nbsp;	 * @return The group of edges between two same nodes, null if the edge is alone
+&nbsp;	 *         between the two nodes.
+&nbsp;	 */
+&nbsp;	public EdgeGroup getGroup() {
+<b class="nc">&nbsp;		return group;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getOpposite(Node node) {
+<b class="nc">&nbsp;		if (node == from)</b>
+<b class="nc">&nbsp;			return to;</b>
+&nbsp;
+<b class="nc">&nbsp;		return from;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getSourceNode() {
+<b class="nc">&nbsp;		return from;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Node getTargetNode() {
+<b class="nc">&nbsp;		return to;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isDirected() {
+<b class="nc">&nbsp;		return directed;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isLoop() {
+<b class="nc">&nbsp;		return (from == to);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setDirected(boolean on) {
+<b class="nc">&nbsp;		directed = on; // / XXX</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void switchDirection() {
+&nbsp;		GraphicNode tmp; // XXX
+<b class="nc">&nbsp;		tmp = from;</b>
+<b class="nc">&nbsp;		from = to;</b>
+<b class="nc">&nbsp;		to = tmp;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Nested classes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * An edge group contains the set of edges between two given nodes. This allows
+&nbsp;	 * to quickly know how many &#39;multi&#39; edges there is between two nodes in a
+&nbsp;	 * multigraph and to associate invariant indices to edges (the
+&nbsp;	 * {@link GraphicEdge#multi} attribute) inside the multi-representation.
+&nbsp;	 */
+&nbsp;	public class EdgeGroup {
+&nbsp;		/**
+&nbsp;		 * The set of multiple edges.
+&nbsp;		 */
+&nbsp;		public ArrayList&lt;GraphicEdge&gt; edges;
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Create a new edge group, starting with two edges.
+&nbsp;		 * 
+&nbsp;		 * @param first
+&nbsp;		 *            The initial edge.
+&nbsp;		 * @param second
+&nbsp;		 *            The second edge.
+&nbsp;		 */
+<b class="nc">&nbsp;		public EdgeGroup(GraphicEdge first, GraphicEdge second) {</b>
+<b class="nc">&nbsp;			edges = new ArrayList&lt;GraphicEdge&gt;();</b>
+<b class="nc">&nbsp;			first.group = this;</b>
+<b class="nc">&nbsp;			second.group = this;</b>
+<b class="nc">&nbsp;			edges.add(first);</b>
+<b class="nc">&nbsp;			edges.add(second);</b>
+<b class="nc">&nbsp;			first.multi = 0;</b>
+<b class="nc">&nbsp;			second.multi = 1;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * I-th edge of the group.
+&nbsp;		 * 
+&nbsp;		 * @param i
+&nbsp;		 *            The edge index.
+&nbsp;		 * @return The i-th edge.
+&nbsp;		 */
+&nbsp;		public GraphicEdge getEdge(int i) {
+<b class="nc">&nbsp;			return edges.get(i);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Number of edges in this group.
+&nbsp;		 * 
+&nbsp;		 * @return The edge count.
+&nbsp;		 */
+&nbsp;		public int getCount() {
+<b class="nc">&nbsp;			return edges.size();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Add an edge in the group.
+&nbsp;		 * 
+&nbsp;		 * @param edge
+&nbsp;		 *            The edge to add.
+&nbsp;		 */
+&nbsp;		public void increment(GraphicEdge edge) {
+<b class="nc">&nbsp;			edge.multi = getCount();</b>
+<b class="nc">&nbsp;			edges.add(edge);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Remove an edge from the group.
+&nbsp;		 * 
+&nbsp;		 * @param edge
+&nbsp;		 *            The edge to remove.
+&nbsp;		 */
+&nbsp;		public void decrement(GraphicEdge edge) {
+<b class="nc">&nbsp;			edges.remove(edges.indexOf(edge));</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 0; i &lt; edges.size(); i++)</b>
+<b class="nc">&nbsp;				edges.get(i).multi = i;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

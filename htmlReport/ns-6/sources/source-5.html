@@ -1,0 +1,244 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSinkDGSUtility</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSinkDGSUtility (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileSinkDGSUtility</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/60)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2014-11-03
+&nbsp; * 
+&nbsp; * @author Thibaut Démare &lt;fdhp_76@hotmail.com&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import java.awt.Color;
+&nbsp;import java.lang.reflect.Array;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Locale;
+&nbsp;
+<b class="nc">&nbsp;public class FileSinkDGSUtility {</b>
+&nbsp;	protected static String formatStringForQuoting(String str) {
+<b class="nc">&nbsp;		return str.replaceAll(&quot;(^|[^\\\\])\&quot;&quot;, &quot;$1\\\\\&quot;&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static String attributeString(String key, Object value, boolean remove) {
+<b class="nc">&nbsp;		if (key == null || key.length() == 0)</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (remove) {</b>
+<b class="nc">&nbsp;			return String.format(&quot; -\&quot;%s\&quot;&quot;, key);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			if (value != null &amp;&amp; value.getClass().isArray())</b>
+<b class="nc">&nbsp;				return String.format(&quot; \&quot;%s\&quot;:%s&quot;, key, arrayString(value));</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return String.format(&quot; \&quot;%s\&quot;:%s&quot;, key, valueString(value));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static String arrayString(Object value) {
+<b class="nc">&nbsp;		if (value != null &amp;&amp; value.getClass().isArray()) {</b>
+<b class="nc">&nbsp;			StringBuilder sb = new StringBuilder();</b>
+<b class="nc">&nbsp;			sb.append(&quot;{&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (Array.getLength(value) == 0)</b>
+<b class="nc">&nbsp;				sb.append(&quot;\&quot;\&quot;&quot;);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				sb.append(arrayString(Array.get(value, 0)));</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 1; i &lt; Array.getLength(value); ++i)</b>
+<b class="nc">&nbsp;				sb.append(String.format(&quot;,%s&quot;, arrayString(Array.get(value, i))));</b>
+&nbsp;
+<b class="nc">&nbsp;			sb.append(&quot;}&quot;);</b>
+<b class="nc">&nbsp;			return sb.toString();</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			return valueString(value);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static String valueString(Object value) {
+<b class="nc">&nbsp;		if (value == null)</b>
+<b class="nc">&nbsp;			return &quot;\&quot;\&quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (value instanceof CharSequence) {</b>
+<b class="nc">&nbsp;			if (value instanceof String)</b>
+<b class="nc">&nbsp;				return String.format(&quot;\&quot;%s\&quot;&quot;, formatStringForQuoting((String) value));</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return String.format(&quot;\&quot;%s\&quot;&quot;, (CharSequence) value);</b>
+<b class="nc">&nbsp;		} else if (value instanceof Number) {</b>
+<b class="nc">&nbsp;			Number nval = (Number) value;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (value instanceof Integer || value instanceof Short || value instanceof Byte || value instanceof Long)</b>
+<b class="nc">&nbsp;				return String.format(Locale.US, &quot;%d&quot;, nval.longValue());</b>
+&nbsp;			else
+<b class="nc">&nbsp;				return String.format(Locale.US, &quot;%f&quot;, nval.doubleValue());</b>
+<b class="nc">&nbsp;		} else if (value instanceof Boolean) {</b>
+<b class="nc">&nbsp;			return String.format(Locale.US, &quot;%b&quot;, ((Boolean) value));</b>
+<b class="nc">&nbsp;		} else if (value instanceof Character) {</b>
+<b class="nc">&nbsp;			return String.format(&quot;\&quot;%c\&quot;&quot;, ((Character) value).charValue());</b>
+<b class="nc">&nbsp;		} else if (value instanceof Object[]) {</b>
+<b class="nc">&nbsp;			Object array[] = (Object[]) value;</b>
+<b class="nc">&nbsp;			int n = array.length;</b>
+<b class="nc">&nbsp;			StringBuffer sb = new StringBuffer();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (array.length &gt; 0)</b>
+<b class="nc">&nbsp;				sb.append(valueString(array[0]));</b>
+&nbsp;
+<b class="nc">&nbsp;			for (int i = 1; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;				sb.append(&quot;,&quot;);</b>
+<b class="nc">&nbsp;				sb.append(valueString(array[i]));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return sb.toString();</b>
+<b class="nc">&nbsp;		} else if (value instanceof HashMap&lt;?, ?&gt;) {</b>
+<b class="nc">&nbsp;			HashMap&lt;?, ?&gt; hash = (HashMap&lt;?, ?&gt;) value;</b>
+&nbsp;
+<b class="nc">&nbsp;			return hashToString(hash);</b>
+<b class="nc">&nbsp;		} else if (value instanceof Color) {</b>
+<b class="nc">&nbsp;			Color c = (Color) value;</b>
+<b class="nc">&nbsp;			return String.format(&quot;#%02X%02X%02X%02X&quot;, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			return String.format(&quot;\&quot;%s\&quot;&quot;, value.toString());</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static String hashToString(HashMap&lt;?, ?&gt; hash) {
+<b class="nc">&nbsp;		StringBuilder sb = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;		sb.append(&quot;[ &quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (Object key : hash.keySet()) {</b>
+<b class="nc">&nbsp;			sb.append(attributeString(key.toString(), hash.get(key), false));</b>
+<b class="nc">&nbsp;			sb.append(&quot;,&quot;);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		sb.append(&#39;]&#39;);</b>
+&nbsp;
+<b class="nc">&nbsp;		return sb.toString();</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

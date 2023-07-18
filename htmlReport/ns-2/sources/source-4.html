@@ -1,0 +1,511 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Element</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.graph</a>
+</div>
+
+<h1>Coverage Summary for Class: Element (org.graphstream.graph)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Element</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Stefan Balev &lt;stefan.balev@graphstream-project.org&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.graph;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;/**
+&nbsp; * An element is a part of a graph (node, edge, the graph itself).
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * An interface that defines common method to manipulate identifiers, attributes
+&nbsp; * and indices of the elements (graph, nodes and edges) of a graph.
+&nbsp; * &lt;/p&gt;
+&nbsp; * *
+&nbsp; * &lt;p&gt;
+&nbsp; * Attributes can be any object and are identified by arbitrary strings. Some
+&nbsp; * attributes are stored as numbers or strings and are in this case named
+&nbsp; * number, label or vector. There are utility methods to handle these attributes
+&nbsp; * ({@link #getNumber(String)}, {@link #getLabel(String)}) or
+&nbsp; * {@link #getVector(String)}, however they are also accessible through the more
+&nbsp; * general method {@link #getAttribute(String)}.
+&nbsp; * &lt;/p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;h3&gt;Important&lt;/h3&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * Implementing classes should indicate the complexity of their implementation
+&nbsp; * for each method.
+&nbsp; * &lt;/p&gt;
+&nbsp; *
+&nbsp; * @since July 12 2007
+&nbsp; */
+&nbsp;public interface Element {
+&nbsp;	/**
+&nbsp;	 * Unique identifier of this element.
+&nbsp;	 *
+&nbsp;	 * @return The identifier value.
+&nbsp;	 */
+&nbsp;	String getId();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The current index of this element
+&nbsp;	 *
+&nbsp;	 * @return The index value
+&nbsp;	 */
+&nbsp;	int getIndex();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the attribute object bound to the given key. The returned value may be
+&nbsp;	 * null to indicate the attribute does not exists or is not supported.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            Name of the attribute to search.
+&nbsp;	 * @return The object bound to the given key or null if no object match this
+&nbsp;	 *         attribute name.
+&nbsp;	 */
+&nbsp;	Object getAttribute(String key);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like {@link #getAttribute(String)}, but returns the first existing attribute
+&nbsp;	 * in a list of keys, instead of only one key. The key list order matters.
+&nbsp;	 *
+&nbsp;	 * @param keys
+&nbsp;	 *            Several strings naming attributes.
+&nbsp;	 * @return The first attribute that exists.
+&nbsp;	 */
+&nbsp;	Object getFirstAttributeOf(String... keys);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the attribute object bound to the given key if it is an instance of the
+&nbsp;	 * given class. Some The returned value maybe null to indicate the attribute
+&nbsp;	 * does not exists or is not an instance of the given class.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The attribute name to search.
+&nbsp;	 * @param clazz
+&nbsp;	 *            The expected attribute class.
+&nbsp;	 * @return The object bound to the given key or null if no object match this
+&nbsp;	 *         attribute.
+&nbsp;	 */
+&nbsp;	// Object getAttribute( String key, Class&lt;?&gt; clazz );
+&nbsp;	&lt;T&gt; T getAttribute(String key, Class&lt;T&gt; clazz);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like {@link #getAttribute(String, Class)}, but returns the first existing
+&nbsp;	 * attribute in a list of keys, instead of only one key. The key list order
+&nbsp;	 * matters.
+&nbsp;	 *
+&nbsp;	 * @param clazz
+&nbsp;	 *            The class the attribute must be instance of.
+&nbsp;	 * @param keys
+&nbsp;	 *            Several string naming attributes.
+&nbsp;	 * @return The first attribute that exists.
+&nbsp;	 */
+&nbsp;	// Object getFirstAttributeOf( Class&lt;?&gt; clazz, String... keys );
+&nbsp;	&lt;T&gt; T getFirstAttributeOf(Class&lt;T&gt; clazz, String... keys);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the label string bound to the given key key. Labels are special
+&nbsp;	 * attributes whose value is a character sequence. If an attribute with the same
+&nbsp;	 * name exists but is not a character sequence, null is returned.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The label to search.
+&nbsp;	 * @return The label string value or null if not found.
+&nbsp;	 */
+&nbsp;	default CharSequence getLabel(String key) {
+<b class="nc">&nbsp;		return getAttribute(key, CharSequence.class);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the number bound to key. Numbers are special attributes whose value is an
+&nbsp;	 * instance of Number. If an attribute with the same name exists but is not a
+&nbsp;	 * Number, NaN is returned.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the number to search.
+&nbsp;	 * @return The number value or NaN if not found.
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	default double getNumber(String key) {
+<b class="nc">&nbsp;		Object o = getAttribute(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o != null) {</b>
+<b class="nc">&nbsp;			if (o instanceof Number)</b>
+<b class="nc">&nbsp;				return ((Number) o).doubleValue();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o instanceof CharSequence) {</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					return Double.parseDouble(o.toString());</b>
+<b class="nc">&nbsp;				} catch (NumberFormatException ignored) {</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return Double.NaN;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the vector of number bound to key. Vectors of numbers are special
+&nbsp;	 * attributes whose value is a sequence of numbers. If an attribute with the
+&nbsp;	 * same name exists but is not a vector of number, null is returned. A vector of
+&nbsp;	 * number is a non-empty {@link java.util.List} of {@link java.lang.Number}
+&nbsp;	 * objects.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the number to search.
+&nbsp;	 * @return The vector of numbers or null if not found.
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	@SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;	default List&lt;? extends Number&gt; getVector(String key) {
+<b class="nc">&nbsp;		Object o = getAttribute(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o != null &amp;&amp; o instanceof List) {</b>
+<b class="nc">&nbsp;			List&lt;?&gt; l = (List&lt;?&gt;) o;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (l.size() &gt; 0 &amp;&amp; l.get(0) instanceof Number)</b>
+<b class="nc">&nbsp;				return (List&lt;? extends Number&gt;) l;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the array of objects bound to key. Arrays of objects are special
+&nbsp;	 * attributes whose value is a sequence of objects. If an attribute with the
+&nbsp;	 * same name exists but is not an array, null is returned.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the array to search.
+&nbsp;	 * @return The array of objects or null if not found.
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	default Object[] getArray(String key) {
+<b class="nc">&nbsp;		return getAttribute(key, Object[].class);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the map bound to key. Maps are special attributes whose value is a set of
+&nbsp;	 * pairs (name,object). Instances of object implementing the
+&nbsp;	 * {@link CompoundAttribute} interface are considered like maps since they can
+&nbsp;	 * be transformed to a map. If an attribute with the same name exists but is not
+&nbsp;	 * a map, null is returned. We cannot enforce the type of the key. It is
+&nbsp;	 * considered a string and you should use &quot;Object.toString()&quot; to get it.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the map to search.
+&nbsp;	 * @return The map or null if not found.
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	default Map&lt;?, ?&gt; getMap(String key) {
+<b class="nc">&nbsp;		Object o = getAttribute(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o != null) {</b>
+<b class="nc">&nbsp;			if (o instanceof Map&lt;?, ?&gt;)</b>
+<b class="nc">&nbsp;				return ((Map&lt;?, ?&gt;) o);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Does this element store a value for the given attribute key? Note that
+&nbsp;	 * returning true here does not mean that calling getAttribute with the same key
+&nbsp;	 * will not return null since attribute values can be null. This method just
+&nbsp;	 * checks if the key is present, with no test on the value.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the attribute to search.
+&nbsp;	 * @return True if a value is present for this attribute.
+&nbsp;	 */
+&nbsp;	boolean hasAttribute(String key);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Does this element store a value for the given attribute key and this value is
+&nbsp;	 * an instance of the given class?
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the attribute to search.
+&nbsp;	 * @param clazz
+&nbsp;	 *            The expected class of the attribute value.
+&nbsp;	 * @return True if a value is present for this attribute.
+&nbsp;	 */
+&nbsp;	boolean hasAttribute(String key, Class&lt;?&gt; clazz);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Does this element store a label value for the given key? A label is an
+&nbsp;	 * attribute whose value is a char sequence.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the label.
+&nbsp;	 * @return True if a value is present for this attribute and implements
+&nbsp;	 *         CharSequence.
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	default boolean hasLabel(String key) {
+<b class="nc">&nbsp;		return getAttribute(key, CharSequence.class) != null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Does this element store a number for the given key? A number is an attribute
+&nbsp;	 * whose value is an instance of Number.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the number.
+&nbsp;	 * @return True if a value is present for this attribute and can contain a
+&nbsp;	 *         double (inherits from Number).
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	default boolean hasNumber(String key) {
+<b class="nc">&nbsp;		if (getAttribute(key, Number.class) != null)</b>
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;
+<b class="nc">&nbsp;		CharSequence o = getAttribute(key, CharSequence.class);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o != null) {</b>
+&nbsp;			try {
+<b class="nc">&nbsp;				Double.parseDouble(o.toString());</b>
+<b class="nc">&nbsp;				return true;</b>
+<b class="nc">&nbsp;			} catch (NumberFormatException ignored) {</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Does this element store a vector value for the given key? A vector is an
+&nbsp;	 * attribute whose value is a sequence of numbers.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the vector.
+&nbsp;	 * @return True if a value is present for this attribute and can contain a
+&nbsp;	 *         sequence of numbers.
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	default boolean hasVector(String key) {
+<b class="nc">&nbsp;		List&lt;?&gt; o = getAttribute(key, List.class);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o != null &amp;&amp; o.size() &gt; 0) {</b>
+<b class="nc">&nbsp;			return o.get(0) instanceof Number;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Does this element store an array value for the given key? Only object arrays
+&nbsp;	 * (instance of Object[]) are considered as array here.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the array.
+&nbsp;	 * @return True if a value is present for this attribute and can contain an
+&nbsp;	 *         array object.
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	default boolean hasArray(String key) {
+<b class="nc">&nbsp;		return getAttribute(key, Object[].class) != null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Does this element store a map value for the given key? A map is a set of
+&nbsp;	 * pairs (key,value) ({@link java.util.Map}) or objects that implement the
+&nbsp;	 * {@link org.graphstream.graph.CompoundAttribute} class.
+&nbsp;	 *
+&nbsp;	 * @param key
+&nbsp;	 *            The name of the hash.
+&nbsp;	 * @return True if a value is present for this attribute and can contain a hash.
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	default boolean hasMap(String key) {
+<b class="nc">&nbsp;		Object o = getAttribute(key);</b>
+<b class="nc">&nbsp;		return o != null &amp;&amp; (o instanceof Map&lt;?, ?&gt;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Stream over the attribute keys of the element. If no attribute exist, method
+&nbsp;	 * will return empty stream.
+&nbsp;	 *
+&nbsp;	 * @return a String stream corresponding to the keys of the attributes.
+&nbsp;	 */
+&nbsp;	Stream&lt;String&gt; attributeKeys();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove all registered attributes. This includes numbers, labels and vectors.
+&nbsp;	 */
+&nbsp;	void clearAttributes();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add or replace the value of an attribute. Existing attributes are overwritten
+&nbsp;	 * silently. All classes inheriting from Number can be considered as numbers.
+&nbsp;	 * All classes inheriting from CharSequence can be considered as labels. You can
+&nbsp;	 * pass zero, one or more arguments for the attribute values. If no value is
+&nbsp;	 * given, a boolean with value &quot;true&quot; is added. If there is more than one value,
+&nbsp;	 * an array is stored. If there is only one value, the value is stored (but not
+&nbsp;	 * in an array).
+&nbsp;	 *
+&nbsp;	 * @param attribute
+&nbsp;	 *            The attribute name.
+&nbsp;	 * @param values
+&nbsp;	 *            The attribute value or set of values.
+&nbsp;	 */
+&nbsp;	void setAttribute(String attribute, Object... values);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add or replace each attribute found in attributes. Existing attributes are
+&nbsp;	 * overwritten silently. All classes inheriting from Number can be considered as
+&nbsp;	 * numbers. All classes inheriting from CharSequence can be considered as
+&nbsp;	 * labels.
+&nbsp;	 *
+&nbsp;	 * @param attributes
+&nbsp;	 *            A set of (key,value) pairs.
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	default void setAttributes(Map&lt;String, Object&gt; attributes) {
+<b class="nc">&nbsp;		attributes.forEach(this::setAttribute);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove an attribute. Non-existent attributes errors are ignored silently.
+&nbsp;	 *
+&nbsp;	 * @param attribute
+&nbsp;	 *            Name of the attribute to remove.
+&nbsp;	 */
+&nbsp;	void removeAttribute(String attribute);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Number of attributes stored in this element.
+&nbsp;	 *
+&nbsp;	 * @return the number of attributes.
+&nbsp;	 */
+&nbsp;	int getAttributeCount();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

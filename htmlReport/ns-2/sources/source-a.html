@@ -1,0 +1,552 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Path</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.graph</a>
+</div>
+
+<h1>Coverage Summary for Class: Path (org.graphstream.graph)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Path</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (10/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    36.5%
+  </span>
+  <span class="absValue">
+    (27/74)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.graph;
+&nbsp;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Stack;
+&nbsp;import java.util.logging.Logger;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;/**
+&nbsp; * Path description.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * A path is a class that stores ordered lists of nodes and links that are
+&nbsp; * adjacent. Such a path may be manipulated with nodes and/or edges added or
+&nbsp; * removed. This class is designed as a dynamic structure that is, to add edges
+&nbsp; * during the construction of the path. Only edges need to be added, the nodes
+&nbsp; * list is maintained automatically.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The two lists (one for nodes, one for edges) may be acceded at any moment in
+&nbsp; * constant time.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The constraint of this class is that it needs to know the first node of the
+&nbsp; * path (the root). This root can be set with the {@link #setRoot(Node)} method
+&nbsp; * or by using the {@link #add(Node, Edge)} method.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The normal use with this class is to first use the {@link #setRoot(Node)}
+&nbsp; * method to initialize the path; then to use the {@link #add(Edge)} method to
+&nbsp; * grow it and the {@link #popEdge()} or {@link #popNode()}.
+&nbsp; * 
+&nbsp; */
+&nbsp;public class Path implements Structure {
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * class level logger
+&nbsp;	 */
+<b class="fc">&nbsp;	private static final Logger logger = Logger.getLogger(Path.class.getSimpleName());</b>
+&nbsp;
+&nbsp;	// ------------- ATTRIBUTES ------------
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The root of the path;
+&nbsp;	 */
+<b class="fc">&nbsp;	private Node root = null;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The list of edges that represents the path.
+&nbsp;	 */
+&nbsp;	Stack&lt;Edge&gt; edgePath;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The list of nodes representing the path.
+&nbsp;	 */
+&nbsp;	Stack&lt;Node&gt; nodePath;
+&nbsp;
+&nbsp;	// ------------- CONSTRUCTORS ------------
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New empty path.
+&nbsp;	 */
+<b class="fc">&nbsp;	public Path() {</b>
+<b class="fc">&nbsp;		edgePath = new Stack&lt;Edge&gt;();</b>
+<b class="fc">&nbsp;		nodePath = new Stack&lt;Node&gt;();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the root (the first node) of the path.
+&nbsp;	 * 
+&nbsp;	 * @return the root of the path.
+&nbsp;	 */
+&nbsp;	public Node getRoot() {
+<b class="nc">&nbsp;		return this.root;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the root (first node) of the path.
+&nbsp;	 * 
+&nbsp;	 * @param root
+&nbsp;	 *            The root of the path.
+&nbsp;	 */
+&nbsp;	public void setRoot(Node root) {
+<b class="fc">&nbsp;		if (this.root == null) {</b>
+<b class="fc">&nbsp;			this.root = root;</b>
+<b class="fc">&nbsp;			nodePath.push(root);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			logger.warning(&quot;Root node is not null - first use the clear method.&quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Says whether the path contains this node or not.
+&nbsp;	 * 
+&nbsp;	 * @param node
+&nbsp;	 *            The node tested for existence in the path.
+&nbsp;	 * @return &lt;code&gt;true&lt;/code&gt; if the path contains the node.
+&nbsp;	 */
+&nbsp;	public boolean contains(Node node) {
+<b class="nc">&nbsp;		return nodePath.contains(node);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Says whether the path contains this edge or not.
+&nbsp;	 * 
+&nbsp;	 * @param edge
+&nbsp;	 *            The edge tested for existence in the path.
+&nbsp;	 * @return &lt;code&gt;true&lt;/code&gt; if the path contains the edge.
+&nbsp;	 */
+&nbsp;	public boolean contains(Edge edge) {
+<b class="nc">&nbsp;		return edgePath.contains(edge);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Returns true if the path is empty.
+&nbsp;	 * 
+&nbsp;	 * @return &lt;code&gt;true&lt;/code&gt; if the path is empty.
+&nbsp;	 */
+&nbsp;	public boolean empty() {
+<b class="nc">&nbsp;		return nodePath.empty();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Returns the size of the path
+&nbsp;	 */
+&nbsp;	public int size() {
+<b class="nc">&nbsp;		return nodePath.size();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * It returns the sum of the &lt;code&gt;characteristic&lt;/code&gt; given value in the
+&nbsp;	 * Edges of the path.
+&nbsp;	 * 
+&nbsp;	 * @param characteristic
+&nbsp;	 *            The characteristic.
+&nbsp;	 * @return Sum of the characteristics.
+&nbsp;	 */
+&nbsp;	public Double getPathWeight(String characteristic) {
+<b class="nc">&nbsp;		double d = 0;</b>
+<b class="nc">&nbsp;		for (Edge l : edgePath) {</b>
+<b class="nc">&nbsp;			d += (Double) l.getAttribute(characteristic, Number.class);</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		return d;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Returns the list of edges representing the path.
+&nbsp;	 * 
+&nbsp;	 * @return The list of edges representing the path.
+&nbsp;	 */
+&nbsp;	public List&lt;Edge&gt; getEdgePath() {
+<b class="nc">&nbsp;		return edgePath;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Construct an return a list of nodes that represents the path.
+&nbsp;	 * 
+&nbsp;	 * @return A list of nodes representing the path.
+&nbsp;	 */
+&nbsp;	public List&lt;Node&gt; getNodePath() {
+<b class="nc">&nbsp;		return nodePath;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Adds a node and an edge to the path. If root is not set, the node will be
+&nbsp;	 * set as root. Otherwise from node must be the same as the head node of the
+&nbsp;	 * path.
+&nbsp;	 *
+&nbsp;	 * @param from
+&nbsp;	 * 		The start node.
+&nbsp;	 * @param edge
+&nbsp;	 * 		The edge used.
+&nbsp;	 */
+&nbsp;	public void add(Node from, Edge edge) {
+<b class="fc">&nbsp;		if (root == null) {</b>
+<b class="fc">&nbsp;			if (from == null) {</b>
+<b class="nc">&nbsp;				throw new IllegalArgumentException(&quot;From node cannot be null.&quot;);</b>
+&nbsp;			} else {
+<b class="fc">&nbsp;				setRoot(from);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (from == null) {</b>
+<b class="nc">&nbsp;			from = nodePath.peek();</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (!nodePath.peek().equals(from)) {</b>
+<b class="nc">&nbsp;			throw new IllegalArgumentException(&quot;From node must be at the head of the path&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (!edge.getSourceNode().equals(from) &amp;&amp; !edge.getTargetNode().equals(from)) {</b>
+<b class="nc">&nbsp;			throw new IllegalArgumentException(&quot;From node must be part of the edge&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		nodePath.push(edge.getOpposite(from));</b>
+<b class="fc">&nbsp;		edgePath.push(edge);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Adds an edge to the path.
+&nbsp;	 *
+&nbsp;	 * @param edge
+&nbsp;	 * 		The edge to add to the path.
+&nbsp;	 */
+&nbsp;	public void add(Edge edge) {
+<b class="fc">&nbsp;		if (nodePath.isEmpty()) {</b>
+<b class="nc">&nbsp;			add(null, edge);</b>
+&nbsp;		} else {
+<b class="fc">&nbsp;			add(nodePath.peek(), edge);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A synonym for {@link #add(Edge)}.
+&nbsp;	 */
+&nbsp;	public void push(Node from, Edge edge) {
+<b class="nc">&nbsp;		add(from, edge);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A synonym for {@link #add(Edge)}.
+&nbsp;	 */
+&nbsp;	public void push(Edge edge) {
+<b class="nc">&nbsp;		add(edge);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This methods pops the 2 stacks (&lt;code&gt;edgePath&lt;/code&gt; and
+&nbsp;	 * &lt;code&gt;nodePath&lt;/code&gt;) and returns the removed edge.
+&nbsp;	 * 
+&nbsp;	 * @return The edge that have just been removed.
+&nbsp;	 */
+&nbsp;	public Edge popEdge() {
+<b class="fc">&nbsp;		nodePath.pop();</b>
+<b class="fc">&nbsp;		return edgePath.pop();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * This methods pops the 2 stacks (&lt;code&gt;edgePath&lt;/code&gt; and
+&nbsp;	 * &lt;code&gt;nodePath&lt;/code&gt;) and returns the removed node.
+&nbsp;	 * 
+&nbsp;	 * @return The node that have just been removed.
+&nbsp;	 */
+&nbsp;	public Node popNode() {
+<b class="fc">&nbsp;		edgePath.pop();</b>
+<b class="fc">&nbsp;		return nodePath.pop();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Looks at the node at the top of the stack without removing it from the stack.
+&nbsp;	 * 
+&nbsp;	 * @return The node at the top of the stack.
+&nbsp;	 */
+&nbsp;	public Node peekNode() {
+<b class="nc">&nbsp;		return nodePath.peek();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Looks at the edge at the top of the stack without removing it from the stack.
+&nbsp;	 * 
+&nbsp;	 * @return The edge at the top of the stack.
+&nbsp;	 */
+&nbsp;
+&nbsp;	public Edge peekEdge() {
+<b class="nc">&nbsp;		return edgePath.peek();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Clears the path;
+&nbsp;	 */
+&nbsp;	public void clear() {
+<b class="fc">&nbsp;		nodePath.clear();</b>
+<b class="fc">&nbsp;		edgePath.clear();</b>
+&nbsp;		// Runtime.getRuntime().gc();
+<b class="fc">&nbsp;		root = null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get a copy of this path
+&nbsp;	 * 
+&nbsp;	 * @return A copy of this path.
+&nbsp;	 */
+&nbsp;	@SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;	public Path getACopy() {
+<b class="nc">&nbsp;		Path newPath = new Path();</b>
+<b class="nc">&nbsp;		newPath.root = this.root;</b>
+<b class="nc">&nbsp;		newPath.edgePath = (Stack&lt;Edge&gt;) edgePath.clone();</b>
+<b class="nc">&nbsp;		newPath.nodePath = (Stack&lt;Node&gt;) nodePath.clone();</b>
+&nbsp;
+<b class="nc">&nbsp;		return newPath;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove all parts of the path that start at a given node and pass a new at
+&nbsp;	 * this node.
+&nbsp;	 */
+&nbsp;	public void removeLoops() {
+<b class="nc">&nbsp;		int n = nodePath.size();</b>
+&nbsp;		// For each node-edge pair
+<b class="nc">&nbsp;		for (int i = 0; i &lt; n; i++) {</b>
+&nbsp;			// Lookup each other following node. We start
+&nbsp;			// at the end to find the largest loop possible.
+<b class="nc">&nbsp;			for (int j = n - 1; j &gt; i; j--) {</b>
+&nbsp;				// If another node match, this is a loop.
+<b class="nc">&nbsp;				if (nodePath.get(i) == nodePath.get(j)) {</b>
+&nbsp;					// We found a loop between i and j.
+&nbsp;					// Remove ]i,j].
+<b class="nc">&nbsp;					for (int k = i + 1; k &lt;= j; k++) {</b>
+<b class="nc">&nbsp;						nodePath.remove(i + 1);</b>
+<b class="nc">&nbsp;						edgePath.remove(i);</b>
+&nbsp;					}
+<b class="nc">&nbsp;					n -= (j - i);</b>
+<b class="nc">&nbsp;					j = i; // To stop the search.</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compare the content of the current path and the specified path to decide
+&nbsp;	 * weather they are equal or not.
+&nbsp;	 * 
+&nbsp;	 * @param p
+&nbsp;	 *            A path to compare to the curent one.
+&nbsp;	 * @return True if both paths are equal.
+&nbsp;	 */
+&nbsp;	public boolean equals(Path p) {
+<b class="nc">&nbsp;		if (nodePath.size() != p.nodePath.size()) {</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			for (int i = 0; i &lt; nodePath.size(); i++) {</b>
+<b class="nc">&nbsp;				if (nodePath.get(i) != p.nodePath.get(i)) {</b>
+<b class="nc">&nbsp;					return false;</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// ------------ UTILITY METHODS ------------
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Returns a String description of the path.
+&nbsp;	 * 
+&nbsp;	 * @return A String representation of the path.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		return nodePath.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Returns the size of the path. Identical to {@link #size()}.
+&nbsp;	 * 
+&nbsp;	 * @return The size of the path.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public int getNodeCount() {
+<b class="nc">&nbsp;		return nodePath.size();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Structure#getEdgeCount()
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public int getEdgeCount() {
+<b class="nc">&nbsp;		return edgePath.size();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 *
+&nbsp;	 * @see org.graphstream.graph.Structure#nodes()
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Stream&lt;Node&gt; nodes() {
+<b class="fc">&nbsp;		return nodePath.stream();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 *
+&nbsp;	 * @see org.graphstream.graph.Structure#edges()
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Stream&lt;Edge&gt; edges() {
+<b class="fc">&nbsp;		return edgePath.stream();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 *
+&nbsp;	 * @see org.graphstream.graph.Structure#getNodeSet()
+&nbsp;	 */
+&nbsp;	@SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;	public &lt;T extends Node&gt; Collection&lt;T&gt; getNodeSet() {
+<b class="nc">&nbsp;		return (Collection&lt;T&gt;) nodePath;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.graph.Structure#getEdgeSet()
+&nbsp;	 */
+&nbsp;	@SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;	public &lt;T extends Edge&gt; Collection&lt;T&gt; getEdgeSet() {
+<b class="nc">&nbsp;		return (Collection&lt;T&gt;) edgePath;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

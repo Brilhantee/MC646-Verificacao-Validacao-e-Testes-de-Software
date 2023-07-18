@@ -1,0 +1,297 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RMISource</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.rmi</a>
+</div>
+
+<h1>Coverage Summary for Class: RMISource (org.graphstream.stream.rmi)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RMISource</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/51)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-05-14
+&nbsp; * 
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.rmi;
+&nbsp;
+&nbsp;import java.rmi.Naming;
+&nbsp;import java.rmi.RemoteException;
+&nbsp;import java.rmi.server.UnicastRemoteObject;
+&nbsp;import java.util.concurrent.ConcurrentLinkedQueue;
+&nbsp;
+&nbsp;import org.graphstream.stream.AttributeSink;
+&nbsp;import org.graphstream.stream.ElementSink;
+&nbsp;import org.graphstream.stream.Sink;
+&nbsp;import org.graphstream.stream.Source;
+&nbsp;
+&nbsp;public class RMISource extends UnicastRemoteObject implements RMIAdapterIn, Source {
+&nbsp;	private static final long serialVersionUID = 6635146473737922832L;
+&nbsp;
+&nbsp;	ConcurrentLinkedQueue&lt;AttributeSink&gt; attributesListeners;
+&nbsp;	ConcurrentLinkedQueue&lt;ElementSink&gt; elementsListeners;
+&nbsp;
+&nbsp;	public RMISource() throws RemoteException {
+<b class="nc">&nbsp;		super();</b>
+&nbsp;
+<b class="nc">&nbsp;		attributesListeners = new ConcurrentLinkedQueue&lt;AttributeSink&gt;();</b>
+<b class="nc">&nbsp;		elementsListeners = new ConcurrentLinkedQueue&lt;ElementSink&gt;();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public RMISource(String name) throws RemoteException {
+<b class="nc">&nbsp;		this();</b>
+<b class="nc">&nbsp;		bind(name);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void bind(String name) {
+&nbsp;		try {
+<b class="nc">&nbsp;			Naming.rebind(String.format(&quot;//localhost/%s&quot;, name), this);</b>
+<b class="nc">&nbsp;		} catch (Exception e) {</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void edgeAdded(String graphId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+&nbsp;			boolean directed) throws RemoteException {
+<b class="nc">&nbsp;		for (ElementSink gel : elementsListeners)</b>
+<b class="nc">&nbsp;			gel.edgeAdded(graphId, timeId, edgeId, fromNodeId, toNodeId, directed);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void edgeAttributeAdded(String graphId, long timeId, String edgeId, String attribute, Object value)
+&nbsp;			throws RemoteException {
+<b class="nc">&nbsp;		for (AttributeSink gal : attributesListeners)</b>
+<b class="nc">&nbsp;			gal.edgeAttributeAdded(graphId, timeId, edgeId, attribute, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void edgeAttributeChanged(String graphId, long timeId, String edgeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) throws RemoteException {
+<b class="nc">&nbsp;		for (AttributeSink gal : attributesListeners)</b>
+<b class="nc">&nbsp;			gal.edgeAttributeChanged(graphId, timeId, edgeId, attribute, oldValue, newValue);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void edgeAttributeRemoved(String graphId, long timeId, String edgeId, String attribute)
+&nbsp;			throws RemoteException {
+<b class="nc">&nbsp;		for (AttributeSink gal : attributesListeners)</b>
+<b class="nc">&nbsp;			gal.edgeAttributeRemoved(graphId, timeId, edgeId, attribute);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void edgeRemoved(String graphId, long timeId, String edgeId) throws RemoteException {
+<b class="nc">&nbsp;		for (ElementSink gel : elementsListeners)</b>
+<b class="nc">&nbsp;			gel.edgeRemoved(graphId, timeId, edgeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphAttributeAdded(String graphId, long timeId, String attribute, Object value)
+&nbsp;			throws RemoteException {
+<b class="nc">&nbsp;		for (AttributeSink gal : attributesListeners)</b>
+<b class="nc">&nbsp;			gal.graphAttributeAdded(graphId, timeId, attribute, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphAttributeChanged(String graphId, long timeId, String attribute, Object oldValue, Object newValue)
+&nbsp;			throws RemoteException {
+<b class="nc">&nbsp;		for (AttributeSink gal : attributesListeners)</b>
+<b class="nc">&nbsp;			gal.graphAttributeChanged(graphId, timeId, attribute, oldValue, newValue);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphAttributeRemoved(String graphId, long timeId, String attribute) throws RemoteException {
+<b class="nc">&nbsp;		for (AttributeSink gal : attributesListeners)</b>
+<b class="nc">&nbsp;			gal.graphAttributeRemoved(graphId, timeId, attribute);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphCleared(String graphId, long timeId) throws RemoteException {
+<b class="nc">&nbsp;		for (ElementSink gel : elementsListeners)</b>
+<b class="nc">&nbsp;			gel.graphCleared(graphId, timeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeAdded(String graphId, long timeId, String nodeId) throws RemoteException {
+<b class="nc">&nbsp;		for (ElementSink gel : elementsListeners)</b>
+<b class="nc">&nbsp;			gel.nodeAdded(graphId, timeId, nodeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeAttributeAdded(String graphId, long timeId, String nodeId, String attribute, Object value)
+&nbsp;			throws RemoteException {
+<b class="nc">&nbsp;		for (AttributeSink gal : attributesListeners)</b>
+<b class="nc">&nbsp;			gal.nodeAttributeAdded(graphId, timeId, nodeId, attribute, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeAttributeChanged(String graphId, long timeId, String nodeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) throws RemoteException {
+<b class="nc">&nbsp;		for (AttributeSink gal : attributesListeners)</b>
+<b class="nc">&nbsp;			gal.nodeAttributeChanged(graphId, timeId, nodeId, attribute, oldValue, newValue);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeAttributeRemoved(String graphId, long timeId, String nodeId, String attribute)
+&nbsp;			throws RemoteException {
+<b class="nc">&nbsp;		for (AttributeSink gal : attributesListeners)</b>
+<b class="nc">&nbsp;			gal.nodeAttributeRemoved(graphId, timeId, nodeId, attribute);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void nodeRemoved(String graphId, long timeId, String nodeId) throws RemoteException {
+<b class="nc">&nbsp;		for (ElementSink gel : elementsListeners)</b>
+<b class="nc">&nbsp;			gel.nodeRemoved(graphId, timeId, nodeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void stepBegins(String graphId, long timeId, double step) throws RemoteException {
+<b class="nc">&nbsp;		for (ElementSink gel : elementsListeners)</b>
+<b class="nc">&nbsp;			gel.stepBegins(graphId, timeId, step);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void addAttributeSink(AttributeSink listener) {
+<b class="nc">&nbsp;		attributesListeners.add(listener);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void addElementSink(ElementSink listener) {
+<b class="nc">&nbsp;		elementsListeners.add(listener);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void addSink(Sink listener) {
+<b class="nc">&nbsp;		attributesListeners.add(listener);</b>
+<b class="nc">&nbsp;		elementsListeners.add(listener);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void removeAttributeSink(AttributeSink listener) {
+<b class="nc">&nbsp;		attributesListeners.remove(listener);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void removeElementSink(ElementSink listener) {
+<b class="nc">&nbsp;		elementsListeners.remove(listener);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void removeSink(Sink listener) {
+<b class="nc">&nbsp;		attributesListeners.remove(listener);</b>
+<b class="nc">&nbsp;		elementsListeners.remove(listener);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void clearAttributeSinks() {
+<b class="nc">&nbsp;		attributesListeners.clear();</b>
+<b class="nc">&nbsp;		elementsListeners.clear();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void clearElementSinks() {
+<b class="nc">&nbsp;		elementsListeners.clear();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void clearSinks() {
+<b class="nc">&nbsp;		attributesListeners.clear();</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

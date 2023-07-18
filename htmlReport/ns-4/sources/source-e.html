@@ -1,0 +1,189 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ElementSink</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream</a>
+</div>
+
+<h1>Coverage Summary for Class: ElementSink (org.graphstream.stream)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ElementSink</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-03-22
+&nbsp; * 
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream;
+&nbsp;
+&nbsp;/**
+&nbsp; * Interface to listen at changes in the graph structure.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Graph elements listeners are called each time an element of the graph (node
+&nbsp; * or edge) is added or removed. It is also called for special events like
+&nbsp; * &quot;steps&quot; that introduce the notion of time in graphs.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public interface ElementSink {
+&nbsp;	/**
+&nbsp;	 * A node was inserted in the given graph.
+&nbsp;	 * 
+&nbsp;	 * @param sourceId
+&nbsp;	 *            Identifier of the graph where the node was added.
+&nbsp;	 * @param nodeId
+&nbsp;	 *            Identifier of the added node.
+&nbsp;	 */
+&nbsp;	void nodeAdded(String sourceId, long timeId, String nodeId);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A node was removed from the graph.
+&nbsp;	 * 
+&nbsp;	 * @param sourceId
+&nbsp;	 *            Identifier of the graph where the node will be removed.
+&nbsp;	 * @param nodeId
+&nbsp;	 *            Identifier of the removed node.
+&nbsp;	 */
+&nbsp;	void nodeRemoved(String sourceId, long timeId, String nodeId);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * An edge was inserted in graph.
+&nbsp;	 * 
+&nbsp;	 * @param sourceId
+&nbsp;	 *            Identifier of the graph where the edge was added.
+&nbsp;	 * @param edgeId
+&nbsp;	 *            Identifier of the added edge.
+&nbsp;	 * @param fromNodeId
+&nbsp;	 *            Identifier of the first node of the edge.
+&nbsp;	 * @param toNodeId
+&nbsp;	 *            Identifier of the second node of the edge.
+&nbsp;	 * @param directed
+&nbsp;	 *            If true, the edge is directed.
+&nbsp;	 */
+&nbsp;	void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId, boolean directed);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * An edge of graph was removed.The nodes the edge connects may already have
+&nbsp;	 * been removed from the graph.
+&nbsp;	 * 
+&nbsp;	 * @param sourceId
+&nbsp;	 *            The graph where the edge will be removed.
+&nbsp;	 * @param edgeId
+&nbsp;	 *            The edge that will be removed.
+&nbsp;	 */
+&nbsp;	void edgeRemoved(String sourceId, long timeId, String edgeId);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The whole graph was cleared. All the nodes, edges and attributes of the graph
+&nbsp;	 * are removed.
+&nbsp;	 * 
+&nbsp;	 * @param sourceId
+&nbsp;	 *            The graph cleared.
+&nbsp;	 */
+&nbsp;	void graphCleared(String sourceId, long timeId);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Since dynamic graphs are based on discrete event modifications, the notion of
+&nbsp;	 * step is defined to simulate elapsed time between events. So a step is a event
+&nbsp;	 * that occurs in the graph, it does not modify it but it gives a kind of
+&nbsp;	 * timestamp that allow the tracking of the progress of the graph over the time.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This kind of event is useful for dynamic algorithms that listen to the
+&nbsp;	 * dynamic graph and need to measure the time in the graph&#39;s evolution.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * @param sourceId
+&nbsp;	 *            Identifier of the graph where the step starts.
+&nbsp;	 * @param timeId
+&nbsp;	 *            A numerical value that may give a timestamp to track the evolution
+&nbsp;	 *            of the graph over the time.
+&nbsp;	 */
+&nbsp;	void stepBegins(String sourceId, long timeId, double step);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

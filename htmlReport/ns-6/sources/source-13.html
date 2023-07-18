@@ -1,0 +1,769 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSourceDGS1And2</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSourceDGS1And2 (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileSourceDGS1And2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/271)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">FileSourceDGS1And2$AttributeFormat</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">FileSourceDGS1And2$AttributeType</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/278)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.FileInputStream;
+&nbsp;import java.io.FileNotFoundException;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.io.Reader;
+&nbsp;import java.io.StreamTokenizer;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.zip.GZIPInputStream;
+&nbsp;
+&nbsp;/**
+&nbsp; * Class responsible for parsing files in the DGS format (old versions of the
+&nbsp; * format).
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The DGS file format is especially designed for storing dynamic graph
+&nbsp; * definitions into a file. More information about the DGS file format will be
+&nbsp; * found on the GraphStream web site:
+&nbsp; * &lt;a href=&quot;http://graphstream-project.org/&quot;&gt;http://graphstream-project.org/&lt;/a&gt;
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * @see OldFileSourceDGS
+&nbsp; * @see FileSource
+&nbsp; */
+&nbsp;public class FileSourceDGS1And2 extends FileSourceBase {
+&nbsp;	// Constants
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Types of attributes.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected enum AttributeType {</b>
+<b class="nc">&nbsp;		NUMBER, VECTOR, STRING</b>
+&nbsp;	};
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Pair &lt;name,type&gt; defining an attribute.
+&nbsp;	 */
+&nbsp;	protected static class AttributeFormat {
+&nbsp;		/**
+&nbsp;		 * Name of the attribute.
+&nbsp;		 */
+&nbsp;		public String name;
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Type of the attribute.
+&nbsp;		 */
+&nbsp;		public AttributeType type;
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * New format descriptor for an attribute.
+&nbsp;		 * 
+&nbsp;		 * @param name
+&nbsp;		 *            The attribute name.
+&nbsp;		 * @param type
+&nbsp;		 *            The attribute type.
+&nbsp;		 */
+<b class="nc">&nbsp;		public AttributeFormat(String name, AttributeType type) {</b>
+<b class="nc">&nbsp;			this.name = name;</b>
+<b class="nc">&nbsp;			this.type = type;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Attribute name.
+&nbsp;		 * 
+&nbsp;		 * @return The name.
+&nbsp;		 */
+&nbsp;		public String getName() {
+<b class="nc">&nbsp;			return name;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Attribute format.
+&nbsp;		 * 
+&nbsp;		 * @return The format.
+&nbsp;		 */
+&nbsp;		public AttributeType getType() {
+<b class="nc">&nbsp;			return type;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Attributes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Format version.
+&nbsp;	 */
+&nbsp;	protected int version;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Name of the graph.
+&nbsp;	 */
+&nbsp;	protected String graphName;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Number of step given in the header.
+&nbsp;	 */
+&nbsp;	protected int stepCountAnnounced;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Number of events given in the header.
+&nbsp;	 */
+&nbsp;	protected int eventCountAnnounced;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Real number of step at current time.
+&nbsp;	 */
+&nbsp;	protected int stepCount;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Real number of events at current time.
+&nbsp;	 */
+&nbsp;	protected int eventCount;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Attribute count and type expected for each node add and modify command.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected ArrayList&lt;AttributeFormat&gt; nodesFormat = new ArrayList&lt;AttributeFormat&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Attribute count and type expected for each edges add and modify command.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected ArrayList&lt;AttributeFormat&gt; edgesFormat = new ArrayList&lt;AttributeFormat&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * An attribute set.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected HashMap&lt;String, Object&gt; attributes = new HashMap&lt;String, Object&gt;();</b>
+&nbsp;
+&nbsp;	// Constructors
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New reader for the DGS graph file format versions 1 and 2.
+&nbsp;	 */
+&nbsp;	public FileSourceDGS1And2() {
+<b class="nc">&nbsp;		super(true /* EOL is significant */);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	// Command
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean nextEvents() throws IOException {
+<b class="nc">&nbsp;		String key = getWordOrSymbolOrStringOrEolOrEof();</b>
+<b class="nc">&nbsp;		String tag = null;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (key.equals(&quot;ce&quot;)) {</b>
+<b class="nc">&nbsp;			tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;			readAttributes(edgesFormat);</b>
+&nbsp;
+<b class="nc">&nbsp;			for (String k : attributes.keySet()) {</b>
+<b class="nc">&nbsp;				Object value = attributes.get(k);</b>
+<b class="nc">&nbsp;				sendEdgeAttributeChanged(graphName, tag, k, null, value);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+<b class="nc">&nbsp;			if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;				return false;</b>
+<b class="nc">&nbsp;		} else if (key.equals(&quot;cn&quot;)) {</b>
+<b class="nc">&nbsp;			tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;			readAttributes(nodesFormat);</b>
+&nbsp;
+<b class="nc">&nbsp;			for (String k : attributes.keySet()) {</b>
+<b class="nc">&nbsp;				Object value = attributes.get(k);</b>
+<b class="nc">&nbsp;				sendNodeAttributeChanged(graphName, tag, k, null, value);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+<b class="nc">&nbsp;			if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;				return false;</b>
+<b class="nc">&nbsp;		} else if (key.equals(&quot;ae&quot;)) {</b>
+<b class="nc">&nbsp;			tag = getStringOrWordOrNumber();</b>
+<b class="nc">&nbsp;			String fromTag = getStringOrWordOrNumber();</b>
+<b class="nc">&nbsp;			String toTag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;			readAttributes(edgesFormat);</b>
+&nbsp;
+<b class="nc">&nbsp;			sendEdgeAdded(graphName, tag, fromTag, toTag, false);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (attributes != null) {</b>
+<b class="nc">&nbsp;				for (String k : attributes.keySet()) {</b>
+<b class="nc">&nbsp;					Object value = attributes.get(k);</b>
+<b class="nc">&nbsp;					sendEdgeAttributeAdded(graphName, tag, k, value);</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;				return false;</b>
+<b class="nc">&nbsp;		} else if (key.equals(&quot;an&quot;)) {</b>
+<b class="nc">&nbsp;			tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;			readAttributes(nodesFormat);</b>
+<b class="nc">&nbsp;			sendNodeAdded(graphName, tag);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (attributes != null) {</b>
+<b class="nc">&nbsp;				for (String k : attributes.keySet()) {</b>
+<b class="nc">&nbsp;					Object value = attributes.get(k);</b>
+<b class="nc">&nbsp;					sendNodeAttributeAdded(graphName, tag, k, value);</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;				return false;</b>
+<b class="nc">&nbsp;		} else if (key.equals(&quot;de&quot;)) {</b>
+<b class="nc">&nbsp;			tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;			sendEdgeRemoved(graphName, tag);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;				return false;</b>
+<b class="nc">&nbsp;		} else if (key.equals(&quot;dn&quot;)) {</b>
+<b class="nc">&nbsp;			tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;			sendNodeRemoved(graphName, tag);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;				return false;</b>
+<b class="nc">&nbsp;		} else if (key.equals(&quot;st&quot;)) {</b>
+<b class="nc">&nbsp;			String w = getWordOrNumber();</b>
+&nbsp;
+&nbsp;			try {
+<b class="nc">&nbsp;				double time = Double.parseDouble(w);</b>
+&nbsp;
+<b class="nc">&nbsp;				sendStepBegins(graphName, time);</b>
+<b class="nc">&nbsp;			} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;				parseError(&quot;expecting a number after `st&#39;, got `&quot; + w + &quot;&#39;&quot;);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+<b class="nc">&nbsp;			if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;				return false;</b>
+<b class="nc">&nbsp;		} else if (key == &quot;#&quot;) {</b>
+<b class="nc">&nbsp;			eatAllUntilEol();</b>
+<b class="nc">&nbsp;		} else if (key == &quot;EOL&quot;) {</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		} else if (key == &quot;EOF&quot;) {</b>
+<b class="nc">&nbsp;			return false;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			parseError(&quot;found an unknown key in file &#39;&quot; + key + &quot;&#39; (expecting an,ae,cn,ce,dn,de or st)&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * tries to read all the events between 2 steps
+&nbsp;	 */
+&nbsp;	public boolean nextStep() throws IOException {
+<b class="nc">&nbsp;		String key = &quot;&quot;;</b>
+<b class="nc">&nbsp;		String tag = null;</b>
+&nbsp;
+<b class="nc">&nbsp;		while (!key.equals(&quot;st&quot;) &amp;&amp; !key.equals(&quot;EOF&quot;)) {</b>
+<b class="nc">&nbsp;			key = getWordOrSymbolOrStringOrEolOrEof();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (key.equals(&quot;ce&quot;)) {</b>
+<b class="nc">&nbsp;				tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;				readAttributes(edgesFormat);</b>
+&nbsp;
+<b class="nc">&nbsp;				for (String k : attributes.keySet()) {</b>
+<b class="nc">&nbsp;					Object value = attributes.get(k);</b>
+<b class="nc">&nbsp;					sendEdgeAttributeChanged(graphName, tag, k, null, value);</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;
+<b class="nc">&nbsp;				if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;					return false;</b>
+<b class="nc">&nbsp;			} else if (key.equals(&quot;cn&quot;)) {</b>
+<b class="nc">&nbsp;				tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;				readAttributes(nodesFormat);</b>
+&nbsp;
+<b class="nc">&nbsp;				for (String k : attributes.keySet()) {</b>
+<b class="nc">&nbsp;					Object value = attributes.get(k);</b>
+<b class="nc">&nbsp;					sendNodeAttributeChanged(graphName, tag, k, null, value);</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;
+<b class="nc">&nbsp;				if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;					return false;</b>
+<b class="nc">&nbsp;			} else if (key.equals(&quot;ae&quot;)) {</b>
+<b class="nc">&nbsp;				tag = getStringOrWordOrNumber();</b>
+<b class="nc">&nbsp;				String fromTag = getStringOrWordOrNumber();</b>
+<b class="nc">&nbsp;				String toTag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;				readAttributes(edgesFormat);</b>
+<b class="nc">&nbsp;				sendEdgeAdded(graphName, tag, fromTag, toTag, false);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (attributes != null) {</b>
+<b class="nc">&nbsp;					for (String k : attributes.keySet()) {</b>
+<b class="nc">&nbsp;						Object value = attributes.get(k);</b>
+<b class="nc">&nbsp;						sendNodeAttributeAdded(graphName, tag, k, value);</b>
+<b class="nc">&nbsp;					}</b>
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;					return false;</b>
+<b class="nc">&nbsp;			} else if (key.equals(&quot;an&quot;)) {</b>
+<b class="nc">&nbsp;				tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;				readAttributes(nodesFormat);</b>
+<b class="nc">&nbsp;				sendNodeAdded(graphName, tag);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (attributes != null) {</b>
+<b class="nc">&nbsp;					for (String k : attributes.keySet()) {</b>
+<b class="nc">&nbsp;						Object value = attributes.get(k);</b>
+<b class="nc">&nbsp;						sendNodeAttributeAdded(graphName, tag, k, value);</b>
+<b class="nc">&nbsp;					}</b>
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;					return false;</b>
+<b class="nc">&nbsp;			} else if (key.equals(&quot;de&quot;)) {</b>
+<b class="nc">&nbsp;				tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;				sendEdgeRemoved(graphName, tag);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;					return false;</b>
+<b class="nc">&nbsp;			} else if (key.equals(&quot;dn&quot;)) {</b>
+<b class="nc">&nbsp;				tag = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;				sendNodeRemoved(graphName, tag);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;					return false;</b>
+<b class="nc">&nbsp;			} else if (key.equals(&quot;st&quot;)) {</b>
+<b class="nc">&nbsp;				String w = getWordOrNumber();</b>
+&nbsp;
+&nbsp;				try {
+<b class="nc">&nbsp;					double time = Double.parseDouble(w);</b>
+<b class="nc">&nbsp;					sendStepBegins(graphName, time);</b>
+<b class="nc">&nbsp;				} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;					parseError(&quot;expecting a number after `st&#39;, got `&quot; + w + &quot;&#39;&quot;);</b>
+<b class="nc">&nbsp;				}</b>
+&nbsp;
+<b class="nc">&nbsp;				if (eatEolOrEof() == StreamTokenizer.TT_EOF)</b>
+<b class="nc">&nbsp;					return false;</b>
+<b class="nc">&nbsp;			} else if (key == &quot;#&quot;) {</b>
+<b class="nc">&nbsp;				eatAllUntilEol();</b>
+<b class="nc">&nbsp;			} else if (key == &quot;EOL&quot;) {</b>
+&nbsp;				// NOP
+<b class="nc">&nbsp;			} else if (key == &quot;EOF&quot;) {</b>
+<b class="nc">&nbsp;				return false;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				parseError(&quot;found an unknown key in file &#39;&quot; + key + &quot;&#39; (expecting an,ae,cn,ce,dn,de or st)&quot;);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void readAttributes(ArrayList&lt;AttributeFormat&gt; formats) throws IOException {
+<b class="nc">&nbsp;		attributes.clear();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (formats.size() &gt; 0) {</b>
+<b class="nc">&nbsp;			for (AttributeFormat format : formats) {</b>
+<b class="nc">&nbsp;				if (format.type == AttributeType.NUMBER) {</b>
+<b class="nc">&nbsp;					readNumberAttribute(format.name);</b>
+<b class="nc">&nbsp;				} else if (format.type == AttributeType.VECTOR) {</b>
+<b class="nc">&nbsp;					readVectorAttribute(format.name);</b>
+<b class="nc">&nbsp;				} else if (format.type == AttributeType.STRING) {</b>
+<b class="nc">&nbsp;					readStringAttribute(format.name);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			}</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void readNumberAttribute(String name) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (isNull(tok)) {</b>
+<b class="nc">&nbsp;			attributes.put(name, new Double(0));</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			st.pushBack();</b>
+&nbsp;
+<b class="nc">&nbsp;			double n = getNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;			attributes.put(name, new Double(n));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void readVectorAttribute(String name) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (isNull(tok)) {</b>
+<b class="nc">&nbsp;			attributes.put(name, new ArrayList&lt;Double&gt;());</b>
+&nbsp;		} else {
+&nbsp;
+<b class="nc">&nbsp;			boolean loop = true;</b>
+&nbsp;
+<b class="nc">&nbsp;			ArrayList&lt;Double&gt; vector = new ArrayList&lt;Double&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;			while (loop) {</b>
+<b class="nc">&nbsp;				if (tok != StreamTokenizer.TT_NUMBER)</b>
+<b class="nc">&nbsp;					parseError(&quot;expecting a number, &quot; + gotWhat(tok));</b>
+&nbsp;
+<b class="nc">&nbsp;				vector.add(st.nval);</b>
+&nbsp;
+<b class="nc">&nbsp;				tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (tok != &#39;,&#39;) {</b>
+<b class="nc">&nbsp;					loop = false;</b>
+<b class="nc">&nbsp;					st.pushBack();</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					tok = st.nextToken();</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			attributes.put(name, vector);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void readStringAttribute(String name) throws IOException {
+<b class="nc">&nbsp;		String s = getStringOrWordOrNumber();</b>
+&nbsp;
+<b class="nc">&nbsp;		attributes.put(name, s);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected boolean isNull(int tok) {
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD)</b>
+<b class="nc">&nbsp;			return (st.sval.equals(&quot;null&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void begin(String filename) throws IOException {
+<b class="nc">&nbsp;		super.begin(filename);</b>
+<b class="nc">&nbsp;		init();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void begin(InputStream stream) throws IOException {
+<b class="nc">&nbsp;		super.begin(stream);</b>
+<b class="nc">&nbsp;		init();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void begin(Reader reader) throws IOException {
+<b class="nc">&nbsp;		super.begin(reader);</b>
+<b class="nc">&nbsp;		init();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void begin(URL url) throws IOException {
+<b class="nc">&nbsp;		super.begin(url);</b>
+<b class="nc">&nbsp;		init();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void init() throws IOException {
+<b class="nc">&nbsp;		st.parseNumbers();</b>
+&nbsp;
+<b class="nc">&nbsp;		String magic = eatOneOfTwoWords(&quot;DGS001&quot;, &quot;DGS002&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (magic.equals(&quot;DGS001&quot;))</b>
+<b class="nc">&nbsp;			version = 1;</b>
+&nbsp;		else
+<b class="nc">&nbsp;			version = 2;</b>
+&nbsp;
+<b class="nc">&nbsp;		eatEol();</b>
+<b class="nc">&nbsp;		graphName = getWord();</b>
+<b class="nc">&nbsp;		stepCountAnnounced = (int) getNumber();// Integer.parseInt( getWord() );</b>
+<b class="nc">&nbsp;		eventCountAnnounced = (int) getNumber();// Integer.parseInt( getWord()</b>
+&nbsp;												// );
+<b class="nc">&nbsp;		eatEol();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (graphName != null) {</b>
+<b class="nc">&nbsp;			attributes.clear();</b>
+<b class="nc">&nbsp;			attributes.put(&quot;label&quot;, graphName);</b>
+<b class="nc">&nbsp;			sendGraphAttributeAdded(graphName, &quot;label&quot;, graphName);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			graphName = &quot;DGS_&quot;;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		graphName = String.format(&quot;%s_%d&quot;, graphName, System.currentTimeMillis() + ((long) Math.random() * 10));</b>
+&nbsp;
+<b class="nc">&nbsp;		readAttributeFormat();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void readAttributeFormat() throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD &amp;&amp; st.sval.equals(&quot;nodes&quot;)) {</b>
+<b class="nc">&nbsp;			parseAttributeFormat(nodesFormat);</b>
+<b class="nc">&nbsp;			tok = st.nextToken();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (tok == StreamTokenizer.TT_WORD &amp;&amp; st.sval.equals(&quot;edges&quot;)) {</b>
+<b class="nc">&nbsp;			parseAttributeFormat(edgesFormat);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			st.pushBack();</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void parseAttributeFormat(ArrayList&lt;AttributeFormat&gt; format) throws IOException {
+<b class="nc">&nbsp;		int tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;		while (tok != StreamTokenizer.TT_EOL) {</b>
+<b class="nc">&nbsp;			if (tok == StreamTokenizer.TT_WORD) {</b>
+<b class="nc">&nbsp;				String name = st.sval;</b>
+&nbsp;
+<b class="nc">&nbsp;				eatSymbol(&#39;:&#39;);</b>
+&nbsp;
+<b class="nc">&nbsp;				tok = st.nextToken();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (tok == StreamTokenizer.TT_WORD) {</b>
+<b class="nc">&nbsp;					String type = st.sval.toLowerCase();</b>
+&nbsp;
+<b class="nc">&nbsp;					if (type.equals(&quot;number&quot;) || type.equals(&quot;n&quot;)) {</b>
+<b class="nc">&nbsp;						format.add(new AttributeFormat(name, AttributeType.NUMBER));</b>
+<b class="nc">&nbsp;					} else if (type.equals(&quot;string&quot;) || type.equals(&quot;s&quot;)) {</b>
+<b class="nc">&nbsp;						format.add(new AttributeFormat(name, AttributeType.STRING));</b>
+<b class="nc">&nbsp;					} else if (type.equals(&quot;vector&quot;) || type.equals(&quot;v&quot;)) {</b>
+<b class="nc">&nbsp;						format.add(new AttributeFormat(name, AttributeType.VECTOR));</b>
+&nbsp;					} else {
+<b class="nc">&nbsp;						parseError(&quot;unknown attribute type `&quot; + type</b>
+&nbsp;								+ &quot;&#39; (only `number&#39;, `vector&#39; and `string&#39; are accepted)&quot;);
+&nbsp;					}
+<b class="nc">&nbsp;				} else {</b>
+<b class="nc">&nbsp;					parseError(&quot;expecting an attribute type, got `&quot; + gotWhat(tok) + &quot;&#39;&quot;);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			} else {</b>
+<b class="nc">&nbsp;				parseError(&quot;expecting an attribute name, got `&quot; + gotWhat(tok) + &quot;&#39;&quot;);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			tok = st.nextToken();</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void continueParsingInInclude() throws IOException {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected Reader createReaderFrom(String file) throws FileNotFoundException {
+<b class="nc">&nbsp;		InputStream is = null;</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			is = new GZIPInputStream(new FileInputStream(file));</b>
+<b class="nc">&nbsp;		} catch (IOException e) {</b>
+<b class="nc">&nbsp;			is = new FileInputStream(file);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		return new BufferedReader(new InputStreamReader(is));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected Reader createReaderFrom(InputStream stream) {
+&nbsp;
+<b class="nc">&nbsp;		return new BufferedReader(new InputStreamReader(stream));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void configureTokenizer(StreamTokenizer tok) throws IOException {
+<b class="nc">&nbsp;		if (COMMENT_CHAR &gt; 0)</b>
+<b class="nc">&nbsp;			tok.commentChar(COMMENT_CHAR);</b>
+&nbsp;		// tok.quoteChar( QUOTE_CHAR );
+<b class="nc">&nbsp;		tok.eolIsSignificant(eol_is_significant);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;_&#39;, &#39;_&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;1&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;2&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;3&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;4&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;5&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;6&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;7&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;8&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;9&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;0&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;.&#39;);</b>
+<b class="nc">&nbsp;		tok.ordinaryChar(&#39;-&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;1&#39;, &#39;1&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;2&#39;, &#39;2&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;3&#39;, &#39;3&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;4&#39;, &#39;4&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;5&#39;, &#39;5&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;6&#39;, &#39;6&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;7&#39;, &#39;7&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;8&#39;, &#39;8&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;9&#39;, &#39;9&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;0&#39;, &#39;0&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;.&#39;, &#39;.&#39;);</b>
+<b class="nc">&nbsp;		tok.wordChars(&#39;-&#39;, &#39;-&#39;);</b>
+&nbsp;		// tok.parseNumbers();
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

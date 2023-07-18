@@ -1,0 +1,596 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Sprite</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.spriteManager</a>
+</div>
+
+<h1>Coverage Summary for Class: Sprite (org.graphstream.ui.spriteManager)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Sprite</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/44)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/114)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-04-17
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Stefan Balev &lt;stefan.balev@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.spriteManager;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;import org.graphstream.graph.Element;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Style;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Values;
+&nbsp;
+&nbsp;/**
+&nbsp; * A gentle little sprite.
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * Sprite objects allow to add data representations in a graphic display of a
+&nbsp; * graph. A sprite is a graphical representation that can double anywhere in the
+&nbsp; * graph drawing surface, or be &quot;attached&quot; to nodes or edges. When attached to
+&nbsp; * an edge, a sprite can be positioned easily at any point along the edge, or
+&nbsp; * perpendicular to it with one or two coordinates. When attached to a node, a
+&nbsp; * sprite &quot;orbits&quot; around the node at any given radius and angle around it.
+&nbsp; * &lt;/p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * Sprites can have many shapes. Most of the CSS nodes shapes are available for
+&nbsp; * sprites, but more are possible. Some shapes follow the form of the element
+&nbsp; * (node or edge) they are attached to.
+&nbsp; * &lt;/p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * Sprites can be moved and animated easily along edges, around nodes, or
+&nbsp; * anywhere on the graph surface. Their shape can change. Some sprites allows to
+&nbsp; * draw pie charts or statistics, or images.
+&nbsp; * &lt;/p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * Sprites are not part of a graph so to speak. Furthermore they make sense only
+&nbsp; * when a graph is displayed with a viewer that supports sprites. Therefore they
+&nbsp; * are handled by a {@link SpriteManager} which is always associated to a graph
+&nbsp; * and is in charge of handling the whole set of sprites, creating them,
+&nbsp; * enumerating them, and destroying them.
+&nbsp; * &lt;/p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * Implementation note: sprites do not exist ! In fact the sprite class only
+&nbsp; * handles a set of attributes that are stored in the graph (the one associated
+&nbsp; * with the sprite manager that created the sprite). These special attributes
+&nbsp; * are handled for you by the sprite class. This technique allows to pass
+&nbsp; * sprites informations through the I/O system of GraphStream. Indeed sprites
+&nbsp; * appearing in a graph can therefore be stored in files and retrieved if the
+&nbsp; * graph file format supports attributes. If this is a dynamic graph format,
+&nbsp; * like DGS, the whole sprite history is remembered: when it moved, when it
+&nbsp; * changed, etc.
+&nbsp; * &lt;/p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * Second implementation node : often you will need to extend the sprite class.
+&nbsp; * This is easily possible, but you must remember that you cannot create sprites
+&nbsp; * yourself, you must use the {@link SpriteManager}. In order to create a sprite
+&nbsp; * of a special kind, you can either use a {@link SpriteFactory} with the
+&nbsp; * SpriteManager or the special {@link SpriteManager#addSprite(String, Class)}
+&nbsp; * method of the SpriteManager. In both cases, the
+&nbsp; * {@link #init(String, SpriteManager, Values)} method of the sprite will be
+&nbsp; * called. Override this method to initialise your sprite.
+&nbsp; * &lt;/p&gt;
+&nbsp; *
+&nbsp; * @see SpriteManager
+&nbsp; * @see SpriteFactory
+&nbsp; */
+&nbsp;public class Sprite implements Element {
+&nbsp;	// Attribute
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The sprite unique identifier.
+&nbsp;	 */
+&nbsp;	protected String id;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The identifier prefixed by &quot;ui.sprite.&quot;.
+&nbsp;	 */
+&nbsp;	protected String completeId;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The boss.
+&nbsp;	 */
+&nbsp;	protected SpriteManager manager;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Current sprite position.
+&nbsp;	 */
+&nbsp;	protected Values position;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The element this sprite is attached to (or null).
+&nbsp;	 */
+&nbsp;	protected Element attachment;
+&nbsp;
+&nbsp;	// Construction
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * For the use with {@link #init(String, SpriteManager, Values)}.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected Sprite() {</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New sprite with a given identifier.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * You cannot build sprites yourself, they are created by the sprite manager.
+&nbsp;	 */
+&nbsp;	protected Sprite(String id, SpriteManager manager) {
+<b class="nc">&nbsp;		this(id, manager, null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New sprite with a given identifier.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * You cannot build sprites yourself, they are created by the sprite manager.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected Sprite(String id, SpriteManager manager, Values position) {</b>
+<b class="nc">&nbsp;		init(id, manager, position);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New sprite with a given identifier.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * You cannot build sprites yourself, they are created by the sprite managern.
+&nbsp;	 * This method is used by the manager when creating instances of sprites that
+&nbsp;	 * inherit this class. If you derive the sprite class you can override this
+&nbsp;	 * method to initialise your sprite. It is always called when creating the
+&nbsp;	 * sprite.
+&nbsp;	 */
+&nbsp;	protected void init(String id, SpriteManager manager, Values position) {
+<b class="nc">&nbsp;		this.id = id;</b>
+<b class="nc">&nbsp;		this.completeId = String.format(&quot;ui.sprite.%s&quot;, id);</b>
+<b class="nc">&nbsp;		this.manager = manager;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!manager.graph.hasAttribute(completeId)) {</b>
+<b class="nc">&nbsp;			if (position != null) {</b>
+<b class="nc">&nbsp;				manager.graph.setAttribute(completeId, position);</b>
+<b class="nc">&nbsp;				this.position = position;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				this.position = new Values(Style.Units.GU, 0f, 0f, 0f);</b>
+<b class="nc">&nbsp;				manager.graph.setAttribute(completeId, this.position);</b>
+&nbsp;			}
+&nbsp;		} else {
+<b class="nc">&nbsp;			if (position != null) {</b>
+<b class="nc">&nbsp;				manager.graph.setAttribute(completeId, position);</b>
+<b class="nc">&nbsp;				this.position = position;</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				this.position = SpriteManager.getPositionValue(manager.graph.getAttribute(completeId));</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Called by the manager when the sprite is removed.
+&nbsp;	 */
+&nbsp;	protected void removed() {
+<b class="nc">&nbsp;		manager.graph.removeAttribute(completeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		String start = String.format(&quot;%s.&quot;, completeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (attached())</b>
+<b class="nc">&nbsp;			detach();</b>
+&nbsp;
+<b class="nc">&nbsp;		ArrayList&lt;String&gt; keys = new ArrayList&lt;String&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		manager.graph.attributeKeys().forEach(key -&gt; {</b>
+<b class="nc">&nbsp;			if (key.startsWith(start))</b>
+<b class="nc">&nbsp;				keys.add(key);</b>
+&nbsp;		});
+&nbsp;
+<b class="nc">&nbsp;		for (String key : keys)</b>
+<b class="nc">&nbsp;			manager.graph.removeAttribute(key);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The element the sprite is attached to or null if the sprite is not attached.
+&nbsp;	 *
+&nbsp;	 * @return An element the sprite is attached to or null.
+&nbsp;	 */
+&nbsp;	public Element getAttachment() {
+<b class="nc">&nbsp;		return attachment;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if attached to an edge or node.
+&nbsp;	 *
+&nbsp;	 * @return False if not attached.
+&nbsp;	 */
+&nbsp;	public boolean attached() {
+<b class="nc">&nbsp;		return (attachment != null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * X position.
+&nbsp;	 *
+&nbsp;	 * @return The position in abscissa.
+&nbsp;	 */
+&nbsp;	public double getX() {
+<b class="nc">&nbsp;		if (position.values.size() &gt; 0)</b>
+<b class="nc">&nbsp;			return position.values.get(0);</b>
+&nbsp;
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Y position.
+&nbsp;	 *
+&nbsp;	 * @return The position in ordinate.
+&nbsp;	 */
+&nbsp;	public double getY() {
+<b class="nc">&nbsp;		if (position.values.size() &gt; 1)</b>
+<b class="nc">&nbsp;			return position.values.get(1);</b>
+&nbsp;
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Z position.
+&nbsp;	 *
+&nbsp;	 * @return The position in depth.
+&nbsp;	 */
+&nbsp;	public double getZ() {
+<b class="nc">&nbsp;		if (position.values.size() &gt; 2)</b>
+<b class="nc">&nbsp;			return position.values.get(2);</b>
+&nbsp;
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Style.Units getUnits() {
+<b class="nc">&nbsp;		return position.units;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Command
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Attach the sprite to a node with the given identifier. If needed the sprite
+&nbsp;	 * is first detached. If the given node identifier does not exist, the sprite
+&nbsp;	 * stays in detached state.
+&nbsp;	 *
+&nbsp;	 * @param id
+&nbsp;	 *            Identifier of the node to attach to.
+&nbsp;	 */
+&nbsp;	public void attachToNode(String id) {
+<b class="nc">&nbsp;		if (attachment != null)</b>
+<b class="nc">&nbsp;			detach();</b>
+&nbsp;
+<b class="nc">&nbsp;		attachment = manager.graph.getNode(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (attachment != null)</b>
+<b class="nc">&nbsp;			attachment.setAttribute(completeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Attach the sprite to an edge with the given identifier. If needed the sprite
+&nbsp;	 * is first detached. If the given edge identifier does not exist, the sprite
+&nbsp;	 * stays in detached state.
+&nbsp;	 *
+&nbsp;	 * @param id
+&nbsp;	 *            Identifier of the edge to attach to.
+&nbsp;	 */
+&nbsp;	public void attachToEdge(String id) {
+<b class="nc">&nbsp;		if (attachment != null)</b>
+<b class="nc">&nbsp;			detach();</b>
+&nbsp;
+<b class="nc">&nbsp;		attachment = manager.graph.getEdge(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (attachment != null)</b>
+<b class="nc">&nbsp;			attachment.setAttribute(completeId);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Detach the sprite from the element it is attached to (if any).
+&nbsp;	 */
+&nbsp;	public void detach() {
+<b class="nc">&nbsp;		if (attachment != null) {</b>
+<b class="nc">&nbsp;			attachment.removeAttribute(completeId);</b>
+<b class="nc">&nbsp;			attachment = null;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setPosition(double percent) {
+<b class="nc">&nbsp;		setPosition(position.units, percent, 0, 0);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setPosition(double x, double y, double z) {
+<b class="nc">&nbsp;		setPosition(position.units, x, y, z);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setPosition(Style.Units units, double x, double y, double z) {
+<b class="nc">&nbsp;		boolean changed = false;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (position.get(0) != x) {</b>
+<b class="nc">&nbsp;			changed = true;</b>
+<b class="nc">&nbsp;			position.setValue(0, x);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (position.get(1) != y) {</b>
+<b class="nc">&nbsp;			changed = true;</b>
+<b class="nc">&nbsp;			position.setValue(1, y);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (position.get(2) != z) {</b>
+<b class="nc">&nbsp;			changed = true;</b>
+<b class="nc">&nbsp;			position.setValue(2, z);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		if (position.units != units) {</b>
+<b class="nc">&nbsp;			changed = true;</b>
+<b class="nc">&nbsp;			position.setUnits(units);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (changed)</b>
+<b class="nc">&nbsp;			manager.graph.setAttribute(completeId, new Values(position));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void setPosition(Values values) {
+<b class="nc">&nbsp;		if (values != null) {</b>
+<b class="nc">&nbsp;			int n = values.values.size();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (n &gt; 2) {</b>
+<b class="nc">&nbsp;				setPosition(values.units, values.get(0), values.get(1), values.get(2));</b>
+<b class="nc">&nbsp;			} else if (n &gt; 0) {</b>
+<b class="nc">&nbsp;				setPosition(values.get(0));</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access (Element)
+&nbsp;
+&nbsp;	public String getId() {
+<b class="nc">&nbsp;		return id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public CharSequence getLabel(String key) {
+<b class="nc">&nbsp;		return manager.graph.getLabel(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Object getAttribute(String key) {
+<b class="nc">&nbsp;		return manager.graph.getAttribute(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public &lt;T&gt; T getAttribute(String key, Class&lt;T&gt; clazz) {
+<b class="nc">&nbsp;		return manager.graph.getAttribute(String.format(&quot;%s.%s&quot;, completeId, key), clazz);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Quite expensive operation !.
+&nbsp;	 */
+&nbsp;	public int getAttributeCount() {
+<b class="nc">&nbsp;		String start = String.format(&quot;%s.&quot;, completeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		return (int) manager.graph.attributeKeys().filter(key -&gt; key.startsWith(start)).count();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Stream&lt;String&gt; attributeKeys() {
+<b class="nc">&nbsp;		throw new RuntimeException(&quot;not implemented&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Map&lt;String, Object&gt; getAttributeMap() {
+<b class="nc">&nbsp;		throw new RuntimeException(&quot;not implemented&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Object getFirstAttributeOf(String... keys) {
+<b class="nc">&nbsp;		String completeKeys[] = new String[keys.length];</b>
+<b class="nc">&nbsp;		int i = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String key : keys) {</b>
+<b class="nc">&nbsp;			completeKeys[i] = String.format(&quot;%s.%s&quot;, completeId, key);</b>
+<b class="nc">&nbsp;			i++;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return manager.graph.getFirstAttributeOf(completeKeys);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public &lt;T&gt; T getFirstAttributeOf(Class&lt;T&gt; clazz, String... keys) {
+<b class="nc">&nbsp;		String completeKeys[] = new String[keys.length];</b>
+<b class="nc">&nbsp;		int i = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String key : keys) {</b>
+<b class="nc">&nbsp;			completeKeys[i] = String.format(&quot;%s.%s&quot;, completeId, key);</b>
+<b class="nc">&nbsp;			i++;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return manager.graph.getFirstAttributeOf(clazz, completeKeys);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Object[] getArray(String key) {
+<b class="nc">&nbsp;		return manager.graph.getArray(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Map&lt;?, ?&gt; getMap(String key) {
+<b class="nc">&nbsp;		return manager.graph.getMap(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public double getNumber(String key) {
+<b class="nc">&nbsp;		return manager.graph.getNumber(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public List&lt;? extends Number&gt; getVector(String key) {
+<b class="nc">&nbsp;		return manager.graph.getVector(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean hasAttribute(String key) {
+<b class="nc">&nbsp;		return manager.graph.hasAttribute(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean hasArray(String key) {
+<b class="nc">&nbsp;		return manager.graph.hasArray(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean hasAttribute(String key, Class&lt;?&gt; clazz) {
+<b class="nc">&nbsp;		return manager.graph.hasAttribute(String.format(&quot;%s.%s&quot;, completeId, key), clazz);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean hasMap(String key) {
+<b class="nc">&nbsp;		return manager.graph.hasMap(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean hasLabel(String key) {
+<b class="nc">&nbsp;		return manager.graph.hasLabel(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean hasNumber(String key) {
+<b class="nc">&nbsp;		return manager.graph.hasNumber(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean hasVector(String key) {
+<b class="nc">&nbsp;		return manager.graph.hasVector(String.format(&quot;%s.%s&quot;, completeId, key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Commands (Element)
+&nbsp;
+&nbsp;	public void setAttribute(String attribute, Object... values) {
+<b class="nc">&nbsp;		manager.graph.setAttribute(String.format(&quot;%s.%s&quot;, completeId, attribute), values);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setAttributes(Map&lt;String, Object&gt; attributes) {
+<b class="nc">&nbsp;		for (String key : attributes.keySet())</b>
+<b class="nc">&nbsp;			manager.graph.setAttribute(String.format(&quot;%s.%s&quot;, completeId, key), attributes.get(key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void clearAttributes() {
+<b class="nc">&nbsp;		String start = String.format(&quot;%s.&quot;, completeId);</b>
+&nbsp;
+<b class="nc">&nbsp;		manager.graph.attributeKeys().filter(key -&gt; key.startsWith(start)).collect(Collectors.toList())</b>
+<b class="nc">&nbsp;				.forEach(key -&gt; manager.graph.removeAttribute(key));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void removeAttribute(String attribute) {
+<b class="nc">&nbsp;		manager.graph.removeAttribute(String.format(&quot;%s.%s&quot;, completeId, attribute));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// XXX -&gt; UGLY FIX
+&nbsp;	// Sprites do not have unique index but is this useful?
+&nbsp;	public int getIndex() {
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

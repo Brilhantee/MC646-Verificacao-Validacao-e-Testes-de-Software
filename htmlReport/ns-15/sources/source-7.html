@@ -1,0 +1,1013 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > StyleSheet</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.graphicGraph.stylesheet</a>
+</div>
+
+<h1>Coverage Summary for Class: StyleSheet (org.graphstream.ui.graphicGraph.stylesheet)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StyleSheet</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/154)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">StyleSheet$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">StyleSheet$NameSpace</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/85)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/40)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/240)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-07-05
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Mathieu Post &lt;mathieupost@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.graphicGraph.stylesheet;
+&nbsp;
+&nbsp;import java.io.BufferedInputStream;
+&nbsp;import java.io.File;
+&nbsp;import java.io.FileInputStream;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStreamReader;
+&nbsp;import java.io.Reader;
+&nbsp;import java.io.StringReader;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Element;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicSprite;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.StrokeMode;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.parser.StyleSheetParser;
+&nbsp;import org.graphstream.util.parser.ParseException;
+&nbsp;
+&nbsp;/**
+&nbsp; * Implementation of the style sheets that can be stored in the graphic graph.
+&nbsp; * 
+&nbsp; * @author Antoine Dutot
+&nbsp; */
+&nbsp;public class StyleSheet {
+&nbsp;	// Attributes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The top-level default rule.
+&nbsp;	 */
+&nbsp;	public Rule defaultRule;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default, id and class rules for graphs.
+&nbsp;	 */
+<b class="nc">&nbsp;	public NameSpace graphRules = new NameSpace(Selector.Type.GRAPH);</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default, id and class rules for nodes.
+&nbsp;	 */
+<b class="nc">&nbsp;	public NameSpace nodeRules = new NameSpace(Selector.Type.NODE);</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default, id and class rules for edges.
+&nbsp;	 */
+<b class="nc">&nbsp;	public NameSpace edgeRules = new NameSpace(Selector.Type.EDGE);</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default, id and class rules for sprites.
+&nbsp;	 */
+<b class="nc">&nbsp;	public NameSpace spriteRules = new NameSpace(Selector.Type.SPRITE);</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set of listeners.
+&nbsp;	 */
+<b class="nc">&nbsp;	public ArrayList&lt;StyleSheetListener&gt; listeners = new ArrayList&lt;StyleSheetListener&gt;();</b>
+&nbsp;
+&nbsp;	// Constructors
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New style sheet initialised to defaults.
+&nbsp;	 */
+<b class="nc">&nbsp;	public StyleSheet() {</b>
+<b class="nc">&nbsp;		initRules();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default rule for graphs.
+&nbsp;	 * 
+&nbsp;	 * @return A rule.
+&nbsp;	 */
+&nbsp;	public Rule getDefaultGraphRule() {
+<b class="nc">&nbsp;		return graphRules.defaultRule;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default rule for nodes.
+&nbsp;	 * 
+&nbsp;	 * @return A rule.
+&nbsp;	 */
+&nbsp;	public Rule getDefaultNodeRule() {
+<b class="nc">&nbsp;		return nodeRules.defaultRule;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default rule for edges.
+&nbsp;	 * 
+&nbsp;	 * @return A rule.
+&nbsp;	 */
+&nbsp;	public Rule getDefaultEdgeRule() {
+<b class="nc">&nbsp;		return edgeRules.defaultRule;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default rule for sprites.
+&nbsp;	 * 
+&nbsp;	 * @return A rule.
+&nbsp;	 */
+&nbsp;	public Rule getDefaultSpriteRule() {
+<b class="nc">&nbsp;		return spriteRules.defaultRule;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default style for graphs.
+&nbsp;	 * 
+&nbsp;	 * @return A style.
+&nbsp;	 */
+&nbsp;	public Style getDefaultGraphStyle() {
+<b class="nc">&nbsp;		return getDefaultGraphRule().getStyle();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default style for nodes.
+&nbsp;	 * 
+&nbsp;	 * @return A style.
+&nbsp;	 */
+&nbsp;	public Style getDefaultNodeStyle() {
+<b class="nc">&nbsp;		return getDefaultNodeRule().getStyle();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default style for edges.
+&nbsp;	 * 
+&nbsp;	 * @return A style.
+&nbsp;	 */
+&nbsp;	public Style getDefaultEdgeStyle() {
+<b class="nc">&nbsp;		return getDefaultEdgeRule().getStyle();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default style for sprites.
+&nbsp;	 * 
+&nbsp;	 * @return A style.
+&nbsp;	 */
+&nbsp;	public Style getDefaultSpriteStyle() {
+<b class="nc">&nbsp;		return getDefaultSpriteRule().getStyle();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * All the rules (default, specific and class) that apply to graphs.
+&nbsp;	 * 
+&nbsp;	 * @return The set of rules for graphs.
+&nbsp;	 */
+&nbsp;	public NameSpace getGraphStyleNameSpace() {
+<b class="nc">&nbsp;		return graphRules;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * All the rules (default, specific and class) that apply to nodes.
+&nbsp;	 * 
+&nbsp;	 * @return The set of rules for nodes.
+&nbsp;	 */
+&nbsp;	public NameSpace getNodeStyleNameSpace() {
+<b class="nc">&nbsp;		return nodeRules;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * All the rules (default, specific and class) that apply to edges.
+&nbsp;	 * 
+&nbsp;	 * @return The set of rules for edges.
+&nbsp;	 */
+&nbsp;	public NameSpace getEdgeStyleNameSpace() {
+<b class="nc">&nbsp;		return edgeRules;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * All the rules (default, specific and class) that apply to sprites.
+&nbsp;	 * 
+&nbsp;	 * @return The set of rules for sprites.
+&nbsp;	 */
+&nbsp;	public NameSpace getSpriteStyleNameSpace() {
+<b class="nc">&nbsp;		return spriteRules;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the rules that match a given element.
+&nbsp;	 * 
+&nbsp;	 * First a rule for the identifier of the element is looked for. It is looked
+&nbsp;	 * for in its name space (nodes for Node element, etc.) If it is not found, the
+&nbsp;	 * default rule for this kind of element is used. This rule is pushed at start
+&nbsp;	 * of the returned array of rules.
+&nbsp;	 * 
+&nbsp;	 * After a rule for the element is found, then the various classes the element
+&nbsp;	 * pertains to are looked at and each class rule found is added in order in the
+&nbsp;	 * returned array.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element a rules are searched for.
+&nbsp;	 * @return A set of rules matching the element, with the main rule at index 0.
+&nbsp;	 */
+&nbsp;	public ArrayList&lt;Rule&gt; getRulesFor(Element element) {
+<b class="nc">&nbsp;		ArrayList&lt;Rule&gt; rules = null;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (element instanceof Graph) {</b>
+<b class="nc">&nbsp;			rules = graphRules.getRulesFor(element);</b>
+<b class="nc">&nbsp;		} else if (element instanceof Node) {</b>
+<b class="nc">&nbsp;			rules = nodeRules.getRulesFor(element);</b>
+<b class="nc">&nbsp;		} else if (element instanceof Edge) {</b>
+<b class="nc">&nbsp;			rules = edgeRules.getRulesFor(element);</b>
+<b class="nc">&nbsp;		} else if (element instanceof GraphicSprite) {</b>
+<b class="nc">&nbsp;			rules = spriteRules.getRulesFor(element);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			rules = new ArrayList&lt;Rule&gt;();</b>
+<b class="nc">&nbsp;			rules.add(defaultRule);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return rules;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the name of the style group and element will pertain to knowing its
+&nbsp;	 * styling rules.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element.
+&nbsp;	 * @param rules
+&nbsp;	 *            The styling rules.
+&nbsp;	 * @return The unique identifier of the style group for the element.
+&nbsp;	 * @see #getRulesFor(Element)
+&nbsp;	 */
+&nbsp;	public String getStyleGroupIdFor(Element element, ArrayList&lt;Rule&gt; rules) {
+<b class="nc">&nbsp;		StringBuilder builder = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (element instanceof Graph) {</b>
+<b class="nc">&nbsp;			builder.append(&quot;g&quot;);</b>
+<b class="nc">&nbsp;		} else if (element instanceof Node) {</b>
+<b class="nc">&nbsp;			builder.append(&quot;n&quot;);</b>
+<b class="nc">&nbsp;		} else if (element instanceof Edge) {</b>
+<b class="nc">&nbsp;			builder.append(&quot;e&quot;);</b>
+<b class="nc">&nbsp;		} else if (element instanceof GraphicSprite) {</b>
+<b class="nc">&nbsp;			builder.append(&quot;s&quot;);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			throw new RuntimeException(&quot;What ?&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (rules.get(0).selector.getId() != null) {</b>
+<b class="nc">&nbsp;			builder.append(&#39;_&#39;);</b>
+<b class="nc">&nbsp;			builder.append(rules.get(0).selector.getId());</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		int n = rules.size();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (n &gt; 1) {</b>
+<b class="nc">&nbsp;			builder.append(&#39;(&#39;);</b>
+<b class="nc">&nbsp;			builder.append(rules.get(1).selector.getClazz());</b>
+<b class="nc">&nbsp;			for (int i = 2; i &lt; n; i++) {</b>
+<b class="nc">&nbsp;				builder.append(&#39;,&#39;);</b>
+<b class="nc">&nbsp;				builder.append(rules.get(i).selector.getClazz());</b>
+&nbsp;			}
+<b class="nc">&nbsp;			builder.append(&#39;)&#39;);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return builder.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Commands
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create the default rules. This method is the place to set defaults for
+&nbsp;	 * specific element types. This is here that the edge width is reset to one,
+&nbsp;	 * since the default width is larger. The default z index that is different for
+&nbsp;	 * every class of element is also set here.
+&nbsp;	 */
+&nbsp;	protected void initRules() {
+<b class="nc">&nbsp;		defaultRule = new Rule(new Selector(Selector.Type.ANY), null);</b>
+&nbsp;
+<b class="nc">&nbsp;		defaultRule.getStyle().setDefaults();</b>
+&nbsp;
+<b class="nc">&nbsp;		graphRules.defaultRule = new Rule(new Selector(Selector.Type.GRAPH), defaultRule);</b>
+<b class="nc">&nbsp;		nodeRules.defaultRule = new Rule(new Selector(Selector.Type.NODE), defaultRule);</b>
+<b class="nc">&nbsp;		edgeRules.defaultRule = new Rule(new Selector(Selector.Type.EDGE), defaultRule);</b>
+<b class="nc">&nbsp;		spriteRules.defaultRule = new Rule(new Selector(Selector.Type.SPRITE), defaultRule);</b>
+&nbsp;
+<b class="nc">&nbsp;		graphRules.defaultRule.getStyle().setValue(&quot;padding&quot;, new Values(Style.Units.PX, 30));</b>
+<b class="nc">&nbsp;		edgeRules.defaultRule.getStyle().setValue(&quot;shape&quot;, StyleConstants.Shape.LINE);</b>
+<b class="nc">&nbsp;		edgeRules.defaultRule.getStyle().setValue(&quot;size&quot;, new Values(Style.Units.PX, 1));</b>
+<b class="nc">&nbsp;		edgeRules.defaultRule.getStyle().setValue(&quot;z-index&quot;, new Integer(1));</b>
+<b class="nc">&nbsp;		nodeRules.defaultRule.getStyle().setValue(&quot;z-index&quot;, new Integer(2));</b>
+<b class="nc">&nbsp;		spriteRules.defaultRule.getStyle().setValue(&quot;z-index&quot;, new Integer(3));</b>
+&nbsp;
+<b class="nc">&nbsp;		Colors colors = new Colors();</b>
+<b class="nc">&nbsp;		colors.add(Color.WHITE);</b>
+&nbsp;
+<b class="nc">&nbsp;		graphRules.defaultRule.getStyle().setValue(&quot;fill-color&quot;, colors);</b>
+<b class="nc">&nbsp;		graphRules.defaultRule.getStyle().setValue(&quot;stroke-mode&quot;, StrokeMode.NONE);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (StyleSheetListener listener : listeners) {</b>
+<b class="nc">&nbsp;			listener.styleAdded(defaultRule, defaultRule);</b>
+<b class="nc">&nbsp;			listener.styleAdded(graphRules.defaultRule, graphRules.defaultRule);</b>
+<b class="nc">&nbsp;			listener.styleAdded(nodeRules.defaultRule, nodeRules.defaultRule);</b>
+<b class="nc">&nbsp;			listener.styleAdded(edgeRules.defaultRule, edgeRules.defaultRule);</b>
+<b class="nc">&nbsp;			listener.styleAdded(spriteRules.defaultRule, spriteRules.defaultRule);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		// for( StyleSheetListener listener: listeners )
+&nbsp;		// listener.styleAdded( defaultRule, defaultRule );
+&nbsp;		// for( StyleSheetListener listener: listeners )
+&nbsp;		// listener.styleAdded( graphRules.defaultRule, graphRules.defaultRule
+&nbsp;		// );
+&nbsp;		// for( StyleSheetListener listener: listeners )
+&nbsp;		// listener.styleAdded( nodeRules.defaultRule, nodeRules.defaultRule );
+&nbsp;		// for( StyleSheetListener listener: listeners )
+&nbsp;		// listener.styleAdded( edgeRules.defaultRule, edgeRules.defaultRule );
+&nbsp;		// for( StyleSheetListener listener: listeners )
+&nbsp;		// listener.styleAdded( spriteRules.defaultRule, spriteRules.defaultRule
+&nbsp;		// );
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a listener for style events. You never receive events for default rules
+&nbsp;	 * and styles. You receive events only for the rules and styles that are added
+&nbsp;	 * after this listener is registered.
+&nbsp;	 * 
+&nbsp;	 * @param listener
+&nbsp;	 *            The new listener.
+&nbsp;	 */
+&nbsp;	public void addListener(StyleSheetListener listener) {
+<b class="nc">&nbsp;		listeners.add(listener);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove a previously registered listener.
+&nbsp;	 * 
+&nbsp;	 * @param listener
+&nbsp;	 *            The listener to remove.
+&nbsp;	 */
+&nbsp;	public void removeListener(StyleSheetListener listener) {
+<b class="nc">&nbsp;		int index = listeners.indexOf(listener);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (index &gt;= 0)</b>
+<b class="nc">&nbsp;			listeners.remove(index);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Clear all specific rules and initialise the default rules. The listeners are
+&nbsp;	 * not changed.
+&nbsp;	 */
+&nbsp;	public void clear() {
+<b class="nc">&nbsp;		graphRules.clear();</b>
+<b class="nc">&nbsp;		nodeRules.clear();</b>
+<b class="nc">&nbsp;		edgeRules.clear();</b>
+<b class="nc">&nbsp;		spriteRules.clear();</b>
+<b class="nc">&nbsp;		initRules();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (StyleSheetListener listener : listeners)</b>
+<b class="nc">&nbsp;			listener.styleSheetCleared();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Parse a style sheet from a file. The style sheet will complete the previously
+&nbsp;	 * parsed style sheets.
+&nbsp;	 * 
+&nbsp;	 * @param fileName
+&nbsp;	 *            Name of the file containing the style sheet.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             For any kind of I/O error or parse error.
+&nbsp;	 */
+&nbsp;	public void parseFromFile(String fileName) throws IOException {
+<b class="nc">&nbsp;		parse(new InputStreamReader(new BufferedInputStream(new FileInputStream(fileName))));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Parse a style sheet from an URL. The style sheet will complete the previously
+&nbsp;	 * parsed style sheets. First, this method will search the URL as
+&nbsp;	 * SystemRessource, then as a file and if there is no match, just try to create
+&nbsp;	 * an URL object giving the URL as constructor&#39;s parameter.
+&nbsp;	 * 
+&nbsp;	 * @param url
+&nbsp;	 *            Name of the file containing the style sheet.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             For any kind of I/O error or parse error.
+&nbsp;	 */
+&nbsp;	public void parseFromURL(String url) throws IOException {
+<b class="nc">&nbsp;		URL u = StyleSheet.class.getClassLoader().getResource(url);</b>
+<b class="nc">&nbsp;		if (u == null) {</b>
+<b class="nc">&nbsp;			String fileUrl = url.replace(&quot;file://&quot;, &quot;&quot;);</b>
+<b class="nc">&nbsp;			File f = new File(fileUrl);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (f.exists())</b>
+<b class="nc">&nbsp;				u = f.toURI().toURL();</b>
+&nbsp;			else
+<b class="nc">&nbsp;				u = new URL(url);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		parse(new InputStreamReader(u.openStream()));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Parse a style sheet from a string. The style sheet will complete the
+&nbsp;	 * previously parsed style sheets.
+&nbsp;	 * 
+&nbsp;	 * @param styleSheet
+&nbsp;	 *            The string containing the whole style sheet.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             For any kind of I/O error or parse error.
+&nbsp;	 */
+&nbsp;	public void parseFromString(String styleSheet) throws IOException {
+<b class="nc">&nbsp;		parse(new StringReader(styleSheet));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Parse only one style, create a rule with the given selector, and add this
+&nbsp;	 * rule.
+&nbsp;	 * 
+&nbsp;	 * @param select
+&nbsp;	 *            The elements for which this style must apply.
+&nbsp;	 * @param styleString
+&nbsp;	 *            The style string to parse.
+&nbsp;	 */
+&nbsp;	public void parseStyleFromString(Selector select, String styleString) throws IOException {
+<b class="nc">&nbsp;		StyleSheetParser parser = new StyleSheetParser(this, new StringReader(styleString));</b>
+&nbsp;
+<b class="nc">&nbsp;		Style style = new Style();</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			parser.stylesStart(style);</b>
+<b class="nc">&nbsp;		} catch (ParseException e) {</b>
+<b class="nc">&nbsp;			throw new IOException(e.getMessage());</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		Rule rule = new Rule(select);</b>
+&nbsp;
+<b class="nc">&nbsp;		rule.setStyle(style);</b>
+<b class="nc">&nbsp;		addRule(rule);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Load a style sheet from an attribute value, the value can either be the
+&nbsp;	 * contents of the whole style sheet, or begin by &quot;url&quot;. If it starts with
+&nbsp;	 * &quot;url&quot;, it must then contain between parenthesis the string of the URL to
+&nbsp;	 * load. For example:
+&nbsp;	 * 
+&nbsp;	 * &lt;pre&gt;
+&nbsp;	 * 		url(&#39;file:///some/path/on/the/file/system&#39;)
+&nbsp;	 * &lt;/pre&gt;
+&nbsp;	 * 
+&nbsp;	 * Or
+&nbsp;	 * 
+&nbsp;	 * &lt;pre&gt;
+&nbsp;	 * 		url(&#39;http://some/web/url&#39;)
+&nbsp;	 * &lt;/pre&gt;
+&nbsp;	 * 
+&nbsp;	 * The loaded style sheet will be merged with the styles already present in the
+&nbsp;	 * style sheet.
+&nbsp;	 * 
+&nbsp;	 * @param styleSheetValue
+&nbsp;	 *            The style sheet name of content.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If the loading or parsing of the style sheet failed.
+&nbsp;	 */
+&nbsp;	public void load(String styleSheetValue) throws IOException {
+<b class="nc">&nbsp;		if (styleSheetValue.startsWith(&quot;url&quot;)) {</b>
+&nbsp;			// Extract the part between &#39;(&#39; and &#39;)&#39;.
+&nbsp;
+<b class="nc">&nbsp;			int beg = styleSheetValue.indexOf(&#39;(&#39;);</b>
+<b class="nc">&nbsp;			int end = styleSheetValue.lastIndexOf(&#39;)&#39;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (beg &gt;= 0 &amp;&amp; end &gt; beg)</b>
+<b class="nc">&nbsp;				styleSheetValue = styleSheetValue.substring(beg + 1, end);</b>
+&nbsp;
+<b class="nc">&nbsp;			styleSheetValue = styleSheetValue.trim();</b>
+&nbsp;
+&nbsp;			// Remove the quotes (&#39;) or (&quot;).
+&nbsp;
+<b class="nc">&nbsp;			if (styleSheetValue.startsWith(&quot;&#39;&quot;)) {</b>
+<b class="nc">&nbsp;				beg = 0;</b>
+<b class="nc">&nbsp;				end = styleSheetValue.lastIndexOf(&#39;\&#39;&#39;);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (beg &gt;= 0 &amp;&amp; end &gt; beg)</b>
+<b class="nc">&nbsp;					styleSheetValue = styleSheetValue.substring(beg + 1, end);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			styleSheetValue = styleSheetValue.trim();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (styleSheetValue.startsWith(&quot;\&quot;&quot;)) {</b>
+<b class="nc">&nbsp;				beg = 0;</b>
+<b class="nc">&nbsp;				end = styleSheetValue.lastIndexOf(&#39;&quot;&#39;);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (beg &gt;= 0 &amp;&amp; end &gt; beg)</b>
+<b class="nc">&nbsp;					styleSheetValue = styleSheetValue.substring(beg + 1, end);</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			// That&#39;s it.
+&nbsp;
+<b class="nc">&nbsp;			parseFromURL(styleSheetValue);</b>
+<b class="nc">&nbsp;		} else // Parse from string, the value is considered to be the style</b>
+&nbsp;				// sheet contents.
+&nbsp;		{
+<b class="nc">&nbsp;			parseFromString(styleSheetValue);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Parse the style sheet from the given reader.
+&nbsp;	 * 
+&nbsp;	 * @param reader
+&nbsp;	 *            The reader pointing at the style sheet.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             For any kind of I/O error or parse error.
+&nbsp;	 */
+&nbsp;	protected void parse(Reader reader) throws IOException {
+<b class="nc">&nbsp;		StyleSheetParser parser = new StyleSheetParser(this, reader);</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			parser.start();</b>
+<b class="nc">&nbsp;		} catch (ParseException e) {</b>
+<b class="nc">&nbsp;			throw new IOException(e.getMessage());</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a new rule with its style. If the rule selector is just GRAPH, NODE, EDGE
+&nbsp;	 * or SPRITE, the default corresponding rules make a copy (or augmentation) of
+&nbsp;	 * its style. Else if an id or class is specified the rules are added (or
+&nbsp;	 * changed/augmented if the id or class was already set) and their parent is set
+&nbsp;	 * to the default graph, node, edge or sprite rules. If this is an event rule
+&nbsp;	 * (or meta-class rule), its sibling rule (the same rule without the meta-class)
+&nbsp;	 * is searched and created if not found and the event rule is added as an
+&nbsp;	 * alternative to it.
+&nbsp;	 * 
+&nbsp;	 * @param newRule
+&nbsp;	 *            The new rule.
+&nbsp;	 */
+&nbsp;	public void addRule(Rule newRule) {
+<b class="nc">&nbsp;		Rule oldRule = null;</b>
+&nbsp;
+<b class="nc">&nbsp;		switch (newRule.selector.getType()) {</b>
+&nbsp;		case ANY:
+<b class="nc">&nbsp;			throw new RuntimeException(&quot;The ANY selector should never be used, it is created automatically.&quot;);</b>
+&nbsp;		case GRAPH:
+<b class="nc">&nbsp;			oldRule = graphRules.addRule(newRule);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case NODE:
+<b class="nc">&nbsp;			oldRule = nodeRules.addRule(newRule);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case EDGE:
+<b class="nc">&nbsp;			oldRule = edgeRules.addRule(newRule);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		case SPRITE:
+<b class="nc">&nbsp;			oldRule = spriteRules.addRule(newRule);</b>
+<b class="nc">&nbsp;			break;</b>
+&nbsp;		default:
+<b class="nc">&nbsp;			throw new RuntimeException(&quot;Ho ho ho ?&quot;);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		for (StyleSheetListener listener : listeners)</b>
+<b class="nc">&nbsp;			listener.styleAdded(oldRule, newRule);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		StringBuilder builder = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;		builder.append(&quot;StyleSheet : {\n&quot;);</b>
+<b class="nc">&nbsp;		builder.append(&quot;  default styles:\n&quot;);</b>
+<b class="nc">&nbsp;		builder.append(defaultRule.toString(1));</b>
+<b class="nc">&nbsp;		builder.append(graphRules.toString(1));</b>
+<b class="nc">&nbsp;		builder.append(nodeRules.toString(1));</b>
+<b class="nc">&nbsp;		builder.append(edgeRules.toString(1));</b>
+<b class="nc">&nbsp;		builder.append(spriteRules.toString(1));</b>
+&nbsp;
+<b class="nc">&nbsp;		return builder.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Nested classes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A name space is a tuple (default rule, id rule set, class rule set).
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The name space defines a default rule for a kind of elements, a set of rules
+&nbsp;	 * for this kind of elements with a given identifier, and a set or rules for
+&nbsp;	 * this kind of elements with a given class.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 */
+&nbsp;	public class NameSpace {
+&nbsp;		// Attribute
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The kind of elements in this name space.
+&nbsp;		 */
+&nbsp;		public Selector.Type type;
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The default rule for this kind of elements.
+&nbsp;		 */
+&nbsp;		public Rule defaultRule;
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The set of rules for this kind of elements with a given identifier.
+&nbsp;		 */
+<b class="nc">&nbsp;		public HashMap&lt;String, Rule&gt; byId = new HashMap&lt;String, Rule&gt;();</b>
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The set of rules for this kind of elements with a given class.
+&nbsp;		 */
+<b class="nc">&nbsp;		public HashMap&lt;String, Rule&gt; byClass = new HashMap&lt;String, Rule&gt;();</b>
+&nbsp;
+&nbsp;		// Constructor
+&nbsp;
+<b class="nc">&nbsp;		public NameSpace(Selector.Type type) {</b>
+<b class="nc">&nbsp;			this.type = type;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		// Access
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * The kind of elements this name space applies rules to.
+&nbsp;		 * 
+&nbsp;		 * @return A type of element (node, edge, sprite, graph).
+&nbsp;		 */
+&nbsp;		public Selector.Type getGraphElementType() {
+<b class="nc">&nbsp;			return type;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Number of specific (id) rules.
+&nbsp;		 * 
+&nbsp;		 * @return The number of rules that apply to elements by their identifiers.
+&nbsp;		 */
+&nbsp;		public int getIdRulesCount() {
+<b class="nc">&nbsp;			return byId.size();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Number of specific (class) rules.
+&nbsp;		 * 
+&nbsp;		 * @return The number of rules that apply to elements by their classes.
+&nbsp;		 */
+&nbsp;		public int getClassRulesCount() {
+<b class="nc">&nbsp;			return byClass.size();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Get the rules that match a given element. The rules are returned in a given
+&nbsp;		 * order. The array always contain the &quot;main&quot; rule that matches the element.
+&nbsp;		 * This rule is either a default rule for the kind of element given or the rule
+&nbsp;		 * that matches its identifier if there is one. Then class rules the element has
+&nbsp;		 * can be appended to this array in order.
+&nbsp;		 * 
+&nbsp;		 * @return an array of rules that match the element, with the main rule at index
+&nbsp;		 *         0.
+&nbsp;		 */
+&nbsp;		protected ArrayList&lt;Rule&gt; getRulesFor(Element element) {
+<b class="nc">&nbsp;			Rule rule = byId.get(element.getId());</b>
+<b class="nc">&nbsp;			ArrayList&lt;Rule&gt; rules = new ArrayList&lt;Rule&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (rule != null)</b>
+<b class="nc">&nbsp;				rules.add(rule);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				rules.add(defaultRule);</b>
+&nbsp;
+<b class="nc">&nbsp;			getClassRules(element, rules);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (rules.isEmpty())</b>
+<b class="nc">&nbsp;				rules.add(defaultRule);</b>
+&nbsp;
+<b class="nc">&nbsp;			return rules;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Search if the given element has classes attributes and fill the given array
+&nbsp;		 * with the set of rules that match these classes.
+&nbsp;		 * 
+&nbsp;		 * @param element
+&nbsp;		 *            The element for which classes must be found.
+&nbsp;		 * @param rules
+&nbsp;		 *            The rule array to fill.
+&nbsp;		 */
+&nbsp;		protected void getClassRules(Element element, ArrayList&lt;Rule&gt; rules) {
+<b class="nc">&nbsp;			Object o = element.getAttribute(&quot;ui.class&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o != null) {</b>
+<b class="nc">&nbsp;				if (o instanceof Object[]) {</b>
+<b class="nc">&nbsp;					for (Object s : (Object[]) o) {</b>
+<b class="nc">&nbsp;						if (s instanceof CharSequence) {</b>
+<b class="nc">&nbsp;							Rule rule = byClass.get((CharSequence) s);</b>
+&nbsp;
+<b class="nc">&nbsp;							if (rule != null)</b>
+<b class="nc">&nbsp;								rules.add(rule);</b>
+&nbsp;						}
+&nbsp;					}
+<b class="nc">&nbsp;				} else if (o instanceof CharSequence) {</b>
+<b class="nc">&nbsp;					String classList = ((CharSequence) o).toString().trim();</b>
+<b class="nc">&nbsp;					String[] classes = classList.split(&quot;\\s*,\\s*&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;					for (String c : classes) {</b>
+<b class="nc">&nbsp;						Rule rule = byClass.get(c);</b>
+&nbsp;
+<b class="nc">&nbsp;						if (rule != null)</b>
+<b class="nc">&nbsp;							rules.add(rule);</b>
+&nbsp;					}
+<b class="nc">&nbsp;				} else {</b>
+<b class="nc">&nbsp;					throw new RuntimeException(&quot;Oups ! class attribute is of type &quot; + o.getClass().getName());</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		// Command
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Remove all styles.
+&nbsp;		 */
+&nbsp;		protected void clear() {
+<b class="nc">&nbsp;			defaultRule = null;</b>
+<b class="nc">&nbsp;			byId.clear();</b>
+<b class="nc">&nbsp;			byClass.clear();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		/**
+&nbsp;		 * Add a new rule.
+&nbsp;		 * 
+&nbsp;		 * &lt;p&gt;
+&nbsp;		 * Several cases can occur :
+&nbsp;		 * &lt;/p&gt;
+&nbsp;		 * 
+&nbsp;		 * &lt;ul&gt;
+&nbsp;		 * &lt;li&gt;The rule to add has an ID or class and the rule does not yet exists and
+&nbsp;		 * is not an event rule : add it directly.&lt;/li&gt;
+&nbsp;		 * &lt;li&gt;If the rule has an ID or class but the rule already exists, augment to
+&nbsp;		 * already existing rule.&lt;/li&gt;
+&nbsp;		 * &lt;li&gt;If the rule has no ID or class and is not an event, augment the default
+&nbsp;		 * style.&lt;/li&gt;
+&nbsp;		 * &lt;li&gt;If the rule is an event, the corresponding normal rule is searched, if it
+&nbsp;		 * does not exists, it is created then or else, the event is added to the found
+&nbsp;		 * rule.&lt;/li&gt;
+&nbsp;		 * &lt;/ul&gt;
+&nbsp;		 * 
+&nbsp;		 * @param newRule
+&nbsp;		 *            The rule to add or copy.
+&nbsp;		 * @return It the rule added augments an existing rule, this existing rule is
+&nbsp;		 *         returned, else null is returned.
+&nbsp;		 */
+&nbsp;		protected Rule addRule(Rule newRule) {
+<b class="nc">&nbsp;			Rule oldRule = null;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (newRule.selector.getPseudoClass() != null) {</b>
+<b class="nc">&nbsp;				oldRule = addEventRule(newRule);</b>
+<b class="nc">&nbsp;			} else if (newRule.selector.getId() != null) {</b>
+<b class="nc">&nbsp;				oldRule = byId.get(newRule.selector.getId());</b>
+&nbsp;
+<b class="nc">&nbsp;				if (oldRule != null) {</b>
+<b class="nc">&nbsp;					oldRule.getStyle().augment(newRule.getStyle());</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					byId.put(newRule.selector.getId(), newRule);</b>
+<b class="nc">&nbsp;					newRule.getStyle().reparent(defaultRule);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			} else if (newRule.selector.getClazz() != null) {</b>
+<b class="nc">&nbsp;				oldRule = byClass.get(newRule.selector.getClazz());</b>
+&nbsp;
+<b class="nc">&nbsp;				if (oldRule != null) {</b>
+<b class="nc">&nbsp;					oldRule.getStyle().augment(newRule.getStyle());</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					byClass.put(newRule.selector.getClazz(), newRule);</b>
+<b class="nc">&nbsp;					newRule.getStyle().reparent(defaultRule);</b>
+&nbsp;				}
+&nbsp;			} else {
+<b class="nc">&nbsp;				oldRule = defaultRule;</b>
+<b class="nc">&nbsp;				defaultRule.getStyle().augment(newRule.getStyle());</b>
+<b class="nc">&nbsp;				newRule = defaultRule;</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			// That&#39;s it.
+&nbsp;
+<b class="nc">&nbsp;			return oldRule;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		protected Rule addEventRule(Rule newRule) {
+<b class="nc">&nbsp;			Rule parentRule = null;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (newRule.selector.getId() != null) {</b>
+<b class="nc">&nbsp;				parentRule = byId.get(newRule.selector.getId());</b>
+&nbsp;
+<b class="nc">&nbsp;				if (parentRule == null) {</b>
+<b class="nc">&nbsp;					parentRule = addRule(new Rule(new Selector(newRule.selector.getType(), newRule.selector.getId(),</b>
+<b class="nc">&nbsp;							newRule.selector.getClazz())));</b>
+&nbsp;				}
+<b class="nc">&nbsp;			} else if (newRule.selector.getClazz() != null) {</b>
+<b class="nc">&nbsp;				parentRule = byClass.get(newRule.selector.getClazz());</b>
+&nbsp;
+<b class="nc">&nbsp;				if (parentRule == null) {</b>
+<b class="nc">&nbsp;					parentRule = addRule(new Rule(new Selector(newRule.selector.getType(), newRule.selector.getId(),</b>
+<b class="nc">&nbsp;							newRule.selector.getClazz())));</b>
+&nbsp;				}
+&nbsp;			} else {
+<b class="nc">&nbsp;				parentRule = defaultRule;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			newRule.getStyle().reparent(parentRule);</b>
+<b class="nc">&nbsp;			parentRule.getStyle().addAlternateStyle(newRule.selector.getPseudoClass(), newRule);</b>
+&nbsp;
+<b class="nc">&nbsp;			return parentRule;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		@Override
+&nbsp;		public String toString() {
+<b class="nc">&nbsp;			return toString(-1);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public String toString(int level) {
+<b class="nc">&nbsp;			String prefix = &quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (level &gt; 0) {</b>
+<b class="nc">&nbsp;				for (int i = 0; i &lt; level; i++)</b>
+<b class="nc">&nbsp;					prefix += &quot;    &quot;;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			StringBuilder builder = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;			builder.append(String.format(&quot;%s%s default style :%n&quot;, prefix, type));</b>
+<b class="nc">&nbsp;			builder.append(defaultRule.toString(level + 1));</b>
+<b class="nc">&nbsp;			toStringRules(level, builder, byId, String.format(&quot;%s%s id styles&quot;, prefix, type));</b>
+<b class="nc">&nbsp;			toStringRules(level, builder, byClass, String.format(&quot;%s%s class styles&quot;, prefix, type));</b>
+&nbsp;
+<b class="nc">&nbsp;			return builder.toString();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		protected void toStringRules(int level, StringBuilder builder, HashMap&lt;String, Rule&gt; rules, String title) {
+<b class="nc">&nbsp;			builder.append(title);</b>
+<b class="nc">&nbsp;			builder.append(String.format(&quot; :%n&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;			for (Rule rule : rules.values())</b>
+<b class="nc">&nbsp;				builder.append(rule.toString(level + 1));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

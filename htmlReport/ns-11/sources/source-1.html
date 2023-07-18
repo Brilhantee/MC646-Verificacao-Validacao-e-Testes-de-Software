@@ -1,0 +1,205 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SinkTime</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.sync</a>
+</div>
+
+<h1>Coverage Summary for Class: SinkTime (org.graphstream.stream.sync)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SinkTime</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (12/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-12-07
+&nbsp; * 
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.sync;
+&nbsp;
+&nbsp;import java.security.AccessControlException;
+&nbsp;import java.util.HashMap;
+&nbsp;
+<b class="fc">&nbsp;public class SinkTime {</b>
+&nbsp;	/**
+&nbsp;	 * Key used to disable synchro. Just run : java -DSYNC_DISABLE_KEY ...
+&nbsp;	 */
+&nbsp;	public static final String SYNC_DISABLE_KEY = &quot;org.graphstream.stream.sync.disable&quot;;
+&nbsp;	/**
+&nbsp;	 * Flag used to disable sync.
+&nbsp;	 */
+&nbsp;	protected static final boolean disableSync;
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * The following code is used to prevent AccessControlException to be thrown
+&nbsp;	 * when trying to get the value of the property (in applets for example).
+&nbsp;	 */
+&nbsp;	static {
+&nbsp;		boolean off;
+&nbsp;
+&nbsp;		try {
+<b class="fc">&nbsp;			off = System.getProperty(SYNC_DISABLE_KEY) != null;</b>
+<b class="nc">&nbsp;		} catch (AccessControlException ex) {</b>
+<b class="nc">&nbsp;			off = false;</b>
+<b class="fc">&nbsp;		}</b>
+&nbsp;
+<b class="fc">&nbsp;		disableSync = off;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Map storing times of sources.
+&nbsp;	 */
+<b class="fc">&nbsp;	protected HashMap&lt;String, Long&gt; times = new HashMap&lt;String, Long&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Update timeId for a source.
+&nbsp;	 * 
+&nbsp;	 * @param sourceId
+&nbsp;	 * @param timeId
+&nbsp;	 * @return true if time has been updated
+&nbsp;	 */
+&nbsp;	protected boolean setTimeFor(String sourceId, long timeId) {
+<b class="fc">&nbsp;		Long knownTimeId = times.get(sourceId);</b>
+&nbsp;
+<b class="fc">&nbsp;		if (knownTimeId == null) {</b>
+<b class="fc">&nbsp;			times.put(sourceId, timeId);</b>
+<b class="fc">&nbsp;			return true;</b>
+<b class="fc">&nbsp;		} else if (timeId &gt; knownTimeId) {</b>
+<b class="fc">&nbsp;			times.put(sourceId, timeId);</b>
+<b class="fc">&nbsp;			return true;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Allow to know if event is new for this source. This updates the timeId mapped
+&nbsp;	 * to the source.
+&nbsp;	 * 
+&nbsp;	 * @param sourceId
+&nbsp;	 * @param timeId
+&nbsp;	 * @return true if event is new for the source
+&nbsp;	 */
+&nbsp;	public boolean isNewEvent(String sourceId, long timeId) {
+<b class="nc">&nbsp;		return disableSync || setTimeFor(sourceId, timeId);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

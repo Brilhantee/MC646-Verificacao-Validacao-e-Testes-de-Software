@@ -1,0 +1,412 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AdjacencyListNode</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.graph.implementations</a>
+</div>
+
+<h1>Coverage Summary for Class: AdjacencyListNode (org.graphstream.graph.implementations)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AdjacencyListNode</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (8/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    45.6%
+  </span>
+  <span class="absValue">
+    (36/79)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AdjacencyListNode$EdgeIterator</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/21)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (8/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    36%
+  </span>
+  <span class="absValue">
+    (36/100)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Stefan Balev &lt;stefan.balev@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.graph.implementations;
+&nbsp;
+&nbsp;import java.security.AccessControlException;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.Iterator;
+&nbsp;import java.util.NoSuchElementException;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;
+&nbsp;/**
+&nbsp; * Nodes used with {@link AdjacencyListGraph}
+&nbsp; * 
+&nbsp; */
+&nbsp;public class AdjacencyListNode extends AbstractNode {
+&nbsp;	protected static final int INITIAL_EDGE_CAPACITY;
+&nbsp;	protected static final double GROWTH_FACTOR = 1.1;
+&nbsp;
+&nbsp;	static {
+<b class="fc">&nbsp;		String p = &quot;org.graphstream.graph.node.initialEdgeCapacity&quot;;</b>
+<b class="fc">&nbsp;		int initialEdgeCapacity = 16;</b>
+&nbsp;		try {
+<b class="fc">&nbsp;			initialEdgeCapacity = Integer.valueOf(System.getProperty(p, &quot;16&quot;));</b>
+<b class="nc">&nbsp;		} catch (AccessControlException e) {</b>
+<b class="fc">&nbsp;		}</b>
+<b class="fc">&nbsp;		INITIAL_EDGE_CAPACITY = initialEdgeCapacity;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected static final char I_EDGE = 0;
+&nbsp;	protected static final char IO_EDGE = 1;
+&nbsp;	protected static final char O_EDGE = 2;
+&nbsp;
+&nbsp;	protected AbstractEdge[] edges;
+&nbsp;	protected int ioStart, oStart, degree;
+&nbsp;
+&nbsp;	// *** Constructor ***
+&nbsp;
+&nbsp;	protected AdjacencyListNode(AbstractGraph graph, String id) {
+<b class="fc">&nbsp;		super(graph, id);</b>
+<b class="fc">&nbsp;		edges = new AbstractEdge[INITIAL_EDGE_CAPACITY];</b>
+<b class="fc">&nbsp;		ioStart = oStart = degree = 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Helpers ***
+&nbsp;
+&nbsp;	protected char edgeType(AbstractEdge e) {
+<b class="fc">&nbsp;		if (!e.directed || e.source == e.target)</b>
+<b class="fc">&nbsp;			return IO_EDGE;</b>
+<b class="nc">&nbsp;		return e.source == this ? O_EDGE : I_EDGE;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;	protected &lt;T extends Edge&gt; T locateEdge(Node opposite, char type) {
+&nbsp;		// where to search ?
+<b class="nc">&nbsp;		int start = 0;</b>
+<b class="nc">&nbsp;		int end = degree;</b>
+<b class="nc">&nbsp;		if (type == I_EDGE)</b>
+<b class="nc">&nbsp;			end = oStart;</b>
+<b class="nc">&nbsp;		else if (type == O_EDGE)</b>
+<b class="nc">&nbsp;			start = ioStart;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (int i = start; i &lt; end; i++)</b>
+<b class="nc">&nbsp;			if (edges[i].getOpposite(this) == opposite)</b>
+<b class="nc">&nbsp;				return (T) edges[i];</b>
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void removeEdge(int i) {
+<b class="fc">&nbsp;		if (i &gt;= oStart) {</b>
+<b class="nc">&nbsp;			edges[i] = edges[--degree];</b>
+<b class="nc">&nbsp;			edges[degree] = null;</b>
+&nbsp;			return;
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (i &gt;= ioStart) {</b>
+<b class="fc">&nbsp;			edges[i] = edges[--oStart];</b>
+<b class="fc">&nbsp;			edges[oStart] = edges[--degree];</b>
+<b class="fc">&nbsp;			edges[degree] = null;</b>
+&nbsp;			return;
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		edges[i] = edges[--ioStart];</b>
+<b class="nc">&nbsp;		edges[ioStart] = edges[--oStart];</b>
+<b class="nc">&nbsp;		edges[oStart] = edges[--degree];</b>
+<b class="nc">&nbsp;		edges[degree] = null;</b>
+&nbsp;
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Callbacks ***
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected boolean addEdgeCallback(AbstractEdge edge) {
+&nbsp;		// resize edges if necessary
+<b class="fc">&nbsp;		if (edges.length == degree) {</b>
+<b class="fc">&nbsp;			AbstractEdge[] tmp = new AbstractEdge[(int) (GROWTH_FACTOR * edges.length) + 1];</b>
+<b class="fc">&nbsp;			System.arraycopy(edges, 0, tmp, 0, edges.length);</b>
+<b class="fc">&nbsp;			Arrays.fill(edges, null);</b>
+<b class="fc">&nbsp;			edges = tmp;</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		char type = edgeType(edge);</b>
+&nbsp;
+<b class="fc">&nbsp;		if (type == O_EDGE) {</b>
+<b class="nc">&nbsp;			edges[degree++] = edge;</b>
+<b class="nc">&nbsp;			return true;</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		if (type == IO_EDGE) {</b>
+<b class="fc">&nbsp;			edges[degree++] = edges[oStart];</b>
+<b class="fc">&nbsp;			edges[oStart++] = edge;</b>
+<b class="fc">&nbsp;			return true;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		edges[degree++] = edges[oStart];</b>
+<b class="nc">&nbsp;		edges[oStart++] = edges[ioStart];</b>
+<b class="nc">&nbsp;		edges[ioStart++] = edge;</b>
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void removeEdgeCallback(AbstractEdge edge) {
+&nbsp;		// locate the edge first
+<b class="fc">&nbsp;		char type = edgeType(edge);</b>
+<b class="fc">&nbsp;		int i = 0;</b>
+<b class="fc">&nbsp;		if (type == IO_EDGE)</b>
+<b class="fc">&nbsp;			i = ioStart;</b>
+<b class="nc">&nbsp;		else if (type == O_EDGE)</b>
+<b class="nc">&nbsp;			i = oStart;</b>
+<b class="fc">&nbsp;		while (edges[i] != edge)</b>
+<b class="fc">&nbsp;			i++;</b>
+&nbsp;
+<b class="fc">&nbsp;		removeEdge(i);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void clearCallback() {
+<b class="fc">&nbsp;		Arrays.fill(edges, 0, degree, null);</b>
+<b class="fc">&nbsp;		ioStart = oStart = degree = 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Access methods ***
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int getDegree() {
+<b class="nc">&nbsp;		return degree;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int getInDegree() {
+<b class="nc">&nbsp;		return oStart;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int getOutDegree() {
+<b class="nc">&nbsp;		return degree - ioStart;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Edge getEdge(int i) {
+<b class="nc">&nbsp;		if (i &lt; 0 || i &gt;= degree)</b>
+<b class="nc">&nbsp;			throw new IndexOutOfBoundsException(&quot;Node \&quot;&quot; + this + &quot;\&quot;&quot; + &quot; has no edge &quot; + i);</b>
+<b class="nc">&nbsp;		return edges[i];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Edge getEnteringEdge(int i) {
+<b class="nc">&nbsp;		if (i &lt; 0 || i &gt;= getInDegree())</b>
+<b class="nc">&nbsp;			throw new IndexOutOfBoundsException(&quot;Node \&quot;&quot; + this + &quot;\&quot;&quot; + &quot; has no entering edge &quot; + i);</b>
+<b class="nc">&nbsp;		return edges[i];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Edge getLeavingEdge(int i) {
+<b class="nc">&nbsp;		if (i &lt; 0 || i &gt;= getOutDegree())</b>
+<b class="nc">&nbsp;			throw new IndexOutOfBoundsException(&quot;Node \&quot;&quot; + this + &quot;\&quot;&quot; + &quot; has no edge &quot; + i);</b>
+<b class="nc">&nbsp;		return edges[ioStart + i];</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Edge getEdgeBetween(Node node) {
+<b class="nc">&nbsp;		return locateEdge(node, IO_EDGE);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Edge getEdgeFrom(Node node) {
+<b class="nc">&nbsp;		return locateEdge(node, I_EDGE);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Edge getEdgeToward(Node node) {
+<b class="nc">&nbsp;		return locateEdge(node, O_EDGE);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Iterators ***
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Stream&lt;Edge&gt; edges() {
+<b class="fc">&nbsp;		return Arrays.stream(edges, 0, degree);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Stream&lt;Edge&gt; enteringEdges() {
+<b class="nc">&nbsp;		return Arrays.stream(edges, 0, oStart);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Stream&lt;Edge&gt; leavingEdges() {
+<b class="nc">&nbsp;		return Arrays.stream(edges, ioStart, degree);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected class EdgeIterator&lt;T extends Edge&gt; implements Iterator&lt;T&gt; {
+&nbsp;		protected int iPrev, iNext, iEnd;
+&nbsp;
+<b class="nc">&nbsp;		protected EdgeIterator(char type) {</b>
+<b class="nc">&nbsp;			iPrev = -1;</b>
+<b class="nc">&nbsp;			iNext = 0;</b>
+<b class="nc">&nbsp;			iEnd = degree;</b>
+<b class="nc">&nbsp;			if (type == I_EDGE)</b>
+<b class="nc">&nbsp;				iEnd = oStart;</b>
+<b class="nc">&nbsp;			else if (type == O_EDGE)</b>
+<b class="nc">&nbsp;				iNext = ioStart;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public boolean hasNext() {
+<b class="nc">&nbsp;			return iNext &lt; iEnd;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		@SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;		public T next() {
+<b class="nc">&nbsp;			if (iNext &gt;= iEnd)</b>
+<b class="nc">&nbsp;				throw new NoSuchElementException();</b>
+<b class="nc">&nbsp;			iPrev = iNext++;</b>
+<b class="nc">&nbsp;			return (T) edges[iPrev];</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void remove() {
+<b class="nc">&nbsp;			if (iPrev == -1)</b>
+<b class="nc">&nbsp;				throw new IllegalStateException();</b>
+<b class="nc">&nbsp;			AbstractEdge e = edges[iPrev];</b>
+&nbsp;			// do not call the callback because we already know the index
+<b class="nc">&nbsp;			graph.removeEdge(e, true, e.source != AdjacencyListNode.this, e.target != AdjacencyListNode.this);</b>
+<b class="nc">&nbsp;			removeEdge(iPrev);</b>
+<b class="nc">&nbsp;			iNext = iPrev;</b>
+<b class="nc">&nbsp;			iPrev = -1;</b>
+<b class="nc">&nbsp;			iEnd--;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

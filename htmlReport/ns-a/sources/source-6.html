@@ -1,0 +1,776 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > KeyValues</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file.gml</a>
+</div>
+
+<h1>Coverage Summary for Class: KeyValues (org.graphstream.stream.file.gml)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">KeyValues</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/64)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-07-22
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Ivan Novikov &lt;novikov@pragmatix-corp.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file.gml;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.HashMap;
+&nbsp;
+&nbsp;import org.graphstream.graph.implementations.AbstractElement.AttributeChangeEvent;
+&nbsp;import org.graphstream.stream.SourceBase.ElementType;
+&nbsp;import org.graphstream.stream.file.FileSourceGML;
+&nbsp;
+&nbsp;public class GMLContext {
+&nbsp;	FileSourceGML gml;
+&nbsp;	// GMLParser parser;
+&nbsp;	String sourceId;
+&nbsp;	boolean directed;
+&nbsp;	protected KeyValues nextStep = null;
+&nbsp;	boolean inGraph = false;
+&nbsp;
+&nbsp;	GMLContext(FileSourceGML gml) {
+&nbsp;		this.gml = gml;
+&nbsp;		this.sourceId = String.format(&quot;&lt;GML stream %d&gt;&quot;, System.currentTimeMillis());
+&nbsp;	}
+&nbsp;
+&nbsp;	void handleKeyValues(KeyValues kv) throws IOException {
+&nbsp;		if (nextStep != null) {
+&nbsp;			insertKeyValues(nextStep);
+&nbsp;			nextStep = null;
+&nbsp;		}
+&nbsp;
+&nbsp;		try {
+&nbsp;			if (kv != null) {
+&nbsp;				insertKeyValues(kv);
+&nbsp;			}
+&nbsp;		} catch (IOException e) {
+&nbsp;			throw new IOException(e);
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	void setNextStep(KeyValues kv) {
+&nbsp;		nextStep = kv;
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setDirected(boolean on) {
+&nbsp;		directed = on;
+&nbsp;	}
+&nbsp;
+&nbsp;	void setIsInGraph(boolean on) {
+&nbsp;		inGraph = on;
+&nbsp;	}
+&nbsp;
+&nbsp;	public void addNodeOrEdge(String element, KeyValues kv) {
+&nbsp;		System.err.printf(&quot;adding %s %n&quot;, element);
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void insertKeyValues(KeyValues kv) throws IOException {
+&nbsp;		if (kv.key != null) {
+&nbsp;			if (inGraph) {
+&nbsp;				if (kv.key.equals(&quot;node&quot;) || kv.key.equals(&quot;add-node&quot;)) {
+&nbsp;					handleAddNode(kv);
+&nbsp;				} else if (kv.key.equals(&quot;edge&quot;) || kv.key.equals(&quot;add-edge&quot;)) {
+&nbsp;					handleAddEdge(kv);
+&nbsp;				} else if (kv.key.equals(&quot;del-node&quot;) || kv.key.equals(&quot;-node&quot;)) {
+&nbsp;					handleDelNode(kv);
+&nbsp;				} else if (kv.key.equals(&quot;del-edge&quot;) || kv.key.equals(&quot;-edge&quot;)) {
+&nbsp;					handleDelEdge(kv);
+&nbsp;				} else if (kv.key.equals(&quot;change-node&quot;) || kv.key.equals(&quot;+node&quot;)) {
+&nbsp;					handleChangeNode(kv);
+&nbsp;				} else if (kv.key.equals(&quot;change-edge&quot;) || kv.key.equals(&quot;+edge&quot;)) {
+&nbsp;					handleChangeEdge(kv);
+&nbsp;				} else if (kv.key.equals(&quot;step&quot;)) {
+&nbsp;					handleStep(kv);
+&nbsp;				} else if (kv.key.equals(&quot;directed&quot;)) {
+&nbsp;					setDirected(getBoolean(kv.get(&quot;directed&quot;)));
+&nbsp;				} else {
+&nbsp;					if (kv.key.startsWith(&quot;-&quot;)) {
+&nbsp;						gml.sendAttributeChangedEvent(sourceId, sourceId, ElementType.GRAPH, kv.key.substring(1),
+&nbsp;								AttributeChangeEvent.REMOVE, null, null);
+&nbsp;					} else {
+&nbsp;						gml.sendAttributeChangedEvent(sourceId, sourceId, ElementType.GRAPH, kv.key,
+&nbsp;								AttributeChangeEvent.ADD, null, compositeAttribute(kv));
+&nbsp;					}
+&nbsp;				}
+&nbsp;			} else {
+&nbsp;				// XXX Should we consider these events pertain to the graph ?
+&nbsp;				// XXX
+&nbsp;
+&nbsp;				if (kv.key.startsWith(&quot;-&quot;)) {
+&nbsp;					gml.sendAttributeChangedEvent(sourceId, sourceId, ElementType.GRAPH, kv.key.substring(1),
+&nbsp;							AttributeChangeEvent.REMOVE, null, null);
+&nbsp;				} else {
+&nbsp;					gml.sendAttributeChangedEvent(sourceId, sourceId, ElementType.GRAPH, kv.key,
+&nbsp;							AttributeChangeEvent.ADD, null, compositeAttribute(kv));
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Object compositeAttribute(KeyValues kv) {
+&nbsp;		if (kv.size() &lt; 2) {
+&nbsp;			return kv.get(kv.key);
+&nbsp;		} else {
+&nbsp;			return kv;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void handleAddNode(KeyValues kv) throws IOException {
+&nbsp;		Object thing = kv.get(&quot;node&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			thing = kv.get(&quot;add-node&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			kv.error(&quot;expecting a node or add-node token here&quot;);
+&nbsp;
+&nbsp;		if (thing instanceof String) {
+&nbsp;			String id = (String) thing;
+&nbsp;			gml.sendNodeAdded(sourceId, id);
+&nbsp;		} else if (thing instanceof KeyValues) {
+&nbsp;			KeyValues node = (KeyValues) thing;
+&nbsp;			String id = node.reqStringOrNumber(&quot;id&quot;);
+&nbsp;
+&nbsp;			gml.sendNodeAdded(sourceId, id);
+&nbsp;			handleNodeAttributes(id, node);
+&nbsp;		} else {
+&nbsp;			kv.error(&quot;unknown token type&quot;);
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected long edgeid = 0;
+&nbsp;
+&nbsp;	protected void handleAddEdge(KeyValues kv) throws IOException {
+&nbsp;		Object thing = kv.get(&quot;edge&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			thing = kv.get(&quot;add-edge&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			kv.error(&quot;expecting a edge or add-edge token here&quot;);
+&nbsp;		if (!(thing instanceof KeyValues))
+&nbsp;			kv.error(&quot;expecting a set of values for the new edge&quot;);
+&nbsp;
+&nbsp;		KeyValues edge = (KeyValues) thing;
+&nbsp;		String id = edge.optString(&quot;id&quot;);
+&nbsp;
+&nbsp;		String src = edge.reqStringOrNumber(&quot;source&quot;);
+&nbsp;		String trg = edge.reqStringOrNumber(&quot;target&quot;);
+&nbsp;
+&nbsp;		if (id == null)
+&nbsp;			id = String.format(&quot;%s_%s_%d&quot;, src, trg, edgeid++);
+&nbsp;
+&nbsp;		String dir = edge.optString(&quot;directed&quot;);
+&nbsp;
+&nbsp;		boolean directed = this.directed;
+&nbsp;
+&nbsp;		if (dir != null) {
+&nbsp;			directed = getBoolean(dir);
+&nbsp;		}
+&nbsp;
+&nbsp;		gml.sendEdgeAdded(sourceId, id, src, trg, directed);
+&nbsp;
+&nbsp;		handleEdgeAttributes(id, edge);
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void handleDelNode(KeyValues kv) throws IOException {
+&nbsp;		Object thing = kv.get(&quot;del-node&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			thing = kv.get(&quot;-node&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			kv.error(&quot;expecting a del-node or -node token here&quot;);
+&nbsp;
+&nbsp;		if (thing instanceof String) {
+&nbsp;			String id = (String) thing;
+&nbsp;			gml.sendNodeRemoved(sourceId, id);
+&nbsp;		} else if (thing instanceof KeyValues) {
+&nbsp;			KeyValues node = (KeyValues) thing;
+&nbsp;			String id = node.reqString(&quot;id&quot;);
+&nbsp;			gml.sendNodeRemoved(sourceId, id);
+&nbsp;		} else {
+&nbsp;			kv.error(&quot;unknown token type&quot;);
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void handleDelEdge(KeyValues kv) throws IOException {
+&nbsp;		Object thing = kv.get(&quot;del-edge&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			thing = kv.get(&quot;-edge&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			kv.error(&quot;expecting a del-edge or -edge token here&quot;);
+&nbsp;
+&nbsp;		if (thing instanceof String) {
+&nbsp;			String id = (String) thing;
+&nbsp;			gml.sendEdgeRemoved(sourceId, id);
+&nbsp;		} else if (thing instanceof KeyValues) {
+&nbsp;			KeyValues edge = (KeyValues) thing;
+&nbsp;			String id = edge.reqString(&quot;id&quot;);
+&nbsp;			gml.sendEdgeRemoved(sourceId, id);
+&nbsp;		} else {
+&nbsp;			kv.error(&quot;unknown token type&quot;);
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void handleChangeNode(KeyValues kv) throws IOException {
+&nbsp;		Object thing = kv.get(&quot;change-node&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			thing = kv.get(&quot;+node&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			kv.error(&quot;expecting a change-node or +node token here&quot;);
+&nbsp;		if (!(thing instanceof KeyValues))
+&nbsp;			kv.error(&quot;expecting a set of values&quot;);
+&nbsp;
+&nbsp;		KeyValues node = (KeyValues) thing;
+&nbsp;		String id = node.reqString(&quot;id&quot;);
+&nbsp;
+&nbsp;		handleNodeAttributes(id, node);
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void handleChangeEdge(KeyValues kv) throws IOException {
+&nbsp;		Object thing = kv.get(&quot;change-edge&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			thing = kv.get(&quot;+edge&quot;);
+&nbsp;		if (thing == null)
+&nbsp;			kv.error(&quot;expecting a change-edge or +edge token here&quot;);
+&nbsp;		if (!(thing instanceof KeyValues))
+&nbsp;			kv.error(&quot;expecting a set of values&quot;);
+&nbsp;
+&nbsp;		KeyValues edge = (KeyValues) thing;
+&nbsp;		String id = edge.reqString(&quot;id&quot;);
+&nbsp;
+&nbsp;		handleEdgeAttributes(id, edge);
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void handleNodeAttributes(String id, KeyValues node) {
+&nbsp;		for (String key : node.keySet()) {
+&nbsp;			if (key.startsWith(&quot;-&quot;)) {
+&nbsp;				if (key.equals(&quot;-label&quot;))
+&nbsp;					key = &quot;-ui.label&quot;;
+&nbsp;
+&nbsp;				gml.sendAttributeChangedEvent(sourceId, id, ElementType.NODE, key.substring(1),
+&nbsp;						AttributeChangeEvent.REMOVE, null, null);
+&nbsp;			} else {
+&nbsp;				if (key.equals(&quot;graphics&quot;) &amp;&amp; node.get(&quot;graphics&quot;) instanceof KeyValues) {
+&nbsp;					Graphics graphics = optNodeStyle((KeyValues) node.get(&quot;graphics&quot;));
+&nbsp;
+&nbsp;					if (graphics != null) {
+&nbsp;						if (graphics.position != null) {
+&nbsp;							gml.sendAttributeChangedEvent(sourceId, id, ElementType.NODE, &quot;xyz&quot;,
+&nbsp;									AttributeChangeEvent.ADD, null, graphics.getPosition());
+&nbsp;						}
+&nbsp;						if (graphics.style != null) {
+&nbsp;							gml.sendAttributeChangedEvent(sourceId, id, ElementType.NODE, &quot;ui.style&quot;,
+&nbsp;									AttributeChangeEvent.ADD, null, graphics.style);
+&nbsp;						}
+&nbsp;					}
+&nbsp;				} else {
+&nbsp;					String k = key;
+&nbsp;
+&nbsp;					if (key.equals(&quot;label&quot;))
+&nbsp;						k = &quot;ui.label&quot;;
+&nbsp;
+&nbsp;					gml.sendAttributeChangedEvent(sourceId, id, ElementType.NODE, k, AttributeChangeEvent.ADD, null,
+&nbsp;							node.get(key));
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void handleEdgeAttributes(String id, KeyValues edge) {
+&nbsp;		for (String key : edge.keySet()) {
+&nbsp;			if (key.startsWith(&quot;-&quot;)) {
+&nbsp;				if (key.equals(&quot;-label&quot;))
+&nbsp;					key = &quot;-ui.label&quot;;
+&nbsp;
+&nbsp;				gml.sendAttributeChangedEvent(sourceId, id, ElementType.EDGE, key.substring(1),
+&nbsp;						AttributeChangeEvent.REMOVE, null, null);
+&nbsp;			} else {
+&nbsp;				if (key.equals(&quot;graphics&quot;) &amp;&amp; edge.get(&quot;graphics&quot;) instanceof KeyValues) {
+&nbsp;					Graphics graphics = optEdgeStyle((KeyValues) edge.get(&quot;graphics&quot;));
+&nbsp;
+&nbsp;					if (graphics != null) {
+&nbsp;						if (graphics.style != null) {
+&nbsp;							gml.sendAttributeChangedEvent(sourceId, id, ElementType.EDGE, &quot;ui.style&quot;,
+&nbsp;									AttributeChangeEvent.ADD, null, graphics.style);
+&nbsp;						}
+&nbsp;					}
+&nbsp;				} else {
+&nbsp;					String k = key;
+&nbsp;
+&nbsp;					if (key.equals(&quot;label&quot;))
+&nbsp;						k = &quot;ui.label&quot;;
+&nbsp;
+&nbsp;					gml.sendAttributeChangedEvent(sourceId, id, ElementType.EDGE, k, AttributeChangeEvent.ADD, null,
+&nbsp;							edge.get(key));
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void handleStep(KeyValues kv) throws IOException {
+&nbsp;		gml.sendStepBegins(sourceId, kv.reqNumber(&quot;step&quot;));
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Graphics optNodeStyle(KeyValues kv) {
+&nbsp;		Graphics graphics = null;
+&nbsp;
+&nbsp;		if (kv != null) {
+&nbsp;			StringBuffer style = new StringBuffer();
+&nbsp;			Object w = null, h = null, d = null;
+&nbsp;			graphics = new Graphics();
+&nbsp;
+&nbsp;			if (kv.get(&quot;x&quot;) != null) {
+&nbsp;				graphics.setX(asDouble(kv.get(&quot;x&quot;)));
+&nbsp;			}
+&nbsp;			if (kv.get(&quot;y&quot;) != null) {
+&nbsp;				graphics.setY(asDouble(kv.get(&quot;y&quot;)));
+&nbsp;			}
+&nbsp;			if (kv.get(&quot;z&quot;) != null) {
+&nbsp;				graphics.setZ(asDouble(kv.get(&quot;z&quot;)));
+&nbsp;			}
+&nbsp;			if (kv.get(&quot;w&quot;) != null) {
+&nbsp;				w = kv.get(&quot;w&quot;);
+&nbsp;			}
+&nbsp;			if (kv.get(&quot;h&quot;) != null) {
+&nbsp;				h = kv.get(&quot;h&quot;);
+&nbsp;			}
+&nbsp;			if (kv.get(&quot;d&quot;) != null) {
+&nbsp;				d = kv.get(&quot;d&quot;);
+&nbsp;			}
+&nbsp;			if (w != null || h != null || d != null) {
+&nbsp;				int ww = w != null ? (int) asDouble(w) : 0;
+&nbsp;				int hh = h != null ? (int) asDouble(h) : 0;
+&nbsp;				int dd = d != null ? (int) asDouble(d) : 0;
+&nbsp;				style.append(String.format(&quot;size: %dpx, %dpx, %dpx; &quot;, ww, hh, dd));
+&nbsp;			}
+&nbsp;			if (kv.get(&quot;type&quot;) != null) {
+&nbsp;				style.append(String.format(&quot;shape: %s; &quot;, asNodeShape((String) kv.get(&quot;type&quot;))));
+&nbsp;			}
+&nbsp;
+&nbsp;			commonGraphicsAttributes(kv, style);
+&nbsp;			graphics.style = style.toString();
+&nbsp;		}
+&nbsp;
+&nbsp;		return graphics;
+&nbsp;	}
+&nbsp;
+&nbsp;	protected Graphics optEdgeStyle(KeyValues kv) {
+&nbsp;		Graphics graphics = null;
+&nbsp;
+&nbsp;		if (kv != null) {
+&nbsp;			StringBuffer style = new StringBuffer();
+&nbsp;			Object w = null;
+&nbsp;			graphics = new Graphics();
+&nbsp;
+&nbsp;			if (kv.get(&quot;width&quot;) != null) {
+&nbsp;				w = kv.get(&quot;width&quot;);
+&nbsp;			} else if (kv.get(&quot;w&quot;) != null) {
+&nbsp;				w = kv.get(&quot;w&quot;);
+&nbsp;			}
+&nbsp;			if (w != null) {
+&nbsp;				style.append(String.format(&quot;size: %fpx;&quot;, asDouble(w)));
+&nbsp;			}
+&nbsp;			if (kv.get(&quot;type&quot;) != null) {
+&nbsp;				style.append(String.format(&quot;shape: %s; &quot;, asEdgeShape((String) kv.get(&quot;type&quot;))));
+&nbsp;			}
+&nbsp;
+&nbsp;			commonGraphicsAttributes(kv, style);
+&nbsp;			graphics.style = style.toString();
+&nbsp;		}
+&nbsp;
+&nbsp;		return graphics;
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void commonGraphicsAttributes(KeyValues kv, StringBuffer style) {
+&nbsp;		if (kv.get(&quot;fill&quot;) != null) {
+&nbsp;			style.append(String.format(&quot;fill-color: %s; &quot;, kv.get(&quot;fill&quot;)));
+&nbsp;		}
+&nbsp;		if (kv.get(&quot;outline&quot;) != null) {
+&nbsp;			style.append(String.format(&quot;stroke-color: %s; &quot;, kv.get(&quot;outline&quot;)));
+&nbsp;		}
+&nbsp;		if (kv.get(&quot;outline_width&quot;) != null) {
+&nbsp;			style.append(String.format(&quot;stroke-width: %spx; &quot;, kv.get(&quot;outline_width&quot;)));
+&nbsp;		}
+&nbsp;		if ((kv.get(&quot;outline&quot;) != null) || (kv.get(&quot;outline_width&quot;) != null)) {
+&nbsp;			style.append(&quot;stroke-mode: plain; &quot;);
+&nbsp;		}
+&nbsp;		if (kv.get(&quot;anchor&quot;) != null) {
+&nbsp;			style.append(String.format(&quot;text-alginment: %s; &quot;, asTextAlignment((String) kv.get(&quot;anchor&quot;))));
+&nbsp;		}
+&nbsp;		if (kv.get(&quot;image&quot;) != null) {
+&nbsp;			style.append(String.format(&quot;icon-mode: at-left; icon: %s; &quot;, (String) kv.get(&quot;image&quot;)));
+&nbsp;		}
+&nbsp;		if (kv.get(&quot;arrow&quot;) != null) {
+&nbsp;			style.append(String.format(&quot;arrow-shape: %s; &quot;, asArrowShape((String) kv.get(&quot;arrow&quot;))));
+&nbsp;		}
+&nbsp;		if (kv.get(&quot;font&quot;) != null) {
+&nbsp;			style.append(String.format(&quot;font: %s; &quot;, (String) kv.get(&quot;font&quot;)));
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected double asDouble(Object value) {
+&nbsp;		if (value instanceof Number) {
+&nbsp;			return ((Number) value).doubleValue();
+&nbsp;		} else if (value instanceof String) {
+&nbsp;			try {
+&nbsp;				return Double.parseDouble((String) value);
+&nbsp;			} catch (NumberFormatException e) {
+&nbsp;				return 0.0;
+&nbsp;			}
+&nbsp;		} else {
+&nbsp;			return 0.0;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String asNodeShape(String type) {
+&nbsp;		if (type.equals(&quot;ellipse&quot;) || type.equals(&quot;oval&quot;)) {
+&nbsp;			return &quot;circle&quot;;
+&nbsp;		} else if (type.equals(&quot;rectangle&quot;) || type.equals(&quot;box&quot;)) {
+&nbsp;			return &quot;box&quot;;
+&nbsp;		} else if (type.equals(&quot;rounded-box&quot;)) {
+&nbsp;			return &quot;rounded-box&quot;;
+&nbsp;		} else if (type.equals(&quot;cross&quot;)) {
+&nbsp;			return &quot;cross&quot;;
+&nbsp;		} else if (type.equals(&quot;freeplane&quot;)) {
+&nbsp;			return &quot;freeplane&quot;;
+&nbsp;		} else if (type.equals(&quot;losange&quot;) || type.equals(&quot;diamond&quot;)) {
+&nbsp;			return &quot;diamond&quot;;
+&nbsp;		} else {
+&nbsp;			return &quot;circle&quot;;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String asEdgeShape(String type) {
+&nbsp;		if (type.equals(&quot;line&quot;)) {
+&nbsp;			return &quot;line&quot;;
+&nbsp;		} else if (type.equals(&quot;cubic-curve&quot;)) {
+&nbsp;			return &quot;cubic-curve&quot;;
+&nbsp;		} else if (type.equals(&quot;angle&quot;)) {
+&nbsp;			return &quot;angle&quot;;
+&nbsp;		} else if (type.equals(&quot;blob&quot;)) {
+&nbsp;			return &quot;blob&quot;;
+&nbsp;		} else if (type.equals(&quot;freeplane&quot;)) {
+&nbsp;			return &quot;freeplane&quot;;
+&nbsp;		} else {
+&nbsp;			return &quot;line&quot;;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String asTextAlignment(String anchor) {
+&nbsp;		if (anchor.equals(&quot;c&quot;)) {
+&nbsp;			return &quot;center&quot;;
+&nbsp;		} else if (anchor.equals(&quot;n&quot;)) {
+&nbsp;			return &quot;above&quot;;
+&nbsp;		} else if (anchor.equals(&quot;ne&quot;)) {
+&nbsp;			return &quot;at-right&quot;;
+&nbsp;		} else if (anchor.equals(&quot;e&quot;)) {
+&nbsp;			return &quot;at-right&quot;;
+&nbsp;		} else if (anchor.equals(&quot;se&quot;)) {
+&nbsp;			return &quot;at-right&quot;;
+&nbsp;		} else if (anchor.equals(&quot;s&quot;)) {
+&nbsp;			return &quot;under&quot;;
+&nbsp;		} else if (anchor.equals(&quot;sw&quot;)) {
+&nbsp;			return &quot;at-left&quot;;
+&nbsp;		} else if (anchor.equals(&quot;w&quot;)) {
+&nbsp;			return &quot;at-left&quot;;
+&nbsp;		} else if (anchor.equals(&quot;nw&quot;)) {
+&nbsp;			return &quot;at-left&quot;;
+&nbsp;		} else {
+&nbsp;			return &quot;center&quot;;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String asArrowShape(String arrow) {
+&nbsp;		if (arrow.equals(&quot;none&quot;)) {
+&nbsp;			return &quot;none&quot;;
+&nbsp;		} else if (arrow.equals(&quot;last&quot;)) {
+&nbsp;			return &quot;arrow&quot;;
+&nbsp;		} else {
+&nbsp;			return &quot;none&quot;;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected boolean getBoolean(Object bool) {
+&nbsp;		if (bool instanceof String) {
+&nbsp;			return (bool.equals(&quot;1&quot;) || bool.equals(&quot;true&quot;) || bool.equals(&quot;yes&quot;) || bool.equals(&quot;y&quot;));
+&nbsp;		} else if (bool instanceof Number) {
+&nbsp;			return (((Number) bool).doubleValue() != 0);
+&nbsp;		}
+&nbsp;		return false;
+&nbsp;	}
+&nbsp;}
+&nbsp;
+&nbsp;class Graphics {
+&nbsp;	public double[] position = null;
+&nbsp;	public String style = null;
+&nbsp;
+&nbsp;	public void setX(double value) {
+&nbsp;		if (position == null)
+&nbsp;			position = new double[3];
+&nbsp;
+&nbsp;		position[0] = value;
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setY(double value) {
+&nbsp;		if (position == null)
+&nbsp;			position = new double[3];
+&nbsp;
+&nbsp;		position[1] = value;
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setZ(double value) {
+&nbsp;		if (position == null)
+&nbsp;			position = new double[3];
+&nbsp;
+&nbsp;		position[2] = value;
+&nbsp;	}
+&nbsp;
+&nbsp;	public Object[] getPosition() {
+&nbsp;		Object p[] = new Object[3];
+&nbsp;		p[0] = (Double) position[0];
+&nbsp;		p[1] = (Double) position[1];
+&nbsp;		p[2] = (Double) position[2];
+&nbsp;		return p;
+&nbsp;	}
+&nbsp;}
+&nbsp;
+<b class="nc">&nbsp;class KeyValues extends HashMap&lt;String, Object&gt; {</b>
+&nbsp;	private static final long serialVersionUID = 5920553787913520204L;
+&nbsp;
+&nbsp;	public String key;
+&nbsp;	public int line;
+&nbsp;	public int column;
+&nbsp;
+&nbsp;	public void print() {
+<b class="nc">&nbsp;		System.err.printf(&quot;%s:%n&quot;, key);</b>
+<b class="nc">&nbsp;		for (String k : keySet()) {</b>
+<b class="nc">&nbsp;			System.err.printf(&quot;    %s: %s%n&quot;, k, get(k));</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String optString(String key) throws IOException {
+<b class="nc">&nbsp;		Object o = get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o == null)</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o instanceof Number)</b>
+<b class="nc">&nbsp;			o = o.toString();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!(o instanceof String))</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(</b>
+<b class="nc">&nbsp;					&quot;%d:%d: expecting a string or number value for tag %s, got a list of values&quot;, line, column, key));</b>
+&nbsp;
+<b class="nc">&nbsp;		remove(key);</b>
+<b class="nc">&nbsp;		return (String) o;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String reqString(String key) throws IOException {
+<b class="nc">&nbsp;		Object o = get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o == null)</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(&quot;%d:%d: expecting a tag %s but none found&quot;, line, column, key));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!(o instanceof String))</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(</b>
+<b class="nc">&nbsp;					&quot;%d:%d: expecting a string or number value for tag %s, got a list of values&quot;, line, column, key));</b>
+&nbsp;
+<b class="nc">&nbsp;		remove(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		return (String) o;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected String reqStringOrNumber(String key) throws IOException {
+<b class="nc">&nbsp;		Object o = get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o == null)</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(&quot;%d:%d: expecting a tag %s but none found&quot;, line, column, key));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!(o instanceof String) &amp;&amp; !(o instanceof Number))</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(</b>
+<b class="nc">&nbsp;					&quot;%d:%d: expecting a string or number value for tag %s, got a list of values&quot;, line, column, key));</b>
+&nbsp;
+<b class="nc">&nbsp;		remove(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o instanceof Number) {</b>
+<b class="nc">&nbsp;			o = o.toString();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return (String) o;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected double reqNumber(String key) throws IOException {
+<b class="nc">&nbsp;		Object o = get(key);</b>
+<b class="nc">&nbsp;		double v = 0.0;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o == null)</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(&quot;%d:%d: expecting a tag %s but none found&quot;, line, column, key));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!(o instanceof String))</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(</b>
+<b class="nc">&nbsp;					&quot;%d:%d expecting a string or number value for tag %s, got a list of values&quot;, line, column, key));</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			remove(key);</b>
+<b class="nc">&nbsp;			v = Double.parseDouble((String) o);</b>
+<b class="nc">&nbsp;		} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;			throw new IOException(</b>
+<b class="nc">&nbsp;					String.format(&quot;%d:%d: expecting a number value for tag %s, got a string&quot;, line, column, key));</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		return v;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected KeyValues optKeyValues(String key) throws IOException {
+<b class="nc">&nbsp;		Object o = get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o == null)</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!(o instanceof KeyValues))</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(&quot;%d:%d: expecting a list of values for tag %s, got a string or number&quot;,</b>
+<b class="nc">&nbsp;					line, column, key));</b>
+&nbsp;
+<b class="nc">&nbsp;		remove(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		return (KeyValues) o;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected KeyValues reqKeyValues(String key) throws IOException {
+<b class="nc">&nbsp;		Object o = get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o == null)</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(&quot;%d:%d: expecting a tag %s but none found&quot;, line, column, key));</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!(o instanceof KeyValues))</b>
+<b class="nc">&nbsp;			throw new IOException(String.format(&quot;%d:%d: expecting a list of values for tag %s, got a string or number&quot;,</b>
+<b class="nc">&nbsp;					line, column, key));</b>
+&nbsp;
+<b class="nc">&nbsp;		remove(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		return (KeyValues) o;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void error(String message) throws IOException {
+<b class="nc">&nbsp;		throw new IOException(String.format(&quot;%d:%d: %s&quot;, line, column, message));</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1555 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSinkSVG</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSinkSVG (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileSinkSVG</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/31)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/78)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">FileSinkSVG$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">FileSinkSVG$SVGContext</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/385)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">FileSinkSVG$SVGStyle</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/104)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">FileSinkSVG$ViewBox</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/21)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">FileSinkSVG$XMLWriter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/66)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/613)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2012-03-26
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import java.io.FileWriter;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.OutputStream;
+&nbsp;import java.io.OutputStreamWriter;
+&nbsp;import java.io.Writer;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Iterator;
+&nbsp;import java.util.Locale;
+&nbsp;
+&nbsp;import javax.xml.stream.FactoryConfigurationError;
+&nbsp;import javax.xml.stream.XMLOutputFactory;
+&nbsp;import javax.xml.stream.XMLStreamException;
+&nbsp;import javax.xml.stream.XMLStreamWriter;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Element;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.ui.geom.Vector2;
+&nbsp;import org.graphstream.ui.graphicGraph.StyleGroup;
+&nbsp;import org.graphstream.ui.graphicGraph.StyleGroupSet;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Color;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Colors;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Selector;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Value;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Values;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Selector.Type;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.Shape;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.StrokeMode;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.Units;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleSheet;
+&nbsp;
+<b class="nc">&nbsp;public class FileSinkSVG implements FileSink {</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#begin(java.lang.String)
+&nbsp;	 */
+&nbsp;	public void begin(String fileName) throws IOException {
+<b class="nc">&nbsp;		throw new UnsupportedOperationException();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#begin(java.io.OutputStream)
+&nbsp;	 */
+&nbsp;	public void begin(OutputStream stream) throws IOException {
+<b class="nc">&nbsp;		throw new UnsupportedOperationException();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#begin(java.io.Writer)
+&nbsp;	 */
+&nbsp;	public void begin(Writer writer) throws IOException {
+<b class="nc">&nbsp;		throw new UnsupportedOperationException();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#end()
+&nbsp;	 */
+&nbsp;	public void end() throws IOException {
+<b class="nc">&nbsp;		throw new UnsupportedOperationException();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#flush()
+&nbsp;	 */
+&nbsp;	public void flush() throws IOException {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.file.FileSink#writeAll(org.graphstream.graph.Graph ,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void writeAll(Graph graph, String fileName) throws IOException {
+<b class="nc">&nbsp;		FileWriter out = new FileWriter(fileName);</b>
+<b class="nc">&nbsp;		writeAll(graph, out);</b>
+<b class="nc">&nbsp;		out.close();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.file.FileSink#writeAll(org.graphstream.graph.Graph ,
+&nbsp;	 * java.io.OutputStream)
+&nbsp;	 */
+&nbsp;	public void writeAll(Graph graph, OutputStream stream) throws IOException {
+<b class="nc">&nbsp;		OutputStreamWriter out = new OutputStreamWriter(stream);</b>
+<b class="nc">&nbsp;		writeAll(graph, out);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.file.FileSink#writeAll(org.graphstream.graph.Graph ,
+&nbsp;	 * java.io.Writer)
+&nbsp;	 */
+&nbsp;	public void writeAll(Graph g, Writer w) throws IOException {
+<b class="nc">&nbsp;		XMLWriter out = new XMLWriter();</b>
+<b class="nc">&nbsp;		SVGContext ctx = new SVGContext();</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			out.start(w);</b>
+<b class="nc">&nbsp;		} catch (XMLStreamException e) {</b>
+<b class="nc">&nbsp;			throw new IOException(e);</b>
+<b class="nc">&nbsp;		} catch (FactoryConfigurationError e) {</b>
+<b class="nc">&nbsp;			throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			ctx.init(out, g);</b>
+<b class="nc">&nbsp;			ctx.writeElements(out, g);</b>
+<b class="nc">&nbsp;			ctx.end(out);</b>
+<b class="nc">&nbsp;		} catch (XMLStreamException e) {</b>
+<b class="nc">&nbsp;			throw new IOException(e);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			out.end();</b>
+<b class="nc">&nbsp;		} catch (XMLStreamException e) {</b>
+<b class="nc">&nbsp;			throw new IOException(e);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static String d(double d) {
+<b class="nc">&nbsp;		return String.format(Locale.ROOT, &quot;%f&quot;, d);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static double getX(Node n) {
+<b class="nc">&nbsp;		if (n.hasNumber(&quot;x&quot;))</b>
+<b class="nc">&nbsp;			return n.getNumber(&quot;x&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (n.hasArray(&quot;xy&quot;)) {</b>
+<b class="nc">&nbsp;			Object[] xy = n.getArray(&quot;xy&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (xy != null &amp;&amp; xy.length &gt; 0 &amp;&amp; xy[0] instanceof Number)</b>
+<b class="nc">&nbsp;				return ((Number) xy[0]).doubleValue();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (n.hasArray(&quot;xyz&quot;)) {</b>
+<b class="nc">&nbsp;			Object[] xyz = n.getArray(&quot;xyz&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (xyz != null &amp;&amp; xyz.length &gt; 0 &amp;&amp; xyz[0] instanceof Number)</b>
+<b class="nc">&nbsp;				return ((Number) xyz[0]).doubleValue();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		System.err.printf(&quot;[WARNING] no x attribute for node \&quot;%s\&quot; %s\n&quot;, n.getId(), n.hasAttribute(&quot;xyz&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;		return Math.random();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static double getY(Node n) {
+<b class="nc">&nbsp;		if (n.hasNumber(&quot;y&quot;))</b>
+<b class="nc">&nbsp;			return n.getNumber(&quot;y&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (n.hasArray(&quot;xy&quot;)) {</b>
+<b class="nc">&nbsp;			Object[] xy = n.getArray(&quot;xy&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (xy != null &amp;&amp; xy.length &gt; 1 &amp;&amp; xy[1] instanceof Number)</b>
+<b class="nc">&nbsp;				return ((Number) xy[1]).doubleValue();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (n.hasArray(&quot;xyz&quot;)) {</b>
+<b class="nc">&nbsp;			Object[] xyz = n.getArray(&quot;xyz&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (xyz != null &amp;&amp; xyz.length &gt; 1 &amp;&amp; xyz[1] instanceof Number)</b>
+<b class="nc">&nbsp;				return ((Number) xyz[1]).doubleValue();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return Math.random();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static String getSize(Value v) {
+<b class="nc">&nbsp;		String u = v.units.name().toLowerCase();</b>
+<b class="nc">&nbsp;		return String.format(Locale.ROOT, &quot;%f%s&quot;, v.value, u);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private static String getSize(Values v, int index) {
+<b class="nc">&nbsp;		String u = v.units.name().toLowerCase();</b>
+<b class="nc">&nbsp;		if (Units.PERCENTS.equals(v.units))</b>
+<b class="nc">&nbsp;			u = &quot;%&quot;;</b>
+<b class="nc">&nbsp;		return String.format(Locale.ROOT, &quot;%f%s&quot;, v.get(index), u);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	static class SVGContext {
+&nbsp;		StyleGroupSet groups;
+&nbsp;		StyleSheet stylesheet;
+&nbsp;		HashMap&lt;StyleGroup, SVGStyle&gt; svgStyles;
+&nbsp;		ViewBox viewBox;
+&nbsp;
+<b class="nc">&nbsp;		public SVGContext() {</b>
+<b class="nc">&nbsp;			stylesheet = new StyleSheet();</b>
+<b class="nc">&nbsp;			groups = new StyleGroupSet(stylesheet);</b>
+<b class="nc">&nbsp;			svgStyles = new HashMap&lt;StyleGroup, SVGStyle&gt;();</b>
+<b class="nc">&nbsp;			viewBox = new ViewBox(0, 0, 1000, 1000);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void init(XMLWriter out, Graph g) throws IOException, XMLStreamException {
+<b class="nc">&nbsp;			if (g.hasAttribute(&quot;ui.stylesheet&quot;)) {</b>
+<b class="nc">&nbsp;				stylesheet.load(((String) g.getAttribute(&quot;ui.stylesheet&quot;)));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			groups.addElement(g);</b>
+<b class="nc">&nbsp;			viewBox.compute(g, groups.getStyleFor(g));</b>
+&nbsp;
+<b class="nc">&nbsp;			out.open(&quot;svg&quot;);</b>
+<b class="nc">&nbsp;			out.attribute(&quot;xmlns&quot;, &quot;http://www.w3.org/2000/svg&quot;);</b>
+<b class="nc">&nbsp;			out.attribute(&quot;xmlns:dc&quot;, &quot;http://purl.org/dc/elements/1.1/&quot;);</b>
+<b class="nc">&nbsp;			out.attribute(&quot;xmlns:cc&quot;, &quot;http://creativecommons.org/ns#&quot;);</b>
+<b class="nc">&nbsp;			out.attribute(&quot;xmlns:rdf&quot;, &quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;);</b>
+<b class="nc">&nbsp;			out.attribute(&quot;xmlns:svg&quot;, &quot;http://www.w3.org/2000/svg&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			out.attribute(&quot;viewBox&quot;,</b>
+<b class="nc">&nbsp;					String.format(Locale.ROOT, &quot;%f %f %f %f&quot;, viewBox.x1, viewBox.y1, viewBox.x2, viewBox.y2));</b>
+&nbsp;
+<b class="nc">&nbsp;			out.attribute(&quot;id&quot;, g.getId());</b>
+<b class="nc">&nbsp;			out.attribute(&quot;version&quot;, &quot;1.1&quot;);</b>
+&nbsp;
+&nbsp;			try {
+<b class="nc">&nbsp;				g.edges().forEach(e -&gt; {</b>
+<b class="nc">&nbsp;					groups.addElement(e);</b>
+&nbsp;
+<b class="nc">&nbsp;					if (e.hasAttribute(&quot;ui.style&quot;)) {</b>
+&nbsp;						try {
+<b class="nc">&nbsp;							stylesheet.parseStyleFromString(new Selector(Type.EDGE, e.getId(), null),</b>
+<b class="nc">&nbsp;									(String) e.getAttribute(&quot;ui.style&quot;));</b>
+<b class="nc">&nbsp;						} catch (IOException ex) {</b>
+<b class="nc">&nbsp;							throw new RuntimeException(ex);</b>
+<b class="nc">&nbsp;						}</b>
+&nbsp;					}
+&nbsp;
+<b class="nc">&nbsp;					groups.checkElementStyleGroup(e);</b>
+&nbsp;				});
+&nbsp;
+<b class="nc">&nbsp;				g.nodes().forEach(n -&gt; {</b>
+<b class="nc">&nbsp;					groups.addElement(n);</b>
+&nbsp;
+<b class="nc">&nbsp;					if (n.hasAttribute(&quot;ui.style&quot;)) {</b>
+&nbsp;						try {
+<b class="nc">&nbsp;							stylesheet.parseStyleFromString(new Selector(Type.NODE, n.getId(), null),</b>
+<b class="nc">&nbsp;									(String) n.getAttribute(&quot;ui.style&quot;));</b>
+<b class="nc">&nbsp;						} catch (IOException ex) {</b>
+<b class="nc">&nbsp;							throw new RuntimeException(ex);</b>
+<b class="nc">&nbsp;						}</b>
+&nbsp;					}
+&nbsp;
+<b class="nc">&nbsp;					groups.checkElementStyleGroup(n);</b>
+&nbsp;				});
+<b class="nc">&nbsp;			} catch (RuntimeException e) {</b>
+<b class="nc">&nbsp;				if (e.getCause() instanceof IOException)</b>
+<b class="nc">&nbsp;					throw (IOException) e.getCause();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (e.getCause() instanceof XMLStreamException)</b>
+<b class="nc">&nbsp;					throw (IOException) e.getCause();</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+<b class="nc">&nbsp;			for (StyleGroup group : groups.groups())</b>
+<b class="nc">&nbsp;				svgStyles.put(group, new SVGStyle(group));</b>
+&nbsp;
+<b class="nc">&nbsp;			out.open(&quot;defs&quot;);</b>
+<b class="nc">&nbsp;			for (SVGStyle svgStyle : svgStyles.values())</b>
+<b class="nc">&nbsp;				svgStyle.writeDef(out);</b>
+<b class="nc">&nbsp;			out.close();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void end(XMLWriter out) throws XMLStreamException {
+<b class="nc">&nbsp;			out.close();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void writeElements(XMLWriter out, Graph g) throws XMLStreamException {
+<b class="nc">&nbsp;			out.open(&quot;g&quot;);</b>
+<b class="nc">&nbsp;			out.attribute(&quot;id&quot;, &quot;graph-misc&quot;);</b>
+<b class="nc">&nbsp;			writeElement(out, g);</b>
+<b class="nc">&nbsp;			out.close();</b>
+&nbsp;
+<b class="nc">&nbsp;			Iterator&lt;HashSet&lt;StyleGroup&gt;&gt; it = groups.getZIterator();</b>
+&nbsp;
+<b class="nc">&nbsp;			out.open(&quot;g&quot;);</b>
+<b class="nc">&nbsp;			out.attribute(&quot;id&quot;, &quot;elements&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			while (it.hasNext()) {</b>
+<b class="nc">&nbsp;				HashSet&lt;StyleGroup&gt; set = it.next();</b>
+&nbsp;
+<b class="nc">&nbsp;				for (StyleGroup sg : set)</b>
+<b class="nc">&nbsp;					for (Element e : sg.elements())</b>
+<b class="nc">&nbsp;						writeElement(out, e);</b>
+<b class="nc">&nbsp;			}</b>
+&nbsp;
+<b class="nc">&nbsp;			out.close();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void writeElement(XMLWriter out, Element e) throws XMLStreamException {
+<b class="nc">&nbsp;			String id = &quot;&quot;;</b>
+<b class="nc">&nbsp;			SVGStyle style = null;</b>
+<b class="nc">&nbsp;			String transform = null;</b>
+<b class="nc">&nbsp;			if (e instanceof Edge) {</b>
+<b class="nc">&nbsp;				id = String.format(&quot;egde-%s&quot;, e.getId());</b>
+<b class="nc">&nbsp;				style = svgStyles.get(groups.getStyleFor((Edge) e));</b>
+<b class="nc">&nbsp;			} else if (e instanceof Node) {</b>
+<b class="nc">&nbsp;				id = String.format(&quot;node-%s&quot;, e.getId());</b>
+<b class="nc">&nbsp;				style = svgStyles.get(groups.getStyleFor((Node) e));</b>
+<b class="nc">&nbsp;				transform = String.format(Locale.ROOT, &quot;translate(%f,%f)&quot;, viewBox.convertX((Node) e),</b>
+<b class="nc">&nbsp;						viewBox.convertY((Node) e));</b>
+<b class="nc">&nbsp;			} else if (e instanceof Graph) {</b>
+<b class="nc">&nbsp;				id = &quot;graph-background&quot;;</b>
+<b class="nc">&nbsp;				style = svgStyles.get(groups.getStyleFor((Graph) e));</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			out.open(&quot;g&quot;);</b>
+<b class="nc">&nbsp;			out.attribute(&quot;id&quot;, id);</b>
+<b class="nc">&nbsp;			out.open(&quot;path&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (style != null)</b>
+<b class="nc">&nbsp;				out.attribute(&quot;style&quot;, style.getElementStyle(e));</b>
+&nbsp;
+<b class="nc">&nbsp;			if (transform != null)</b>
+<b class="nc">&nbsp;				out.attribute(&quot;transform&quot;, transform);</b>
+&nbsp;
+<b class="nc">&nbsp;			out.attribute(&quot;d&quot;, getPath(e, style));</b>
+<b class="nc">&nbsp;			out.close();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (e.hasLabel(&quot;label&quot;))</b>
+<b class="nc">&nbsp;				writeElementText(out, (String) e.getAttribute(&quot;label&quot;), e, style.group);</b>
+&nbsp;
+<b class="nc">&nbsp;			out.close();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void writeElementText(XMLWriter out, String text, Element e, StyleGroup style)
+&nbsp;				throws XMLStreamException {
+<b class="nc">&nbsp;			if (style == null || style.getTextVisibilityMode() != StyleConstants.TextVisibilityMode.HIDDEN) {</b>
+&nbsp;				double x, y;
+&nbsp;
+<b class="nc">&nbsp;				x = 0;</b>
+<b class="nc">&nbsp;				y = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;				if (e instanceof Node) {</b>
+<b class="nc">&nbsp;					x = viewBox.convertX((Node) e);</b>
+<b class="nc">&nbsp;					y = viewBox.convertY((Node) e);</b>
+<b class="nc">&nbsp;				} else if (e instanceof Edge) {</b>
+&nbsp;					Node n0, n1;
+&nbsp;
+<b class="nc">&nbsp;					n0 = ((Edge) e).getNode0();</b>
+<b class="nc">&nbsp;					n1 = ((Edge) e).getNode0();</b>
+&nbsp;
+<b class="nc">&nbsp;					x = viewBox.convertX((getX(n0) + getX(n1)) / 2);</b>
+<b class="nc">&nbsp;					y = viewBox.convertY((getY(n0) + getY(n1)) / 2);</b>
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				out.open(&quot;g&quot;);</b>
+<b class="nc">&nbsp;				out.open(&quot;text&quot;);</b>
+<b class="nc">&nbsp;				out.attribute(&quot;x&quot;, d(x));</b>
+<b class="nc">&nbsp;				out.attribute(&quot;y&quot;, d(y));</b>
+&nbsp;
+<b class="nc">&nbsp;				if (style != null) {</b>
+<b class="nc">&nbsp;					if (style.getTextColorCount() &gt; 0)</b>
+<b class="nc">&nbsp;						out.attribute(&quot;fill&quot;, toHexColor(style.getTextColor(0)));</b>
+&nbsp;
+<b class="nc">&nbsp;					switch (style.getTextAlignment()) {</b>
+&nbsp;					case CENTER:
+<b class="nc">&nbsp;						out.attribute(&quot;text-anchor&quot;, &quot;middle&quot;);</b>
+<b class="nc">&nbsp;						out.attribute(&quot;alignment-baseline&quot;, &quot;central&quot;);</b>
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					case LEFT:
+<b class="nc">&nbsp;						out.attribute(&quot;text-anchor&quot;, &quot;start&quot;);</b>
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					case RIGHT:
+<b class="nc">&nbsp;						out.attribute(&quot;text-anchor&quot;, &quot;end&quot;);</b>
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					default:
+&nbsp;						break;
+&nbsp;					}
+&nbsp;
+<b class="nc">&nbsp;					switch (style.getTextSize().units) {</b>
+&nbsp;					case PX:
+&nbsp;					case GU:
+<b class="nc">&nbsp;						out.attribute(&quot;font-size&quot;, d(style.getTextSize().value));</b>
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					case PERCENTS:
+<b class="nc">&nbsp;						out.attribute(&quot;font-size&quot;, d(style.getTextSize().value) + &quot;%&quot;);</b>
+&nbsp;						break;
+&nbsp;					}
+&nbsp;
+<b class="nc">&nbsp;					if (style.getTextFont() != null)</b>
+<b class="nc">&nbsp;						out.attribute(&quot;font-family&quot;, style.getTextFont());</b>
+&nbsp;
+<b class="nc">&nbsp;					switch (style.getTextStyle()) {</b>
+&nbsp;					case NORMAL:
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					case ITALIC:
+<b class="nc">&nbsp;						out.attribute(&quot;font-style&quot;, &quot;italic&quot;);</b>
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					case BOLD:
+<b class="nc">&nbsp;						out.attribute(&quot;font-weight&quot;, &quot;bold&quot;);</b>
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					case BOLD_ITALIC:
+<b class="nc">&nbsp;						out.attribute(&quot;font-weight&quot;, &quot;bold&quot;);</b>
+<b class="nc">&nbsp;						out.attribute(&quot;font-style&quot;, &quot;italic&quot;);</b>
+&nbsp;						break;
+&nbsp;					}
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				out.characters(text);</b>
+<b class="nc">&nbsp;				out.close();</b>
+<b class="nc">&nbsp;				out.close();</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		public String getPath(Element e, SVGStyle style) {
+<b class="nc">&nbsp;			StringBuilder buffer = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (e instanceof Node) {</b>
+&nbsp;				double sx, sy;
+<b class="nc">&nbsp;				Values size = style.group.getSize();</b>
+&nbsp;
+<b class="nc">&nbsp;				sx = getValue(size.get(0), size.units, true);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (size.getValueCount() &gt; 1)</b>
+<b class="nc">&nbsp;					sy = getValue(size.get(1), size.units, false);</b>
+&nbsp;				else
+<b class="nc">&nbsp;					sy = getValue(size.get(0), size.units, false);</b>
+&nbsp;
+<b class="nc">&nbsp;				switch (style.group.getShape()) {</b>
+&nbsp;				case ROUNDED_BOX:
+&nbsp;					double rx, ry;
+&nbsp;
+<b class="nc">&nbsp;					rx = Math.min(5, sx / 2);</b>
+<b class="nc">&nbsp;					ry = Math.min(5, sy / 2);</b>
+&nbsp;
+<b class="nc">&nbsp;					concat(buffer, &quot; m &quot;, d(-sx / 2 + rx), &quot; &quot;, d(-sy / 2));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; h &quot;, d(sx - 2 * rx));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; a &quot;, d(rx), &quot;,&quot;, d(ry), &quot; 0 0 1 &quot;, d(rx), &quot;,&quot;, d(ry));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; v &quot;, d(sy - 2 * ry));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; a &quot;, d(rx), &quot;,&quot;, d(ry), &quot; 0 0 1 -&quot;, d(rx), &quot;,&quot;, d(ry));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; h &quot;, d(-sx + 2 * rx));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; a &quot;, d(rx), &quot;,&quot;, d(ry), &quot; 0 0 1 -&quot;, d(rx), &quot;,-&quot;, d(ry));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; v &quot;, d(-sy + 2 * ry));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; a &quot;, d(rx), &quot;,&quot;, d(ry), &quot; 0 0 1 &quot;, d(rx), &quot;-&quot;, d(ry));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; z&quot;);</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				case BOX:
+<b class="nc">&nbsp;					concat(buffer, &quot; m &quot;, d(-sx / 2), &quot; &quot;, d(-sy / 2));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; h &quot;, d(sx));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; v &quot;, d(sy));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; h &quot;, d(-sx));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; z&quot;);</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				case DIAMOND:
+<b class="nc">&nbsp;					concat(buffer, &quot; m &quot;, d(-sx / 2), &quot; 0&quot;);</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; l &quot;, d(sx / 2), &quot; &quot;, d(-sy / 2));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; l &quot;, d(sx / 2), &quot; &quot;, d(sy / 2));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; l &quot;, d(-sx / 2), &quot; &quot;, d(sy / 2));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; z&quot;);</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				case TRIANGLE:
+<b class="nc">&nbsp;					concat(buffer, &quot; m &quot;, d(0), &quot; &quot;, d(-sy / 2));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; l &quot;, d(sx / 2), &quot; &quot;, d(sy));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; h &quot;, d(-sx));</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; z&quot;);</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				default:
+&nbsp;				case CIRCLE:
+<b class="nc">&nbsp;					concat(buffer, &quot; m &quot;, d(-sx / 2), &quot; 0&quot;);</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; a &quot;, d(sx / 2), &quot;,&quot;, d(sy / 2), &quot; 0 1 0 &quot;, d(sx), &quot;,0&quot;);</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; &quot;, d(sx / 2), &quot;,&quot;, d(sy / 2), &quot; 0 1 0 -&quot;, d(sx), &quot;,0&quot;);</b>
+<b class="nc">&nbsp;					concat(buffer, &quot; z&quot;);</b>
+&nbsp;					break;
+&nbsp;				}
+<b class="nc">&nbsp;			} else if (e instanceof Graph) {</b>
+<b class="nc">&nbsp;				concat(buffer, &quot; M &quot;, d(viewBox.x1), &quot; &quot;, d(viewBox.y1));</b>
+<b class="nc">&nbsp;				concat(buffer, &quot; L &quot;, d(viewBox.x2), &quot; &quot;, d(viewBox.y1));</b>
+<b class="nc">&nbsp;				concat(buffer, &quot; L &quot;, d(viewBox.x2), &quot; &quot;, d(viewBox.y2));</b>
+<b class="nc">&nbsp;				concat(buffer, &quot; L &quot;, d(viewBox.x1), &quot; &quot;, d(viewBox.y2));</b>
+<b class="nc">&nbsp;				concat(buffer, &quot; Z&quot;);</b>
+<b class="nc">&nbsp;			} else if (e instanceof Edge) {</b>
+&nbsp;				//---------- Size Edge
+<b class="nc">&nbsp;				double sizeEdge = getValue(style.group.getSize().get(0), style.group.getSize().units, true);</b>
+&nbsp;
+&nbsp;				//---------- Size Arrow
+&nbsp;				double sx, sy;
+<b class="nc">&nbsp;				Values sizeArrow = style.group.getArrowSize();</b>
+&nbsp;
+<b class="nc">&nbsp;				sx = getValue(sizeArrow.get(0), sizeArrow.units, true);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (sizeArrow.getValueCount() &gt; 1)</b>
+<b class="nc">&nbsp;					sy = getValue(sizeArrow.get(1), sizeArrow.units, false);</b>
+&nbsp;				else
+<b class="nc">&nbsp;					sy = getValue(sizeArrow.get(0), sizeArrow.units, false);</b>
+&nbsp;
+&nbsp;				//-------------- Draw Edge
+<b class="nc">&nbsp;				Edge edge = (Edge) e;</b>
+&nbsp;				Node src, trg;
+&nbsp;
+&nbsp;				double x1, y1;
+&nbsp;				double x2, y2;
+&nbsp;
+<b class="nc">&nbsp;				src = edge.getSourceNode();</b>
+<b class="nc">&nbsp;				trg = edge.getTargetNode();</b>
+&nbsp;
+<b class="nc">&nbsp;				x1 = viewBox.convertX(src);</b>
+<b class="nc">&nbsp;				y1 = viewBox.convertY(src);</b>
+<b class="nc">&nbsp;				x2 = viewBox.convertX(trg);</b>
+<b class="nc">&nbsp;				y2 = viewBox.convertY(trg);</b>
+&nbsp;				
+&nbsp;				double nodeSize, xCenter, yCenter, xCenterCenter, yCenterCenter ;
+&nbsp;				double[] perpen;
+<b class="nc">&nbsp;				switch(style.group.getShape()) {</b>
+&nbsp;					case ANGLE:
+<b class="nc">&nbsp;						double[] perpendicular = getPerpendicular(x1, y1, x2, y2, sizeEdge);</b>
+<b class="nc">&nbsp;						double x1Prim = perpendicular[0];</b>
+<b class="nc">&nbsp;						double y1Prim = perpendicular[1];</b>
+<b class="nc">&nbsp;						double x2Prim = perpendicular[2];</b>
+<b class="nc">&nbsp;						double y2Prim = perpendicular[3];</b>
+&nbsp;						
+<b class="nc">&nbsp;						concat(buffer, &quot; M &quot;, d(x1), &quot; &quot;, d(y1));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; L &quot;, d(x1Prim), &quot; &quot;, d(y1Prim));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; L &quot;, d(x2Prim), &quot; &quot;, d(y2Prim));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; Z&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					case CUBIC_CURVE:
+<b class="nc">&nbsp;						nodeSize = svgStyles.get(groups.getStyleFor(trg)).group.getSize().get(0);</b>
+<b class="nc">&nbsp;						if (svgStyles.get(groups.getStyleFor(trg)).group.getSize().getValueCount() &gt; 1) {</b>
+<b class="nc">&nbsp;							nodeSize = Math.max(nodeSize,svgStyles.get(groups.getStyleFor(trg)).group.getSize().get(1));</b>
+&nbsp;						}
+&nbsp;						
+&nbsp;						// First part of the curve
+<b class="nc">&nbsp;						xCenter = (x1+x2)/2 ;</b>
+<b class="nc">&nbsp;						yCenter = (y1+y2)/2 ;</b>
+&nbsp;						
+<b class="nc">&nbsp;						perpen = getPerpendicular(x1, y1, xCenter, yCenter, Math.sqrt(Math.pow(Math.abs(x1-xCenter), 2)+Math.pow(Math.abs(y1-yCenter), 2))*2);</b>
+&nbsp;						
+<b class="nc">&nbsp;						double x45degrees = (x1+perpen[2])/2;</b>
+<b class="nc">&nbsp;						double y45degrees = (y1+perpen[3])/2;</b>
+&nbsp;						
+<b class="nc">&nbsp;						xCenterCenter = (x1+xCenter)/2 ;</b>
+<b class="nc">&nbsp;						yCenterCenter = (y1+yCenter)/2 ;</b>
+&nbsp;						
+<b class="nc">&nbsp;						double x20degrees = (xCenterCenter+x45degrees)/2;</b>
+<b class="nc">&nbsp;						double y20degrees = (yCenterCenter+y45degrees)/2;</b>
+&nbsp;						
+<b class="nc">&nbsp;						concat(buffer, &quot; M &quot;, d(x1), &quot; &quot;, d(y1));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; C &quot;, d(x20degrees), &quot; &quot;, d(y20degrees), &quot; &quot;, d(x20degrees), &quot; &quot;, d(y20degrees), &quot; &quot;, d(xCenter), &quot; &quot;, d(yCenter));</b>
+&nbsp;						
+&nbsp;						/// Second part of the curve
+<b class="nc">&nbsp;						double x45degrees2nd = (x2+perpen[0])/2;</b>
+<b class="nc">&nbsp;						double y45degrees2nd = (y2+perpen[1])/2;</b>
+&nbsp;						
+<b class="nc">&nbsp;						double xCenterCenter2nd = (x2+xCenter)/2;</b>
+<b class="nc">&nbsp;						double yCenterCenter2nd = (y2+yCenter)/2;</b>
+&nbsp;						
+<b class="nc">&nbsp;						double x20degrees2nd = (xCenterCenter2nd+x45degrees2nd)/2;</b>
+<b class="nc">&nbsp;						double y20degrees2nd = (yCenterCenter2nd+y45degrees2nd)/2;</b>
+&nbsp;						
+<b class="nc">&nbsp;						concat(buffer, &quot; S &quot;, d(x20degrees2nd), &quot; &quot;, d(y20degrees2nd), &quot; &quot;, d(x2), &quot; &quot;, d(y2));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; C &quot;, d(x20degrees2nd), &quot; &quot;, d(y20degrees2nd), &quot; &quot;, d(x20degrees2nd), &quot; &quot;, d(y20degrees2nd), &quot; &quot;, d(xCenter), &quot; &quot;, d(yCenter));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; S &quot;, d(x20degrees), &quot; &quot;, d(y20degrees), &quot; &quot;, d(x1), &quot; &quot;, d(y1));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; Z&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;						break;</b>
+&nbsp;					case BLOB:
+<b class="nc">&nbsp;						nodeSize = svgStyles.get(groups.getStyleFor(trg)).group.getSize().get(0);</b>
+<b class="nc">&nbsp;						if (svgStyles.get(groups.getStyleFor(trg)).group.getSize().getValueCount() &gt; 1) {</b>
+<b class="nc">&nbsp;							nodeSize = Math.max(nodeSize,svgStyles.get(groups.getStyleFor(trg)).group.getSize().get(1));</b>
+&nbsp;						}
+&nbsp;						
+<b class="nc">&nbsp;						xCenter = (x1+x2)/2 ;</b>
+<b class="nc">&nbsp;						yCenter = (y1+y2)/2 ;</b>
+&nbsp;						
+<b class="nc">&nbsp;						xCenterCenter = (x1+xCenter)/2 ;</b>
+<b class="nc">&nbsp;						yCenterCenter = (y1+yCenter)/2 ;</b>
+&nbsp;						
+<b class="nc">&nbsp;						double[] perpenCenter = getPerpendicular(x1, y1, xCenter, yCenter, sizeEdge);</b>
+&nbsp;						
+<b class="nc">&nbsp;						double[] perpenX1 = getPerpendicular(xCenter, yCenter, x1, y1, nodeSize);</b>
+&nbsp;						
+<b class="nc">&nbsp;						double[] perpenXCenter1 = getPerpendicular(x1, y1, xCenterCenter, yCenterCenter, sizeEdge);</b>
+&nbsp;						
+<b class="nc">&nbsp;						concat(buffer, &quot; M &quot;, d(perpenX1[0]), &quot; &quot;, d(perpenX1[1]));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; Q &quot;, d(perpenXCenter1[0]), &quot; &quot;, d(perpenXCenter1[1]), &quot; &quot;, d(perpenCenter[0]), &quot; &quot;, d(perpenCenter[1]));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; L &quot;, d(x2), &quot; &quot;, d(y2));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; L &quot;, d(perpenCenter[2]), &quot; &quot;, d(perpenCenter[3]));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; Q &quot;, d(perpenXCenter1[2]), &quot; &quot;, d(perpenXCenter1[3]), &quot; &quot;, d(perpenX1[2]), &quot; &quot;, d(perpenX1[3]));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; Z&quot;);</b>
+&nbsp;						
+<b class="nc">&nbsp;						if(! edge.isDirected()) {</b>
+<b class="nc">&nbsp;							double[] perpenX2 = getPerpendicular(xCenter, yCenter, x2, y2, nodeSize);</b>
+&nbsp;							
+<b class="nc">&nbsp;							xCenterCenter2nd = (x2+xCenter)/2;</b>
+<b class="nc">&nbsp;							yCenterCenter2nd = (y2+yCenter)/2;</b>
+&nbsp;							
+<b class="nc">&nbsp;							double[] perpenXCenter2 = getPerpendicular(x2, y2, xCenterCenter2nd, yCenterCenter2nd, sizeEdge);</b>
+&nbsp;
+<b class="nc">&nbsp;							concat(buffer, &quot; M &quot;, d(perpenX2[0]), &quot; &quot;, d(perpenX2[1]));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; Q &quot;, d(perpenXCenter2[0]), &quot; &quot;, d(perpenXCenter2[1]), &quot; &quot;, d(perpenCenter[0]), &quot; &quot;, d(perpenCenter[1]));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; L &quot;, d(x1), &quot; &quot;, d(y1));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; L &quot;, d(perpenCenter[2]), &quot; &quot;, d(perpenCenter[3]));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; Q &quot;, d(perpenXCenter2[2]), &quot; &quot;, d(perpenXCenter2[3]), &quot; &quot;, d(perpenX2[2]), &quot; &quot;, d(perpenX2[3]));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; Z&quot;);</b>
+<b class="nc">&nbsp;						}</b>
+&nbsp;						
+&nbsp;						break;
+&nbsp;					default:
+&nbsp;					case LINE:
+<b class="nc">&nbsp;						concat(buffer, &quot; M &quot;, d(x1), &quot; &quot;, d(y1));</b>
+<b class="nc">&nbsp;						concat(buffer, &quot; L &quot;, d(x2), &quot; &quot;, d(y2));</b>
+&nbsp;						
+&nbsp;						break;
+&nbsp;				}
+&nbsp;				
+&nbsp;				//-------------------- draw arrow
+&nbsp;				
+<b class="nc">&nbsp;				if(edge.isDirected()) {</b>
+&nbsp;					//--------------------- Size node ---------------------------------------
+<b class="nc">&nbsp;					nodeSize = svgStyles.get(groups.getStyleFor(trg)).group.getSize().get(0);</b>
+<b class="nc">&nbsp;					double diag = -1;</b>
+<b class="nc">&nbsp;					if (svgStyles.get(groups.getStyleFor(trg)).group.getSize().getValueCount() &gt; 1) {</b>
+<b class="nc">&nbsp;						diag = Math.sqrt(Math.pow(nodeSize, 2)+Math.pow(svgStyles.get(groups.getStyleFor(trg)).group.getSize().get(1), 2));</b>
+<b class="nc">&nbsp;						nodeSize = Math.min(nodeSize,svgStyles.get(groups.getStyleFor(trg)).group.getSize().get(1));</b>
+&nbsp;					} else {
+<b class="nc">&nbsp;						diag = Math.sqrt(Math.pow(nodeSize, 2)+Math.pow(nodeSize, 2));</b>
+&nbsp;					}
+&nbsp;										
+<b class="nc">&nbsp;					if(svgStyles.get(groups.getStyleFor(trg)).group.getShape().equals(Shape.CIRCLE)) {</b>
+<b class="nc">&nbsp;						nodeSize = nodeSize/2;</b>
+<b class="nc">&nbsp;					} else if (svgStyles.get(groups.getStyleFor(trg)).group.getShape().equals(Shape.BOX) ||</b>
+<b class="nc">&nbsp;							svgStyles.get(groups.getStyleFor(trg)).group.getShape().equals(Shape.ROUNDED_BOX) ||</b>
+<b class="nc">&nbsp;							svgStyles.get(groups.getStyleFor(trg)).group.getShape().equals(Shape.DIAMOND) ||</b>
+<b class="nc">&nbsp;							svgStyles.get(groups.getStyleFor(trg)).group.getShape().equals(Shape.TRIANGLE)) {</b>
+<b class="nc">&nbsp;						nodeSize = diag/2 ;</b>
+&nbsp;					}
+&nbsp;					//----------------------------------------------------------------------
+&nbsp;					
+<b class="nc">&nbsp;					double distance = Math.sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));</b>
+&nbsp;					
+&nbsp;					double ratioPoint, ratioLine ;
+&nbsp;					double x2Root, y2Root ;
+&nbsp;					double x2Point, y2Point ;
+&nbsp;					
+&nbsp;					double x1Prim, y1Prim, x2Prim, y2Prim ;
+<b class="nc">&nbsp;					switch (style.group.getArrowShape()) {</b>
+&nbsp;						case CIRCLE:
+<b class="nc">&nbsp;							ratioPoint = 1-(nodeSize/distance);</b>
+<b class="nc">&nbsp;							ratioLine = 1-(((sx/2)+nodeSize)/distance);</b>
+&nbsp;							
+<b class="nc">&nbsp;							x2Root = (((1-ratioLine)*x1)+(ratioLine*x2));</b>
+<b class="nc">&nbsp;							y2Root = (((1-ratioLine)*y1)+(ratioLine*y2));</b>
+&nbsp;							
+<b class="nc">&nbsp;							x2Point = (((1-ratioPoint)*x1)+(ratioPoint*x2));</b>
+<b class="nc">&nbsp;							y2Point = (((1-ratioPoint)*y1)+(ratioPoint*y2));</b>
+&nbsp;							
+<b class="nc">&nbsp;							perpen = getPerpendicular(x2, y2, x2Root, y2Root, sy);</b>
+<b class="nc">&nbsp;							x1Prim = perpen[0];</b>
+<b class="nc">&nbsp;							y1Prim = perpen[1];</b>
+<b class="nc">&nbsp;							x2Prim = perpen[2];</b>
+<b class="nc">&nbsp;							y2Prim = perpen[3];</b>
+&nbsp;							
+<b class="nc">&nbsp;							concat(buffer, &quot; M &quot;, d(x1Prim), &quot; &quot;, d(y1Prim));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; A &quot;, d(sx / 4), &quot; &quot;, d(sy / 4), &quot; 0 1 0 &quot;, d(x2Prim), &quot; &quot;, d(y2Prim));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; &quot;, d(sx / 4), &quot; &quot;, d(sy / 4), &quot; 0 1 0 &quot;, d(x1Prim), &quot; &quot;, d(y1Prim));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; Z&quot;);</b>
+<b class="nc">&nbsp;							break;</b>
+&nbsp;
+&nbsp;						case DIAMOND:
+<b class="nc">&nbsp;							ratioPoint = 1-(nodeSize/distance);</b>
+<b class="nc">&nbsp;							ratioLine = 1-(((sx/2)+nodeSize)/distance);</b>
+&nbsp;							
+<b class="nc">&nbsp;							x2Root = (((1-ratioLine)*x1)+(ratioLine*x2));</b>
+<b class="nc">&nbsp;							y2Root = (((1-ratioLine)*y1)+(ratioLine*y2));</b>
+&nbsp;							
+<b class="nc">&nbsp;							x2Point = (((1-ratioPoint)*x1)+(ratioPoint*x2));</b>
+<b class="nc">&nbsp;							y2Point = (((1-ratioPoint)*y1)+(ratioPoint*y2));</b>
+&nbsp;							
+<b class="nc">&nbsp;							System.out.println(nodeSize+&quot; &quot;+sx);</b>
+<b class="nc">&nbsp;							double ratioEnd = 1-((sx+nodeSize)/distance);</b>
+<b class="nc">&nbsp;							double x2End = (((1-ratioEnd)*x1)+(ratioEnd*x2));</b>
+<b class="nc">&nbsp;							double y2End = (((1-ratioEnd)*y1)+(ratioEnd*y2));</b>
+&nbsp;							
+&nbsp;														
+<b class="nc">&nbsp;							perpen = getPerpendicular(x2, y2, x2Root, y2Root, sy);</b>
+<b class="nc">&nbsp;							x1Prim = perpen[0];</b>
+<b class="nc">&nbsp;							y1Prim = perpen[1];</b>
+<b class="nc">&nbsp;							x2Prim = perpen[2];</b>
+<b class="nc">&nbsp;							y2Prim = perpen[3];</b>
+&nbsp;							
+<b class="nc">&nbsp;							concat(buffer, &quot; M &quot;, d(x2Point), &quot; &quot;, d(y2Point));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; L &quot;, d(x1Prim), &quot; &quot;, d(y1Prim));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; L &quot;, d(x2End), &quot; &quot;, d(y2End));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; L &quot;, d(x2Prim), &quot; &quot;, d(y2Prim));</b>
+&nbsp;
+&nbsp;							//concat(buffer, &quot; L &quot;, d(x2Point), &quot; &quot;, d(y2Point));
+<b class="nc">&nbsp;							concat(buffer, &quot; Z&quot;);</b>
+&nbsp;
+&nbsp;
+&nbsp;							
+<b class="nc">&nbsp;							break;</b>
+&nbsp;						default:
+&nbsp;						case ARROW:
+<b class="nc">&nbsp;							ratioPoint = 1-(nodeSize/distance);</b>
+<b class="nc">&nbsp;							ratioLine = 1-((sx+nodeSize)/distance);</b>
+&nbsp;							
+<b class="nc">&nbsp;							x2Root = (((1-ratioLine)*x1)+(ratioLine*x2));</b>
+<b class="nc">&nbsp;							y2Root = (((1-ratioLine)*y1)+(ratioLine*y2));</b>
+&nbsp;							
+<b class="nc">&nbsp;							x2Point = (((1-ratioPoint)*x1)+(ratioPoint*x2));</b>
+<b class="nc">&nbsp;							y2Point = (((1-ratioPoint)*y1)+(ratioPoint*y2));</b>
+&nbsp;														
+<b class="nc">&nbsp;							perpen = getPerpendicular(x2, y2, x2Root, y2Root, sy);</b>
+<b class="nc">&nbsp;							x1Prim = perpen[0];</b>
+<b class="nc">&nbsp;							y1Prim = perpen[1];</b>
+<b class="nc">&nbsp;							x2Prim = perpen[2];</b>
+<b class="nc">&nbsp;							y2Prim = perpen[3];</b>
+&nbsp;							
+<b class="nc">&nbsp;							if (style.group.getShape().equals(Shape.CUBIC_CURVE)) {</b>
+<b class="nc">&nbsp;								double rotation = 25 ;</b>
+&nbsp;								
+<b class="nc">&nbsp;								System.out.println(y2Point-y2);</b>
+<b class="nc">&nbsp;								if (y2Point-y2 &lt;= 1)</b>
+<b class="nc">&nbsp;									rotation = -rotation ;</b>
+&nbsp;								
+<b class="nc">&nbsp;								Vector2 v = rotatePoint(x2, y2, rotation, x2Point, y2Point);</b>
+<b class="nc">&nbsp;								x2Point = v.x();</b>
+<b class="nc">&nbsp;								y2Point = v.y();</b>
+&nbsp;								
+<b class="nc">&nbsp;								v = rotatePoint(x2, y2, rotation, x1Prim, y1Prim);</b>
+<b class="nc">&nbsp;								x1Prim = v.x();</b>
+<b class="nc">&nbsp;								y1Prim = v.y();</b>
+&nbsp;								
+<b class="nc">&nbsp;								v = rotatePoint(x2, y2, rotation, x2Prim, y2Prim);</b>
+<b class="nc">&nbsp;								x2Prim = v.x();</b>
+<b class="nc">&nbsp;								y2Prim = v.y();</b>
+&nbsp;							}
+&nbsp;							
+<b class="nc">&nbsp;							concat(buffer, &quot; M &quot;, d(x1Prim), &quot; &quot;, d(y1Prim));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; L &quot;, d(x2Prim), &quot; &quot;, d(y2Prim));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; L &quot;, d(x2Point), &quot; &quot;, d(y2Point));</b>
+<b class="nc">&nbsp;							concat(buffer, &quot; Z&quot;);</b>
+&nbsp;							
+&nbsp;
+<b class="nc">&nbsp;							System.out.println(&quot;Arrow = (&quot;+x1Prim+&quot;, &quot;+y1Prim+&quot;) (&quot;+x1Prim+&quot;, &quot;+y2Prim+&quot;) (&quot;+x2Point+&quot;, &quot;+y2Point+&quot;)&quot;);</b>
+&nbsp;
+&nbsp;							break;
+&nbsp;
+&nbsp;					}
+&nbsp;					
+&nbsp;				}
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return buffer.toString();</b>
+&nbsp;		}
+&nbsp;		
+&nbsp;		/**
+&nbsp;		 * rotates the point around a center and returns the new point
+&nbsp;		 * @param cx x coordinate of the center
+&nbsp;		 * @param cy y coordinate of the center
+&nbsp;		 * @param angle in degrees (sign determines the direction + is counter-clockwise - is clockwise)
+&nbsp;		 * @param px x coordinate of point to rotate 
+&nbsp;		 * @param py y coordinate of point to rotate 
+&nbsp;		 * */
+&nbsp;
+&nbsp;		public static Vector2 rotatePoint(double cx, double cy, double angle, double px, double py){
+<b class="nc">&nbsp;			double absangl = Math.abs(angle);</b>
+<b class="nc">&nbsp;			double s = Math.sin(Math.toRadians(absangl));</b>
+<b class="nc">&nbsp;			double c = Math.cos(Math.toRadians(absangl));</b>
+&nbsp;
+&nbsp;		    // translate point back to origin:
+<b class="nc">&nbsp;		    px -= cx;</b>
+<b class="nc">&nbsp;		    py -= cy;</b>
+&nbsp;
+&nbsp;		    // rotate point
+&nbsp;		    double xnew;
+&nbsp;		    double ynew;
+<b class="nc">&nbsp;		    if (angle &gt; 0) {</b>
+<b class="nc">&nbsp;		        xnew = px * c - py * s;</b>
+<b class="nc">&nbsp;		        ynew = px * s + py * c;</b>
+&nbsp;		    }
+&nbsp;		    else {
+<b class="nc">&nbsp;		        xnew = px * c + py * s;</b>
+<b class="nc">&nbsp;		        ynew = -px * s + py * c;</b>
+&nbsp;		    }
+&nbsp;
+&nbsp;		    // translate point back:
+<b class="nc">&nbsp;		    px = xnew + cx;</b>
+<b class="nc">&nbsp;		    py = ynew + cy;</b>
+<b class="nc">&nbsp;		    return new Vector2(px, py);</b>
+&nbsp;		}
+&nbsp;		
+&nbsp;		public double[] getPerpendicular(double x1, double y1, double x2, double y2, double size) {
+&nbsp;			double slope, slopePerpen;
+&nbsp;
+<b class="nc">&nbsp;			slope = (y2-y1)/(x2-x1);</b>
+&nbsp;
+&nbsp;			double x1Prim, x2Prim, y1Prim, y2Prim ;
+<b class="nc">&nbsp;			if(Double.isInfinite(slope)) {								</b>
+<b class="nc">&nbsp;				x1Prim = x2-(size/2);</b>
+<b class="nc">&nbsp;				y1Prim = y2;</b>
+&nbsp;				
+<b class="nc">&nbsp;				x2Prim = x2+(size/2);</b>
+<b class="nc">&nbsp;				y2Prim = y2;</b>
+&nbsp;			}
+<b class="nc">&nbsp;			else if (slope == 0) {								</b>
+<b class="nc">&nbsp;				x1Prim = x2;</b>
+<b class="nc">&nbsp;				y1Prim = y2-(size/2);</b>
+&nbsp;				
+<b class="nc">&nbsp;				x2Prim = x2;</b>
+<b class="nc">&nbsp;				y2Prim = y2+(size/2);</b>
+&nbsp;			}
+&nbsp;			else {
+<b class="nc">&nbsp;				slopePerpen = (-1/slope);</b>
+&nbsp;				
+&nbsp;				//concat(buffer, &quot; m &quot;, d(x2), &quot; &quot;, d(y2));
+<b class="nc">&nbsp;				double deltaX = 1/(Math.sqrt((slopePerpen*slopePerpen)+1));</b>
+<b class="nc">&nbsp;				double deltaY = slopePerpen/(Math.sqrt((slopePerpen*slopePerpen)+1));</b>
+&nbsp;				
+<b class="nc">&nbsp;				x1Prim = x2-((size/2)*deltaX);</b>
+<b class="nc">&nbsp;				y1Prim = y2-((size/2)*deltaY);</b>
+&nbsp;				
+<b class="nc">&nbsp;				x2Prim = x2+((size/2)*deltaX);</b>
+<b class="nc">&nbsp;				y2Prim = y2+((size/2)*deltaY);</b>
+&nbsp;			}
+&nbsp;			
+<b class="nc">&nbsp;			return new double[] {x1Prim, y1Prim, x2Prim, y2Prim}; </b>
+&nbsp;		}
+&nbsp;		
+&nbsp;		public double getValue(Value v, boolean horizontal) {
+<b class="nc">&nbsp;			return getValue(v.value, v.units, horizontal);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public double getValue(double d, StyleConstants.Units units, boolean horizontal) {
+<b class="nc">&nbsp;			switch (units) {</b>
+&nbsp;			case PX:
+&nbsp;				// TODO
+<b class="nc">&nbsp;				return d;</b>
+&nbsp;			case GU:
+&nbsp;				// TODO
+<b class="nc">&nbsp;				return d;</b>
+&nbsp;			case PERCENTS:
+<b class="nc">&nbsp;				if (horizontal)</b>
+<b class="nc">&nbsp;					return (viewBox.x2 - viewBox.x1) * d / 100.0;</b>
+&nbsp;				else
+<b class="nc">&nbsp;					return (viewBox.y2 - viewBox.y1) * d / 100.0;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return d;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	static class ViewBox {
+&nbsp;		double x1, y1, x2, y2;
+&nbsp;		double x3, y3, x4, y4;
+&nbsp;
+<b class="nc">&nbsp;		double[] padding = { 0, 0 };</b>
+&nbsp;
+<b class="nc">&nbsp;		ViewBox(double x1, double y1, double x2, double y2) {</b>
+<b class="nc">&nbsp;			this.x1 = x1;</b>
+<b class="nc">&nbsp;			this.y1 = y1;</b>
+<b class="nc">&nbsp;			this.x2 = x2;</b>
+<b class="nc">&nbsp;			this.y2 = y2;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		void compute(Graph g, StyleGroup style) {
+<b class="nc">&nbsp;			x3 = y3 = Double.MAX_VALUE;</b>
+<b class="nc">&nbsp;			x4 = y4 = Double.MIN_VALUE;</b>
+&nbsp;
+<b class="nc">&nbsp;			g.nodes().forEach(n -&gt; {</b>
+<b class="nc">&nbsp;				x3 = Math.min(x3, getX(n));</b>
+<b class="nc">&nbsp;				y3 = Math.min(y3, getY(n));</b>
+&nbsp;
+<b class="nc">&nbsp;				x4 = Math.max(x4, getX(n));</b>
+<b class="nc">&nbsp;				y4 = Math.max(y4, getY(n));</b>
+&nbsp;			});
+&nbsp;
+<b class="nc">&nbsp;			Values v = style.getPadding();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (v.getValueCount() &gt; 0) {</b>
+<b class="nc">&nbsp;				padding[0] = v.get(0);</b>
+<b class="nc">&nbsp;				padding[1] = v.getValueCount() &gt; 1 ? v.get(1) : v.get(0);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		double convertX(double x) {
+<b class="nc">&nbsp;			return (x2 - x1 - 2 * padding[0]) * (x - x3) / (x4 - x3) + x1 + padding[0];</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		double convertX(Node n) {
+<b class="nc">&nbsp;			return convertX(getX(n));</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		double convertY(double y) {
+<b class="nc">&nbsp;			return (y2 - y1 - 2 * padding[1]) * (y - y3) / (y4 - y3) + y1 + padding[1];</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		double convertY(Node n) {
+<b class="nc">&nbsp;			return convertY(getY(n));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	static class SVGStyle {
+&nbsp;
+<b class="nc">&nbsp;		static int gradientId = 0;</b>
+&nbsp;
+&nbsp;		String style;
+&nbsp;		StyleGroup group;
+&nbsp;		boolean gradient;
+&nbsp;		boolean dynfill;
+&nbsp;
+<b class="nc">&nbsp;		public SVGStyle(StyleGroup group) throws XMLStreamException {</b>
+&nbsp;
+<b class="nc">&nbsp;			this.group = group;</b>
+<b class="nc">&nbsp;			this.gradient = false;</b>
+<b class="nc">&nbsp;			this.dynfill = false;</b>
+&nbsp;
+<b class="nc">&nbsp;			switch (group.getType()) {</b>
+&nbsp;			case EDGE:
+<b class="nc">&nbsp;				buildEdgeStyle();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case NODE:
+<b class="nc">&nbsp;				buildNodeStyle();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case GRAPH:
+<b class="nc">&nbsp;				buildGraphStyle();</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case SPRITE:
+&nbsp;			default:
+&nbsp;				break;
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		void buildNodeStyle() {
+<b class="nc">&nbsp;			StringBuilder styleSB = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;			switch (group.getFillMode()) {</b>
+&nbsp;			case GRADIENT_RADIAL:
+&nbsp;			case GRADIENT_HORIZONTAL:
+&nbsp;			case GRADIENT_VERTICAL:
+&nbsp;			case GRADIENT_DIAGONAL1:
+&nbsp;			case GRADIENT_DIAGONAL2:
+<b class="nc">&nbsp;				concat(styleSB, &quot;fill:url(#%gradient-id%);&quot;);</b>
+<b class="nc">&nbsp;				this.gradient = true;</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case PLAIN:
+<b class="nc">&nbsp;				concat(styleSB, &quot;fill:&quot;, toHexColor(group.getFillColor(0)), &quot;;&quot;);</b>
+<b class="nc">&nbsp;				concat(styleSB, &quot;fill-opacity:&quot;, d(group.getFillColor(0).getAlpha() / 255.0), &quot;;&quot;);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case DYN_PLAIN:
+<b class="nc">&nbsp;				dynfill = true;</b>
+<b class="nc">&nbsp;				concat(styleSB, &quot;fill:%fill-color%;&quot;);</b>
+<b class="nc">&nbsp;				concat(styleSB, &quot;fill-opacity:%fill-opacity%;&quot;);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case IMAGE_TILED:
+&nbsp;			case IMAGE_SCALED:
+&nbsp;			case IMAGE_SCALED_RATIO_MAX:
+&nbsp;			case IMAGE_SCALED_RATIO_MIN:
+&nbsp;			case NONE:
+&nbsp;				break;
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			concat(styleSB, &quot;fill-rule:nonzero;&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (group.getStrokeMode() != StrokeMode.NONE) {</b>
+<b class="nc">&nbsp;				concat(styleSB, &quot;stroke:&quot;, toHexColor(group.getStrokeColor(0)), &quot;;&quot;);</b>
+<b class="nc">&nbsp;				concat(styleSB, &quot;stroke-width:&quot;, getSize(group.getStrokeWidth()), &quot;;&quot;);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			style = styleSB.toString();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		void buildGraphStyle() {
+<b class="nc">&nbsp;			buildNodeStyle();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		void buildEdgeStyle() {
+<b class="nc">&nbsp;			StringBuilder styleSB = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;			switch (group.getFillMode()) {</b>
+&nbsp;			case GRADIENT_RADIAL:
+&nbsp;			case GRADIENT_HORIZONTAL:
+&nbsp;			case GRADIENT_VERTICAL:
+&nbsp;			case GRADIENT_DIAGONAL1:
+&nbsp;			case GRADIENT_DIAGONAL2:
+<b class="nc">&nbsp;				concat(styleSB, &quot;stroke:url(#%gradient-id%);&quot;);</b>
+<b class="nc">&nbsp;				this.gradient = true;</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case PLAIN:
+<b class="nc">&nbsp;				concat(styleSB, &quot;fill:&quot;, toHexColor(group.getFillColor(0)), &quot;;&quot;);</b>
+<b class="nc">&nbsp;				concat(styleSB, &quot;fill-opacity:&quot;, d(group.getFillColor(0).getAlpha() / 255.0), &quot;;&quot;);</b>
+<b class="nc">&nbsp;				concat(styleSB, &quot;stroke:&quot;, toHexColor(group.getFillColor(0)), &quot;;&quot;);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case DYN_PLAIN:
+<b class="nc">&nbsp;				concat(styleSB, &quot;stroke:&quot;, toHexColor(group.getFillColor(0)), &quot;;&quot;);</b>
+<b class="nc">&nbsp;				break;</b>
+&nbsp;			case IMAGE_TILED:
+&nbsp;			case IMAGE_SCALED:
+&nbsp;			case IMAGE_SCALED_RATIO_MAX:
+&nbsp;			case IMAGE_SCALED_RATIO_MIN:
+&nbsp;			case NONE:
+&nbsp;				break;
+&nbsp;			}
+&nbsp;			
+<b class="nc">&nbsp;			if (! group.getShape().equals(Shape.ANGLE) &amp;&amp; ! group.getShape().equals(Shape.BLOB)) { // Size used in the path creation</b>
+<b class="nc">&nbsp;				concat(styleSB, &quot;stroke-width:&quot;, getSize(group.getSize(), 0), &quot;;&quot;);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			style = styleSB.toString();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		public void writeDef(XMLWriter out) throws XMLStreamException {
+<b class="nc">&nbsp;			if (gradient) {</b>
+<b class="nc">&nbsp;				String gid = String.format(&quot;gradient%x&quot;, gradientId++);</b>
+<b class="nc">&nbsp;				String type = &quot;linearGradient&quot;;</b>
+<b class="nc">&nbsp;				String x1 = null, x2 = null, y1 = null, y2 = null;</b>
+&nbsp;
+<b class="nc">&nbsp;				switch (group.getFillMode()) {</b>
+&nbsp;				case GRADIENT_RADIAL:
+<b class="nc">&nbsp;					type = &quot;radialGradient&quot;;</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				case GRADIENT_HORIZONTAL:
+<b class="nc">&nbsp;					x1 = &quot;0%&quot;;</b>
+<b class="nc">&nbsp;					y1 = &quot;50%&quot;;</b>
+<b class="nc">&nbsp;					x2 = &quot;100%&quot;;</b>
+<b class="nc">&nbsp;					y2 = &quot;50%&quot;;</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				case GRADIENT_VERTICAL:
+<b class="nc">&nbsp;					x1 = &quot;50%&quot;;</b>
+<b class="nc">&nbsp;					y1 = &quot;0%&quot;;</b>
+<b class="nc">&nbsp;					x2 = &quot;50%&quot;;</b>
+<b class="nc">&nbsp;					y2 = &quot;100%&quot;;</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				case GRADIENT_DIAGONAL1:
+<b class="nc">&nbsp;					x1 = &quot;0%&quot;;</b>
+<b class="nc">&nbsp;					y1 = &quot;0%&quot;;</b>
+<b class="nc">&nbsp;					x2 = &quot;100%&quot;;</b>
+<b class="nc">&nbsp;					y2 = &quot;100%&quot;;</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				case GRADIENT_DIAGONAL2:
+<b class="nc">&nbsp;					x1 = &quot;100%&quot;;</b>
+<b class="nc">&nbsp;					y1 = &quot;100%&quot;;</b>
+<b class="nc">&nbsp;					x2 = &quot;0%&quot;;</b>
+<b class="nc">&nbsp;					y2 = &quot;0%&quot;;</b>
+<b class="nc">&nbsp;					break;</b>
+&nbsp;				default:
+&nbsp;					break;
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				out.open(type);</b>
+<b class="nc">&nbsp;				out.attribute(&quot;id&quot;, gid);</b>
+<b class="nc">&nbsp;				out.attribute(&quot;gradientUnits&quot;, &quot;objectBoundingBox&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (type.equals(&quot;linearGradient&quot;)) {</b>
+<b class="nc">&nbsp;					out.attribute(&quot;x1&quot;, x1);</b>
+<b class="nc">&nbsp;					out.attribute(&quot;y1&quot;, y1);</b>
+<b class="nc">&nbsp;					out.attribute(&quot;x2&quot;, x2);</b>
+<b class="nc">&nbsp;					out.attribute(&quot;y2&quot;, y2);</b>
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				for (int i = 0; i &lt; group.getFillColorCount(); i++) {</b>
+<b class="nc">&nbsp;					out.open(&quot;stop&quot;);</b>
+<b class="nc">&nbsp;					out.attribute(&quot;stop-color&quot;, toHexColor(group.getFillColor(i)));</b>
+<b class="nc">&nbsp;					out.attribute(&quot;stop-opacity&quot;, d(group.getFillColor(i).getAlpha() / 255.0));</b>
+<b class="nc">&nbsp;					out.attribute(&quot;offset&quot;, Double.toString(i / (double) (group.getFillColorCount() - 1)));</b>
+<b class="nc">&nbsp;					out.close();</b>
+&nbsp;				}
+&nbsp;
+<b class="nc">&nbsp;				out.close();</b>
+&nbsp;
+<b class="nc">&nbsp;				style = style.replace(&quot;%gradient-id%&quot;, gid);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		public String getElementStyle(Element e) {
+<b class="nc">&nbsp;			String st = style;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (dynfill) {</b>
+<b class="nc">&nbsp;				if (group.getFillColorCount() &gt; 1) {</b>
+&nbsp;					String color, opacity;
+<b class="nc">&nbsp;					double d = e.hasNumber(&quot;ui.color&quot;) ? e.getNumber(&quot;ui.color&quot;) : 0;</b>
+&nbsp;
+&nbsp;					double a, b;
+<b class="nc">&nbsp;					Colors colors = group.getFillColors();</b>
+<b class="nc">&nbsp;					int s = Math.min((int) (d * group.getFillColorCount()), colors.size() - 2);</b>
+&nbsp;
+<b class="nc">&nbsp;					a = s / (double) (colors.size() - 1);</b>
+<b class="nc">&nbsp;					b = (s + 1) / (double) (colors.size() - 1);</b>
+&nbsp;
+<b class="nc">&nbsp;					d = (d - a) / (b - a);</b>
+&nbsp;
+<b class="nc">&nbsp;					Color c1 = colors.get(s), c2 = colors.get(s + 1);</b>
+&nbsp;
+<b class="nc">&nbsp;					color = String.format(&quot;#%02x%02x%02x&quot;, (int) (c1.getRed() + d * (c2.getRed() - c1.getRed())),</b>
+<b class="nc">&nbsp;							(int) (c1.getGreen() + d * (c2.getGreen() - c1.getGreen())),</b>
+<b class="nc">&nbsp;							(int) (c1.getBlue() + d * (c2.getBlue() - c1.getBlue())));</b>
+&nbsp;
+<b class="nc">&nbsp;					opacity = Double.toString((c1.getAlpha() + d * (c2.getAlpha() - c1.getAlpha())) / 255.0);</b>
+&nbsp;
+<b class="nc">&nbsp;					st = st.replace(&quot;%fill-color%&quot;, color);</b>
+<b class="nc">&nbsp;					st = st.replace(&quot;%fill-opacity%&quot;, opacity);</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			return st;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	static class XMLWriter {</b>
+&nbsp;		XMLStreamWriter out;
+&nbsp;		int depth;
+&nbsp;		boolean closed;
+&nbsp;
+&nbsp;		void start(Writer w) throws XMLStreamException, FactoryConfigurationError, IOException {
+<b class="nc">&nbsp;			if (out != null)</b>
+<b class="nc">&nbsp;				end();</b>
+&nbsp;
+<b class="nc">&nbsp;			out = XMLOutputFactory.newInstance().createXMLStreamWriter(w);</b>
+<b class="nc">&nbsp;			out.writeStartDocument();</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		void end() throws XMLStreamException {
+<b class="nc">&nbsp;			out.writeEndDocument();</b>
+<b class="nc">&nbsp;			out.flush();</b>
+<b class="nc">&nbsp;			out.close();</b>
+<b class="nc">&nbsp;			out = null;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		void open(String name) throws XMLStreamException {
+<b class="nc">&nbsp;			out.writeCharacters(&quot;\n&quot;);</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; depth; i++)</b>
+<b class="nc">&nbsp;				out.writeCharacters(&quot;  &quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			out.writeStartElement(name);</b>
+<b class="nc">&nbsp;			depth++;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		void close() throws XMLStreamException {
+<b class="nc">&nbsp;			out.writeEndElement();</b>
+<b class="nc">&nbsp;			depth--;</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		void attribute(String key, String value) throws XMLStreamException {
+<b class="nc">&nbsp;			out.writeAttribute(key, value);</b>
+&nbsp;		}
+&nbsp;
+&nbsp;		void characters(String data) throws XMLStreamException {
+<b class="nc">&nbsp;			out.writeCharacters(data);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private static void concat(StringBuilder buffer, Object... args) {
+<b class="nc">&nbsp;		if (args != null) {</b>
+<b class="nc">&nbsp;			for (int i = 0; i &lt; args.length; i++)</b>
+<b class="nc">&nbsp;				buffer.append(args[i].toString());</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private static String toHexColor(Color c) {
+<b class="nc">&nbsp;		return String.format(&quot;#%02x%02x%02x&quot;, c.getRed(), c.getGreen(), c.getBlue());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#edgeAttributeAdded(java.lang.String,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId, String attribute, Object value) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#edgeAttributeChanged(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void edgeAttributeChanged(String sourceId, long timeId, String edgeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#edgeAttributeRemoved(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void edgeAttributeRemoved(String sourceId, long timeId, String edgeId, String attribute) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#graphAttributeAdded(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void graphAttributeAdded(String sourceId, long timeId, String attribute, Object value) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.AttributeSink#graphAttributeChanged(java.lang.
+&nbsp;	 * String, long, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void graphAttributeChanged(String sourceId, long timeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.AttributeSink#graphAttributeRemoved(java.lang.
+&nbsp;	 * String, long, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void graphAttributeRemoved(String sourceId, long timeId, String attribute) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#nodeAttributeAdded(java.lang.String,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId, String attribute, Object value) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#nodeAttributeChanged(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String, java.lang.Object, java.lang.Object)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeChanged(String sourceId, long timeId, String nodeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see
+&nbsp;	 * org.graphstream.stream.AttributeSink#nodeAttributeRemoved(java.lang.String ,
+&nbsp;	 * long, java.lang.String, java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeAttributeRemoved(String sourceId, long timeId, String nodeId, String attribute) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#edgeAdded(java.lang.String, long,
+&nbsp;	 * java.lang.String, java.lang.String, java.lang.String, boolean)
+&nbsp;	 */
+&nbsp;	public void edgeAdded(String sourceId, long timeId, String edgeId, String fromNodeId, String toNodeId,
+&nbsp;			boolean directed) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#edgeRemoved(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void edgeRemoved(String sourceId, long timeId, String edgeId) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#graphCleared(java.lang.String, long)
+&nbsp;	 */
+&nbsp;	public void graphCleared(String sourceId, long timeId) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#nodeAdded(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeAdded(String sourceId, long timeId, String nodeId) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#nodeRemoved(java.lang.String, long,
+&nbsp;	 * java.lang.String)
+&nbsp;	 */
+&nbsp;	public void nodeRemoved(String sourceId, long timeId, String nodeId) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.ElementSink#stepBegins(java.lang.String, long,
+&nbsp;	 * double)
+&nbsp;	 */
+&nbsp;	public void stepBegins(String sourceId, long timeId, double step) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

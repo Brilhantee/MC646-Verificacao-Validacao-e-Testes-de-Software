@@ -1,0 +1,468 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AbstractElement</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.graph.implementations</a>
+</div>
+
+<h1>Coverage Summary for Class: AbstractElement (org.graphstream.graph.implementations)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AbstractElement</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (6/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.3%
+  </span>
+  <span class="absValue">
+    (10/75)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AbstractElement$AttributeChangeEvent</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    31.6%
+  </span>
+  <span class="absValue">
+    (6/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13%
+  </span>
+  <span class="absValue">
+    (10/77)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Stefan Balev &lt;stefan.balev@graphstream-project.org&gt;
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.graph.implementations;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;import org.graphstream.graph.Element;
+&nbsp;
+&nbsp;/**
+&nbsp; * A base implementation of an element.
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * This class is the Base class for {@link org.graphstream.graph.Node},
+&nbsp; * {@link org.graphstream.graph.Edge} and {@link org.graphstream.graph.Graph}.
+&nbsp; * An element is made of an unique and arbitrary identifier that identifies it,
+&nbsp; * and a set of attributes.
+&nbsp; * &lt;/p&gt;
+&nbsp; *
+&nbsp; * @since 20040910
+&nbsp; */
+<b class="fc">&nbsp;public abstract class AbstractElement implements Element {</b>
+<b class="nc">&nbsp;	public enum AttributeChangeEvent {</b>
+<b class="nc">&nbsp;		ADD, CHANGE, REMOVE</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Attribute
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Tag of this element.
+&nbsp;	 */
+&nbsp;	protected final String id;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The index of this element.
+&nbsp;	 */
+&nbsp;	private int index;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Attributes map. This map is created only when needed. It contains pairs
+&nbsp;	 * (key,value) where the key is the attribute name and the value an Object.
+&nbsp;	 */
+<b class="fc">&nbsp;	protected Map&lt;String, Object&gt; attributes = null;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Vector used when removing attributes to avoid recursive removing.
+&nbsp;	 */
+<b class="fc">&nbsp;	protected ArrayList&lt;String&gt; attributesBeingRemoved = null;</b>
+&nbsp;
+&nbsp;	// Construction
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New element.
+&nbsp;	 *
+&nbsp;	 * @param id
+&nbsp;	 *            The unique identifier of this element.
+&nbsp;	 */
+<b class="fc">&nbsp;	public AbstractElement(String id) {</b>
+<b class="fc">&nbsp;		assert id != null : &quot;Graph elements cannot have a null identifier&quot;;</b>
+<b class="fc">&nbsp;		this.id = id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	public String getId() {
+<b class="fc">&nbsp;		return id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int getIndex() {
+<b class="fc">&nbsp;		return index;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Used by subclasses to change the index of an element
+&nbsp;	 *
+&nbsp;	 * @param index
+&nbsp;	 *            the new index
+&nbsp;	 */
+&nbsp;	protected void setIndex(int index) {
+<b class="fc">&nbsp;		this.index = index;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// XXX UGLY. how to create events in the abstract element ?
+&nbsp;	// XXX The various methods that add and remove attributes will propagate an
+&nbsp;	// event
+&nbsp;	// XXX sometimes this is in response to another event and the
+&nbsp;	// sourceId/timeId is given
+&nbsp;	// XXX sometimes this comes from a direct call to
+&nbsp;	// add/change/removeAttribute() methods
+&nbsp;	// XXX in which case we need to generate a new event (sourceId/timeId) using
+&nbsp;	// the graph
+&nbsp;	// XXX id and a new time. These methods allow access to this.
+&nbsp;	// protected abstract String myGraphId(); // XXX
+&nbsp;
+&nbsp;	// protected abstract long newEvent(); // XXX
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Called for each change in the attribute set. This method must be implemented
+&nbsp;	 * by sub-elements in order to send events to the graph listeners.
+&nbsp;	 *
+&nbsp;	 * @param attribute
+&nbsp;	 *            The attribute name that changed.
+&nbsp;	 * @param event
+&nbsp;	 *            The type of event among ADD, CHANGE and REMOVE.
+&nbsp;	 * @param oldValue
+&nbsp;	 *            The old value of the attribute, null if the attribute was added.
+&nbsp;	 * @param newValue
+&nbsp;	 *            The new value of the attribute, null if the attribute is about to
+&nbsp;	 *            be removed.
+&nbsp;	 */
+&nbsp;	protected abstract void attributeChanged(AttributeChangeEvent event, String attribute, Object oldValue,
+&nbsp;			Object newValue);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Object getAttribute(String key) {
+<b class="nc">&nbsp;		if (attributes != null) {</b>
+<b class="nc">&nbsp;			Object value = attributes.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (value != null)</b>
+<b class="nc">&nbsp;				return value;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @complexity O(log(n*m)) with n being the number of attributes of this element
+&nbsp;	 *             and m the number of keys given.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Object getFirstAttributeOf(String... keys) {
+<b class="nc">&nbsp;		Object o = null;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (attributes != null) {</b>
+<b class="nc">&nbsp;			for (String key : keys) {</b>
+<b class="nc">&nbsp;				o = attributes.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (o != null)</b>
+<b class="nc">&nbsp;					return o;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return o;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public &lt;T&gt; T getAttribute(String key, Class&lt;T&gt; clazz) {
+<b class="nc">&nbsp;		if (attributes != null) {</b>
+<b class="nc">&nbsp;			Object o = attributes.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o != null &amp;&amp; clazz.isInstance(o))</b>
+<b class="nc">&nbsp;				return clazz.cast(o);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @complexity O(log(n*m)) with n being the number of attributes of this element
+&nbsp;	 *             and m the number of keys given.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public &lt;T&gt; T getFirstAttributeOf(Class&lt;T&gt; clazz, String... keys) {
+<b class="nc">&nbsp;		Object o = null;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (attributes == null)</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String key : keys) {</b>
+<b class="nc">&nbsp;			o = attributes.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o != null &amp;&amp; clazz.isInstance(o))</b>
+<b class="nc">&nbsp;				return clazz.cast(o);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public boolean hasAttribute(String key) {
+<b class="nc">&nbsp;		return attributes != null &amp;&amp; attributes.containsKey(key);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public boolean hasAttribute(String key, Class&lt;?&gt; clazz) {
+<b class="nc">&nbsp;		if (attributes != null) {</b>
+<b class="nc">&nbsp;			Object o = attributes.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o != null)</b>
+<b class="nc">&nbsp;				return (clazz.isInstance(o));</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return false;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Stream&lt;String&gt; attributeKeys() {
+<b class="nc">&nbsp;		if (attributes == null)</b>
+<b class="nc">&nbsp;			return Stream.empty();</b>
+&nbsp;
+<b class="nc">&nbsp;		return attributes.keySet().stream();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Override the Object method
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		return id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int getAttributeCount() {
+<b class="nc">&nbsp;		if (attributes != null)</b>
+<b class="nc">&nbsp;			return attributes.size();</b>
+&nbsp;
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Command
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public void clearAttributes() {
+<b class="nc">&nbsp;		if (attributes != null) {</b>
+<b class="nc">&nbsp;			for (Map.Entry&lt;String, Object&gt; entry : attributes.entrySet())</b>
+<b class="nc">&nbsp;				attributeChanged(AttributeChangeEvent.REMOVE, entry.getKey(), entry.getValue(), null);</b>
+&nbsp;
+<b class="nc">&nbsp;			attributes.clear();</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void clearAttributesWithNoEvent() {
+<b class="fc">&nbsp;		if (attributes != null)</b>
+<b class="nc">&nbsp;			attributes.clear();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public void setAttribute(String attribute, Object... values) {
+<b class="nc">&nbsp;		if (attributes == null)</b>
+<b class="nc">&nbsp;			attributes = new HashMap&lt;&gt;(1);</b>
+&nbsp;
+&nbsp;		Object oldValue;
+&nbsp;		Object value;
+&nbsp;
+<b class="nc">&nbsp;		if (values == null)</b>
+<b class="nc">&nbsp;			value = null;</b>
+<b class="nc">&nbsp;		else if (values.length == 0)</b>
+<b class="nc">&nbsp;			value = true;</b>
+<b class="nc">&nbsp;		else if (values.length == 1)</b>
+<b class="nc">&nbsp;			value = values[0];</b>
+&nbsp;		else
+<b class="nc">&nbsp;			value = values;</b>
+&nbsp;
+<b class="nc">&nbsp;		AttributeChangeEvent event = AttributeChangeEvent.ADD;</b>
+&nbsp;
+<b class="nc">&nbsp;		if (attributes.containsKey(attribute)) // In case the value is null,</b>
+<b class="nc">&nbsp;			event = AttributeChangeEvent.CHANGE; // but the attribute exists.</b>
+&nbsp;
+<b class="nc">&nbsp;		oldValue = attributes.put(attribute, value);</b>
+<b class="nc">&nbsp;		attributeChanged(event, attribute, oldValue, value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * @complexity O(log(n)) with n being the number of attributes of this element.
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public void removeAttribute(String attribute) {
+<b class="nc">&nbsp;		if (attributes != null) {</b>
+&nbsp;			//
+&nbsp;			// &#39;attributesBeingRemoved&#39; is created only if this is required.
+&nbsp;			//
+<b class="nc">&nbsp;			if (attributesBeingRemoved == null)</b>
+<b class="nc">&nbsp;				attributesBeingRemoved = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;			//
+&nbsp;			// Avoid recursive calls when synchronizing graphs.
+&nbsp;			//
+<b class="nc">&nbsp;			if (attributes.containsKey(attribute) &amp;&amp; !attributesBeingRemoved.contains(attribute)) {</b>
+<b class="nc">&nbsp;				attributesBeingRemoved.add(attribute);</b>
+&nbsp;
+<b class="nc">&nbsp;				attributeChanged(AttributeChangeEvent.REMOVE, attribute, attributes.get(attribute), null);</b>
+&nbsp;
+<b class="nc">&nbsp;				attributesBeingRemoved.remove(attributesBeingRemoved.size() - 1);</b>
+<b class="nc">&nbsp;				attributes.remove(attribute);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

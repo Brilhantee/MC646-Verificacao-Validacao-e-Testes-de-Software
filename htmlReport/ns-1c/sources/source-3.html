@@ -1,0 +1,270 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Camera</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.view.camera</a>
+</div>
+
+<h1>Coverage Summary for Class: Camera (org.graphstream.ui.view.camera)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Camera</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-07-26
+&nbsp; * 
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.view.camera;
+&nbsp;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.EnumSet;
+&nbsp;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicElement;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicGraph;
+&nbsp;import org.graphstream.ui.view.util.GraphMetrics;
+&nbsp;import org.graphstream.ui.view.util.InteractiveElement;
+&nbsp;import org.graphstream.ui.geom.Point3;
+&nbsp;
+&nbsp;public interface Camera {
+&nbsp;	/**
+&nbsp;	 * The view centre (a point in graph units).
+&nbsp;	 * 
+&nbsp;	 * @return The view centre.
+&nbsp;	 */
+&nbsp;	Point3 getViewCenter();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Change the view centre.
+&nbsp;	 * 
+&nbsp;	 * @param x
+&nbsp;	 *            The new abscissa.
+&nbsp;	 * @param y
+&nbsp;	 *            The new ordinate.
+&nbsp;	 * @param z
+&nbsp;	 *            The new depth.
+&nbsp;	 */
+&nbsp;	void setViewCenter(double x, double y, double z);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The portion of the graph visible.
+&nbsp;	 * 
+&nbsp;	 * @return A real for which value 1 means the graph is fully visible and uses
+&nbsp;	 *         the whole view port.
+&nbsp;	 */
+&nbsp;	double getViewPercent();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Zoom the view.
+&nbsp;	 * 
+&nbsp;	 * @param percent
+&nbsp;	 *            Percent of the graph visible.
+&nbsp;	 */
+&nbsp;	void setViewPercent(double percent);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The current rotation angle.
+&nbsp;	 * 
+&nbsp;	 * @return The rotation angle in degrees.
+&nbsp;	 */
+&nbsp;	double getViewRotation();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Rotate the view around its centre point by a given theta angles (in degrees).
+&nbsp;	 * 
+&nbsp;	 * @param theta
+&nbsp;	 *            The rotation angle in degrees.
+&nbsp;	 */
+&nbsp;	void setViewRotation(double theta);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * A number in GU that gives the approximate graph size (often the diagonal of
+&nbsp;	 * the graph). This allows to compute displacements in the graph as percent of
+&nbsp;	 * its overall size. For example this can be used to move the view centre.
+&nbsp;	 * 
+&nbsp;	 * @return The graph estimated size in graph units.
+&nbsp;	 */
+&nbsp;	double getGraphDimension();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove the specified graph view port.
+&nbsp;	 * 
+&nbsp;	 * @see #setGraphViewport(double, double, double, double)
+&nbsp;	 */
+&nbsp;	void removeGraphViewport();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Specify exactly the minimum and maximum points in GU that are visible (more
+&nbsp;	 * points may be visible due to aspect-ratio constraints).
+&nbsp;	 * 
+&nbsp;	 * @param minx
+&nbsp;	 *            The minimum abscissa visible.
+&nbsp;	 * @param miny
+&nbsp;	 *            The minimum ordinate visible.
+&nbsp;	 * @param maxx
+&nbsp;	 *            The maximum abscissa visible.
+&nbsp;	 * @param maxy
+&nbsp;	 *            The maximum abscissa visible.
+&nbsp;	 * @see #removeGraphViewport()
+&nbsp;	 */
+&nbsp;	void setGraphViewport(double minx, double miny, double maxx, double maxy);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Reset the view to the automatic mode.
+&nbsp;	 */
+&nbsp;	void resetView();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the bounds of the graphic graph in GU. Called by the Viewer.
+&nbsp;	 * 
+&nbsp;	 * @param minx
+&nbsp;	 *            Lowest abscissa.
+&nbsp;	 * @param miny
+&nbsp;	 *            Lowest ordinate.
+&nbsp;	 * @param minz
+&nbsp;	 *            Lowest depth.
+&nbsp;	 * @param maxx
+&nbsp;	 *            Highest abscissa.
+&nbsp;	 * @param maxy
+&nbsp;	 *            Highest ordinate.
+&nbsp;	 * @param maxz
+&nbsp;	 *            Highest depth.
+&nbsp;	 */
+&nbsp;	void setBounds(double minx, double miny, double minz, double maxx, double maxy, double maxz);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the {@link org.graphstream.ui.swingViewer.util.GraphMetrics} object
+&nbsp;	 * linked to this Camera. It can be used to convert pixels to graphic units and
+&nbsp;	 * vice versa.
+&nbsp;	 * 
+&nbsp;	 * @return a GraphMetrics instance
+&nbsp;	 */
+&nbsp;	GraphMetrics getMetrics();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Enable or disable automatic adjustment of the view to see the entire graph.
+&nbsp;	 * 
+&nbsp;	 * @param on
+&nbsp;	 *            If true, automatic adjustment is enabled.
+&nbsp;	 */
+&nbsp;	void setAutoFitView(boolean on);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Transform a point in graph units into pixels.
+&nbsp;	 * 
+&nbsp;	 * @return The transformed point.
+&nbsp;	 */
+&nbsp;	Point3 transformGuToPx(double x, double y, double z);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Return the given point in pixels converted in graph units (GU) using the
+&nbsp;	 * inverse transformation of the current projection matrix. The inverse matrix
+&nbsp;	 * is computed only once each time a new projection matrix is created.
+&nbsp;	 * 
+&nbsp;	 * @param x
+&nbsp;	 *            The source point abscissa in pixels.
+&nbsp;	 * @param y
+&nbsp;	 *            The source point ordinate in pixels.
+&nbsp;	 * @return The resulting points in graph units.
+&nbsp;	 */
+&nbsp;	Point3 transformPxToGu(double x, double y);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the element would be visible on screen. The method used is to
+&nbsp;	 * transform the center of the element (which is always in graph units) using
+&nbsp;	 * the camera actual transformation to put it in pixel units. Then to look in
+&nbsp;	 * the style sheet the size of the element and to test if its enclosing
+&nbsp;	 * rectangle intersects the view port. For edges, its two nodes are used.
+&nbsp;	 * 
+&nbsp;	 * @param element
+&nbsp;	 *            The element to test.
+&nbsp;	 * @return True if the element is visible and therefore must be rendered.
+&nbsp;	 */
+&nbsp;	boolean isVisible(GraphicElement element);
+&nbsp;
+&nbsp;	GraphicElement findGraphicElementAt(GraphicGraph graph, EnumSet&lt;InteractiveElement&gt; types, double x, double y);
+&nbsp;
+&nbsp;	Collection&lt;GraphicElement&gt; allGraphicElementsIn(GraphicGraph graph, EnumSet&lt;InteractiveElement&gt; types, double x1,
+&nbsp;			double y1, double x2, double y2);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

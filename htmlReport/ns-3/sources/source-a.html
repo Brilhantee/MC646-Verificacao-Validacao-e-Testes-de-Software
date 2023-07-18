@@ -1,0 +1,227 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MultiNode</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.graph.implementations</a>
+</div>
+
+<h1>Coverage Summary for Class: MultiNode (org.graphstream.graph.implementations)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MultiNode</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (4/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    53.1%
+  </span>
+  <span class="absValue">
+    (17/32)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Stefan Balev &lt;stefan.balev@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.graph.implementations;
+&nbsp;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.LinkedList;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;
+&nbsp;/**
+&nbsp; * Nodes used with {@link MultiGraph}
+&nbsp; *
+&nbsp; */
+&nbsp;public class MultiNode extends AdjacencyListNode {
+&nbsp;	protected HashMap&lt;AbstractNode, List&lt;AbstractEdge&gt;&gt; neighborMap;
+&nbsp;
+&nbsp;	// *** Constructor ***
+&nbsp;
+&nbsp;	public MultiNode(AbstractGraph graph, String id) {
+<b class="fc">&nbsp;		super(graph, id);</b>
+<b class="fc">&nbsp;		neighborMap = new HashMap&lt;AbstractNode, List&lt;AbstractEdge&gt;&gt;(4 * INITIAL_EDGE_CAPACITY / 3 + 1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Helpers ***
+&nbsp;
+&nbsp;	@SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;	@Override
+&nbsp;	protected &lt;T extends Edge&gt; T locateEdge(Node opposite, char type) {
+<b class="nc">&nbsp;		List&lt;AbstractEdge&gt; l = neighborMap.get(opposite);</b>
+<b class="nc">&nbsp;		if (l == null)</b>
+<b class="nc">&nbsp;			return null;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (AbstractEdge e : l) {</b>
+<b class="nc">&nbsp;			char etype = edgeType(e);</b>
+<b class="nc">&nbsp;			if ((type != I_EDGE || etype != O_EDGE) &amp;&amp; (type != O_EDGE || etype != I_EDGE))</b>
+<b class="nc">&nbsp;				return (T) e;</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void removeEdge(int i) {
+<b class="fc">&nbsp;		AbstractNode opposite = (AbstractNode) edges[i].getOpposite(this);</b>
+<b class="fc">&nbsp;		List&lt;AbstractEdge&gt; l = neighborMap.get(opposite);</b>
+<b class="fc">&nbsp;		l.remove(edges[i]);</b>
+<b class="fc">&nbsp;		if (l.isEmpty())</b>
+<b class="fc">&nbsp;			neighborMap.remove(opposite);</b>
+<b class="fc">&nbsp;		super.removeEdge(i);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Callbacks ***
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected boolean addEdgeCallback(AbstractEdge edge) {
+<b class="fc">&nbsp;		AbstractNode opposite = (AbstractNode) edge.getOpposite(this);</b>
+<b class="fc">&nbsp;		List&lt;AbstractEdge&gt; l = neighborMap.get(opposite);</b>
+<b class="fc">&nbsp;		if (l == null) {</b>
+<b class="fc">&nbsp;			l = new LinkedList&lt;AbstractEdge&gt;();</b>
+<b class="fc">&nbsp;			neighborMap.put(opposite, l);</b>
+&nbsp;		}
+<b class="fc">&nbsp;		l.add(edge);</b>
+<b class="fc">&nbsp;		return super.addEdgeCallback(edge);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	protected void clearCallback() {
+<b class="fc">&nbsp;		neighborMap.clear();</b>
+<b class="fc">&nbsp;		super.clearCallback();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// *** Others ***
+&nbsp;
+&nbsp;	@SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;	public &lt;T extends Edge&gt; Collection&lt;T&gt; getEdgeSetBetween(Node node) {
+<b class="nc">&nbsp;		List&lt;AbstractEdge&gt; l = neighborMap.get(node);</b>
+<b class="nc">&nbsp;		if (l == null)</b>
+<b class="nc">&nbsp;			return Collections.emptyList();</b>
+<b class="nc">&nbsp;		return (Collection&lt;T&gt;) Collections.unmodifiableList(l);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public &lt;T extends Edge&gt; Collection&lt;T&gt; getEdgeSetBetween(String id) {
+<b class="nc">&nbsp;		return getEdgeSetBetween(graph.getNode(id));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public &lt;T extends Edge&gt; Collection&lt;T&gt; getEdgeSetBetween(int index) {
+<b class="nc">&nbsp;		return getEdgeSetBetween(graph.getNode(index));</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

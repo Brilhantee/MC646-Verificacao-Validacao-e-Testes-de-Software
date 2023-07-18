@@ -1,0 +1,241 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CumulativeAttributes</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.util.cumulative</a>
+</div>
+
+<h1>Coverage Summary for Class: CumulativeAttributes (org.graphstream.util.cumulative)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CumulativeAttributes</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/42)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2013-07-31
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.util.cumulative;
+&nbsp;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.HashMap;
+&nbsp;
+&nbsp;import org.graphstream.util.cumulative.CumulativeSpells.Spell;
+&nbsp;
+&nbsp;public class CumulativeAttributes {
+&nbsp;	boolean nullAttributesAreErrors;
+&nbsp;	HashMap&lt;String, CumulativeSpells&gt; data;
+&nbsp;	double date;
+&nbsp;
+<b class="nc">&nbsp;	public CumulativeAttributes(double date) {</b>
+<b class="nc">&nbsp;		data = new HashMap&lt;String, CumulativeSpells&gt;();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Object get(String key) {
+<b class="nc">&nbsp;		CumulativeSpells o = data.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o != null) {</b>
+<b class="nc">&nbsp;			Spell s = o.getCurrentSpell();</b>
+<b class="nc">&nbsp;			return s == null ? null : s.getAttachedData();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Object getAny(String key) {
+<b class="nc">&nbsp;		CumulativeSpells o = data.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o != null) {</b>
+<b class="nc">&nbsp;			Spell s = o.getSpell(0);</b>
+<b class="nc">&nbsp;			return s == null ? null : s.getAttachedData();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Iterable&lt;String&gt; getAttributes() {
+<b class="nc">&nbsp;		return data.keySet();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;	public Iterable&lt;Spell&gt; getAttributeSpells(String key) {
+<b class="nc">&nbsp;		CumulativeSpells o = data.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (o != null)</b>
+<b class="nc">&nbsp;			return Collections.unmodifiableList(o.spells);</b>
+&nbsp;
+<b class="nc">&nbsp;		return Collections.EMPTY_LIST;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public int getAttributesCount() {
+<b class="nc">&nbsp;		return data.size();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void set(String key, Object value) {
+<b class="nc">&nbsp;		CumulativeSpells spells = data.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (spells == null) {</b>
+<b class="nc">&nbsp;			spells = new CumulativeSpells();</b>
+<b class="nc">&nbsp;			data.put(key, spells);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		Spell s = spells.closeSpell();</b>
+&nbsp;
+<b class="nc">&nbsp;		if (s != null)</b>
+<b class="nc">&nbsp;			s.setEndOpen(true);</b>
+&nbsp;
+<b class="nc">&nbsp;		s = spells.startSpell(date);</b>
+<b class="nc">&nbsp;		s.setAttachedData(value);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void remove(String key) {
+<b class="nc">&nbsp;		CumulativeSpells spells = data.get(key);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (spells == null)</b>
+&nbsp;			return;
+&nbsp;
+<b class="nc">&nbsp;		spells.closeSpell();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void remove() {
+<b class="nc">&nbsp;		for (CumulativeSpells spells : data.values())</b>
+<b class="nc">&nbsp;			spells.closeSpell();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void updateDate(double date) {
+<b class="nc">&nbsp;		this.date = date;</b>
+&nbsp;
+<b class="nc">&nbsp;		for (CumulativeSpells spells : data.values())</b>
+<b class="nc">&nbsp;			spells.updateCurrentSpell(date);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		StringBuilder buffer = new StringBuilder();</b>
+&nbsp;
+<b class="nc">&nbsp;		buffer.append(&quot;(&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String key : data.keySet()) {</b>
+<b class="nc">&nbsp;			buffer.append(key).append(&quot;:&quot;).append(data.get(key));</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		buffer.append(&quot;)&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		return buffer.toString();</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

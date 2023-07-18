@@ -1,0 +1,381 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSinkBase</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSinkBase (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileSinkBase</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/48)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-05-07
+&nbsp; * 
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.OutputStream;
+&nbsp;import java.io.PrintWriter;
+&nbsp;import java.io.Writer;
+&nbsp;import java.util.concurrent.atomic.AtomicLong;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;
+&nbsp;/**
+&nbsp; * Base implementation for graph output to files.
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * This class provides base services to write graphs into files using a specific
+&nbsp; * file format. It allows to create an output stream. By default a print stream
+&nbsp; * for easy text output, but binary files are possible.
+&nbsp; * &lt;/p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * It handles completely the {@link #writeAll(Graph, OutputStream)},
+&nbsp; * {@link #writeAll(Graph, String)}, {@link #begin(OutputStream)},
+&nbsp; * {@link #begin(String)}, {@link #flush()} and {@link #end()} methods. You
+&nbsp; * should not have to modify or override these.
+&nbsp; * &lt;/p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;p&gt;
+&nbsp; * In order to implement an output you have to:
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;Eventually override {@link #createWriter(OutputStream)} or
+&nbsp; * {@link #createWriter(String)} to replace the default instance of PrintStream
+&nbsp; * created for you.&lt;/li&gt;
+&nbsp; * &lt;li&gt;Implement the {@link #outputHeader()} method. This method is called at
+&nbsp; * start, before any graph event is sent to output. Use it to output the header
+&nbsp; * of your file.&lt;/li&gt;
+&nbsp; * &lt;li&gt;Implement the {@link #outputEndOfFile()} method. This method is called at
+&nbsp; * the end of the output, just before closing the output stream. Use it to
+&nbsp; * output any terminating syntax for the file format you implement.&lt;/li&gt;
+&nbsp; * &lt;li&gt;Implement all the methods of {@link org.graphstream.stream.Sink}. All
+&nbsp; * these methods will be called for each graph event and must export these
+&nbsp; * events to the file you are writing. You should use the {@link #output} field
+&nbsp; * to write to the file. This field has type {@link java.io.OutputStream} but by
+&nbsp; * default is of type {@link java.io.PrintStream}, as most of the file format
+&nbsp; * will be textual.&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+<b class="nc">&nbsp;public abstract class FileSinkBase implements FileSink {</b>
+&nbsp;	// Attribute
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The output.
+&nbsp;	 */
+&nbsp;	protected Writer output;
+&nbsp;
+&nbsp;	// Command
+&nbsp;
+&nbsp;	public void writeAll(Graph graph, String fileName) throws IOException {
+<b class="nc">&nbsp;		begin(fileName);</b>
+<b class="nc">&nbsp;		exportGraph(graph);</b>
+<b class="nc">&nbsp;		end();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void writeAll(Graph graph, OutputStream stream) throws IOException {
+<b class="nc">&nbsp;		begin(stream);</b>
+<b class="nc">&nbsp;		exportGraph(graph);</b>
+<b class="nc">&nbsp;		end();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void writeAll(Graph graph, Writer writer) throws IOException {
+<b class="nc">&nbsp;		begin(writer);</b>
+<b class="nc">&nbsp;		exportGraph(graph);</b>
+<b class="nc">&nbsp;		end();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Echo each element and attribute of the graph to the actual output.
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The elements are echoed as add events (add node, add edge, add attribute).
+&nbsp;	 * This method guarantees there are no change or delete events.
+&nbsp;	 *
+&nbsp;	 * @param graph
+&nbsp;	 *            The graph to export.
+&nbsp;	 */
+&nbsp;	protected void exportGraph(Graph graph) {
+<b class="nc">&nbsp;		final String graphId = graph.getId();</b>
+<b class="nc">&nbsp;		final AtomicLong timeId = new AtomicLong(0);</b>
+&nbsp;
+<b class="nc">&nbsp;		graph.attributeKeys()</b>
+<b class="nc">&nbsp;				.forEach(key -&gt; graphAttributeAdded(graphId, timeId.getAndIncrement(), key, graph.getAttribute(key)));</b>
+&nbsp;
+<b class="nc">&nbsp;		graph.nodes().forEach(node -&gt; {</b>
+<b class="nc">&nbsp;			String nodeId = node.getId();</b>
+<b class="nc">&nbsp;			nodeAdded(graphId, timeId.getAndIncrement(), nodeId);</b>
+&nbsp;
+<b class="nc">&nbsp;			node.attributeKeys().forEach(</b>
+<b class="nc">&nbsp;					key -&gt; nodeAttributeAdded(graphId, timeId.getAndIncrement(), nodeId, key, node.getAttribute(key)));</b>
+&nbsp;		});
+&nbsp;
+<b class="nc">&nbsp;		graph.edges().forEach(edge -&gt; {</b>
+<b class="nc">&nbsp;			String edgeId = edge.getId();</b>
+<b class="nc">&nbsp;			edgeAdded(graphId, timeId.getAndIncrement(), edgeId, edge.getNode0().getId(), edge.getNode1().getId(),</b>
+<b class="nc">&nbsp;					edge.isDirected());</b>
+&nbsp;
+<b class="nc">&nbsp;			edge.attributeKeys().forEach(</b>
+<b class="nc">&nbsp;					key -&gt; edgeAttributeAdded(graphId, timeId.getAndIncrement(), edgeId, key, edge.getAttribute(key)));</b>
+&nbsp;		});
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#begin(java.lang.String)
+&nbsp;	 */
+&nbsp;	public void begin(String fileName) throws IOException {
+<b class="nc">&nbsp;		if (output != null)</b>
+<b class="nc">&nbsp;			throw new IOException(&quot;cannot call begin() twice without calling end() before.&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		output = createWriter(fileName);</b>
+&nbsp;
+<b class="nc">&nbsp;		outputHeader();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#begin(java.io.OutputStream)
+&nbsp;	 */
+&nbsp;	public void begin(OutputStream stream) throws IOException {
+<b class="nc">&nbsp;		if (output != null)</b>
+<b class="nc">&nbsp;			throw new IOException(&quot;cannot call begin() twice without calling end() before.&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		output = createWriter(stream);</b>
+&nbsp;
+<b class="nc">&nbsp;		outputHeader();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#begin(java.io.Writer)
+&nbsp;	 */
+&nbsp;	public void begin(Writer writer) throws IOException {
+<b class="nc">&nbsp;		if (output != null)</b>
+<b class="nc">&nbsp;			throw new IOException(&quot;cannot call begin() twice without calling end() before.&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		output = createWriter(writer);</b>
+&nbsp;
+<b class="nc">&nbsp;		outputHeader();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#flush()
+&nbsp;	 */
+&nbsp;	public void flush() throws IOException {
+<b class="nc">&nbsp;		if (output != null)</b>
+<b class="nc">&nbsp;			output.flush();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/*
+&nbsp;	 * (non-Javadoc)
+&nbsp;	 * 
+&nbsp;	 * @see org.graphstream.stream.file.FileSink#end()
+&nbsp;	 */
+&nbsp;	public void end() throws IOException {
+<b class="nc">&nbsp;		outputEndOfFile();</b>
+<b class="nc">&nbsp;		output.flush();</b>
+<b class="nc">&nbsp;		output.close();</b>
+<b class="nc">&nbsp;		output = null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Method called at start just after the {@link #output} field is created. Use
+&nbsp;	 * it to output the header of the file.
+&nbsp;	 *
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If any I/O error occurs.
+&nbsp;	 */
+&nbsp;	protected abstract void outputHeader() throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Method called at the end just before the {@link #output} field is flushed and
+&nbsp;	 * closed. Use it to output any information that closes the file.
+&nbsp;	 *
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If any I/O error occurs.
+&nbsp;	 */
+&nbsp;	protected abstract void outputEndOfFile() throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a a writer from a file name. Override this method if the default
+&nbsp;	 * PrintWriter does not suits your needs. This method is called by
+&nbsp;	 * {@link #begin(String)} and {@link #writeAll(Graph, String)}.
+&nbsp;	 *
+&nbsp;	 * @param fileName
+&nbsp;	 *            Name of the file to output to.
+&nbsp;	 * @return A new writer.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If any I/O error occurs.
+&nbsp;	 */
+&nbsp;	protected Writer createWriter(String fileName) throws IOException {
+<b class="nc">&nbsp;		return new PrintWriter(fileName);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a writer from an existing output stream. Override this method if the
+&nbsp;	 * default PrintWriter does not suits your needs. This method is called by
+&nbsp;	 * {@link #begin(OutputStream)} and {@link #writeAll(Graph, OutputStream)}. This
+&nbsp;	 * method does not create an output stream if the given stream is already
+&nbsp;	 * instance of PrintStream.
+&nbsp;	 *
+&nbsp;	 * @param stream
+&nbsp;	 *            An already existing output stream.
+&nbsp;	 * @return A new writer.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If any I/O error occurs.
+&nbsp;	 */
+&nbsp;	protected Writer createWriter(OutputStream stream) throws IOException {
+<b class="nc">&nbsp;		return new PrintWriter(stream);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a writer from an existing writer. Override this method if the default
+&nbsp;	 * PrintWriter does not suits your needs. This method is called by
+&nbsp;	 * {@link #begin(Writer)} and {@link #writeAll(Graph, Writer)}. This method does
+&nbsp;	 * not create a new writer if the given writer is already instance of
+&nbsp;	 * PrintWriter.
+&nbsp;	 *
+&nbsp;	 * @param writer
+&nbsp;	 *            An already existing writer.
+&nbsp;	 * @return A new writer.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If any I/O error occurs.
+&nbsp;	 */
+&nbsp;	protected Writer createWriter(Writer writer) throws IOException {
+<b class="nc">&nbsp;		if (writer instanceof PrintWriter)</b>
+<b class="nc">&nbsp;			return writer;</b>
+&nbsp;
+<b class="nc">&nbsp;		return new PrintWriter(writer);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,235 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSink</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSink (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">FileSink</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-04-17
+&nbsp; * 
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Richard O. Legendi &lt;richard.legendi@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.OutputStream;
+&nbsp;import java.io.Writer;
+&nbsp;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.stream.Sink;
+&nbsp;
+&nbsp;/**
+&nbsp; * Output a graph or graph events to a file.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * File outputs can work in two modes:
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;In the &quot;writeAll()&quot; mode, the file output is done &quot;all at once&quot; writing a
+&nbsp; * &quot;snapshot&quot; of the graph at this particular instant in time. This mode cannot
+&nbsp; * convey the dynamics of the graph.&lt;/li&gt;
+&nbsp; * &lt;li&gt;In &quot;begin()/end()&quot; mode, the output is listener of an input (a graph or
+&nbsp; * any other sort of graph events producer) and it write events as they come,
+&nbsp; * conveying the dynamics of the graph correctly.&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public interface FileSink extends Sink {
+&nbsp;	/**
+&nbsp;	 * Write the current graph state in one big non-interruptible operation. This
+&nbsp;	 * operation is a &quot;snapshot&quot; of the graph, it will never convey the dynamics of
+&nbsp;	 * the graph. To ensure you store the graph &quot;as it evolves in time&quot; you must use
+&nbsp;	 * the {@link #begin(OutputStream)} or {@link #begin(String)} as soon as the
+&nbsp;	 * graph appears (or any source of graph event, any descendant of {@link Source}
+&nbsp;	 * will do).
+&nbsp;	 * 
+&nbsp;	 * @param graph
+&nbsp;	 *            The graph to send as events to the file.
+&nbsp;	 * @param fileName
+&nbsp;	 *            Name of the file to write.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             if an I/O error occurs while writing.
+&nbsp;	 */
+&nbsp;	void writeAll(Graph graph, String fileName) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Write the current graph state in one big non-interruptible operation. This
+&nbsp;	 * operation is a &quot;snapshot&quot; of the graph, it will never convey the dynamics of
+&nbsp;	 * the graph. To ensure you store the graph &quot;as it evolves in time&quot; you must use
+&nbsp;	 * the {@link #begin(Writer)} or {@link #begin(OutputStream)} or
+&nbsp;	 * {@link #begin(String)} as soon as the graph appears (or any source of graph
+&nbsp;	 * event, any descendant of {@link Source} will do).
+&nbsp;	 * 
+&nbsp;	 * @param graph
+&nbsp;	 *            The graph to send as events to the file.
+&nbsp;	 * @param stream
+&nbsp;	 *            The stream where the graph is sent.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             if an I/O error occurs while writing.
+&nbsp;	 */
+&nbsp;	void writeAll(Graph graph, OutputStream stream) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Write the current graph state in one big non-interruptible operation. This
+&nbsp;	 * operation is a &quot;snapshot&quot; of the graph, it will never convey the dynamics of
+&nbsp;	 * the graph. To ensure you store the graph &quot;as it evolves in time&quot; you must use
+&nbsp;	 * the {@link #begin(Writer)} or {@link #begin(OutputStream)} or
+&nbsp;	 * {@link #begin(String)} as soon as the graph appears (or any source of graph
+&nbsp;	 * event, any descendant of {@link Source} will do).
+&nbsp;	 * 
+&nbsp;	 * @param graph
+&nbsp;	 *            The graph to send as events to the file.
+&nbsp;	 * @param writer
+&nbsp;	 *            The writer where the graph is sent.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             if an I/O error occurs while writing.
+&nbsp;	 */
+&nbsp;	void writeAll(Graph graph, Writer writer) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Begin the output of the given stream of graph events. The graph events can
+&nbsp;	 * come from any input (implementation of {@link Source} or you can directly use
+&nbsp;	 * the methods inherited from {@link Sink}. Once the writing is started using
+&nbsp;	 * begin(), you must close it using {@link #end()} when done to ensure data is
+&nbsp;	 * correctly stored in the file.
+&nbsp;	 * 
+&nbsp;	 * @param fileName
+&nbsp;	 *            The name of the file where to output the graph events.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while writing.
+&nbsp;	 */
+&nbsp;	void begin(String fileName) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Begin the output of the given stream of graph events. The graph events can
+&nbsp;	 * come from any input (implementation of {@link Source} or you can directly use
+&nbsp;	 * the methods inherited from {@link Sink}. Once the writing is started using
+&nbsp;	 * begin(), you must close it using {@link #end()} when done to ensure data is
+&nbsp;	 * correctly stored in the file.
+&nbsp;	 * 
+&nbsp;	 * @param stream
+&nbsp;	 *            The file stream where to output the graph events.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while writing.
+&nbsp;	 */
+&nbsp;	void begin(OutputStream stream) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Begin the output of the given stream of graph events. The graph events can
+&nbsp;	 * come from any input (implementation of {@link Source} or you can directly use
+&nbsp;	 * the methods inherited from {@link Sink}. Once the writing is started using
+&nbsp;	 * begin(), you must close it using {@link #end()} when done to ensure data is
+&nbsp;	 * correctly stored in the file.
+&nbsp;	 * 
+&nbsp;	 * @param writer
+&nbsp;	 *            The writer where to output the graph events.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while writing.
+&nbsp;	 */
+&nbsp;	void begin(Writer writer) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Ensure all data sent to the output are correctly written.
+&nbsp;	 * 
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs during write.
+&nbsp;	 */
+&nbsp;	void flush() throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * End the writing process started with {@link #begin(OutputStream)} or
+&nbsp;	 * {@link #begin(String)}.
+&nbsp;	 * 
+&nbsp;	 * @throws IOException
+&nbsp;	 */
+&nbsp;	void end() throws IOException;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

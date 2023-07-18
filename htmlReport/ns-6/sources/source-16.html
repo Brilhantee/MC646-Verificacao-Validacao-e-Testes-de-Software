@@ -1,0 +1,318 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSourceFactory</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSourceFactory (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FileSourceFactory</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/60)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-05-09
+&nbsp; * 
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.io.FileReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.RandomAccessFile;
+&nbsp;
+&nbsp;import javax.xml.stream.FactoryConfigurationError;
+&nbsp;import javax.xml.stream.XMLEventReader;
+&nbsp;import javax.xml.stream.XMLInputFactory;
+&nbsp;import javax.xml.stream.XMLStreamException;
+&nbsp;import javax.xml.stream.events.XMLEvent;
+&nbsp;
+&nbsp;/**
+&nbsp; * File source factory.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * A graph reader factory allow to create readers according to a given file. It
+&nbsp; * both tries to read the start of the file to infer its type (works well for
+&nbsp; * file formats with a magic cookie or header), and if it fails it tries to look
+&nbsp; * at the file name extension.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+<b class="nc">&nbsp;public class FileSourceFactory {</b>
+&nbsp;	/**
+&nbsp;	 * Create a file input for the given file name.
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This method first tests if the file is a regular file and is readable. If so,
+&nbsp;	 * it opens it and reads the magic cookie to test the known file formats that
+&nbsp;	 * can be inferred from their header. If it works, it returns a file input for
+&nbsp;	 * the format. Else it looks at the file name extension, and returns a file
+&nbsp;	 * input for the extension. Finally if all fail, it throws a NotFoundException.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Notice that this method only creates the file input and does not connect it
+&nbsp;	 * to a graph.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * @param fileName
+&nbsp;	 *            Name of the graph file.
+&nbsp;	 * @return A graph reader suitable for the fileName graph format.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If the file is not readable or accessible.
+&nbsp;	 */
+&nbsp;	public static FileSource sourceFor(String fileName) throws IOException {
+<b class="nc">&nbsp;		File file = new File(fileName);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!file.isFile())</b>
+<b class="nc">&nbsp;			throw new IOException(&quot;not a regular file &#39;&quot; + fileName + &quot;&#39;&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (!file.canRead())</b>
+<b class="nc">&nbsp;			throw new IOException(&quot;not a readable file &#39;&quot; + fileName + &quot;&#39;&quot;);</b>
+&nbsp;
+&nbsp;		// Try to read the beginning of the file.
+&nbsp;
+<b class="nc">&nbsp;		RandomAccessFile in = new RandomAccessFile(fileName, &quot;r&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		byte b[] = new byte[10];</b>
+<b class="nc">&nbsp;		int n = in.read(b, 0, 10);</b>
+&nbsp;
+&nbsp;		// System.err.printf( &quot;[&quot; );
+&nbsp;		// for( int i=0; i&lt;n; ++i )
+&nbsp;		// {
+&nbsp;		// System.err.printf( &quot;%c&quot;, (char)b[i] );
+&nbsp;		// }
+&nbsp;		// System.err.printf( &quot;]%n&quot; );
+&nbsp;
+<b class="nc">&nbsp;		in.close();</b>
+&nbsp;
+&nbsp;		// Surely match a DGS file, as DGS files are well done and have a
+&nbsp;		// signature.
+&nbsp;
+<b class="nc">&nbsp;		if (n &gt;= 3 &amp;&amp; b[0] == &#39;D&#39; &amp;&amp; b[1] == &#39;G&#39; &amp;&amp; b[2] == &#39;S&#39;) {</b>
+<b class="nc">&nbsp;			if (n &gt;= 6 &amp;&amp; b[3] == &#39;0&#39; &amp;&amp; b[4] == &#39;0&#39;) {</b>
+<b class="nc">&nbsp;				if (b[5] == &#39;1&#39; || b[5] == &#39;2&#39;) {</b>
+<b class="nc">&nbsp;					return new FileSourceDGS1And2();</b>
+<b class="nc">&nbsp;				} else if (b[5] == &#39;3&#39; || b[5] == &#39;4&#39;) {</b>
+<b class="nc">&nbsp;					return new FileSourceDGS();</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+&nbsp;		// Maybe match a GML file as most GML files begin by the line &quot;graph [&quot;,
+&nbsp;		// but not sure, you may create a GML file that starts by a comment, an
+&nbsp;		// empty line, with any kind of spaces, etc.
+&nbsp;
+<b class="nc">&nbsp;		if (n &gt;= 7 &amp;&amp; b[0] == &#39;g&#39; &amp;&amp; b[1] == &#39;r&#39; &amp;&amp; b[2] == &#39;a&#39; &amp;&amp; b[3] == &#39;p&#39; &amp;&amp; b[4] == &#39;h&#39; &amp;&amp; b[5] == &#39; &#39;</b>
+&nbsp;				&amp;&amp; b[6] == &#39;[&#39;) {
+<b class="nc">&nbsp;			return new org.graphstream.stream.file.FileSourceGML();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (n &gt;= 4 &amp;&amp; b[0] == &#39;(&#39; &amp;&amp; b[1] == &#39;t&#39; &amp;&amp; b[2] == &#39;l&#39; &amp;&amp; b[3] == &#39;p&#39;)</b>
+<b class="nc">&nbsp;			return new FileSourceTLP();</b>
+&nbsp;
+&nbsp;		// The web reader.
+&nbsp;
+<b class="nc">&nbsp;		String flc = fileName.toLowerCase();</b>
+&nbsp;
+&nbsp;		// If we did not found anything, we try with the filename extension ...
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.dgs&quot;)) {</b>
+<b class="nc">&nbsp;			return new FileSourceDGS();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.gml&quot;) || flc.endsWith(&quot;.dgml&quot;)) {</b>
+<b class="nc">&nbsp;			return new org.graphstream.stream.file.FileSourceGML();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.net&quot;)) {</b>
+<b class="nc">&nbsp;			return new FileSourcePajek();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.chaco&quot;) || flc.endsWith(&quot;.graph&quot;)) {</b>
+&nbsp;			// return new GraphReaderChaco();
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.dot&quot;)) {</b>
+<b class="nc">&nbsp;			return new org.graphstream.stream.file.FileSourceDOT();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.edge&quot;)) {</b>
+<b class="nc">&nbsp;			return new FileSourceEdge();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.lgl&quot;)) {</b>
+<b class="nc">&nbsp;			return new FileSourceLGL();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.ncol&quot;)) {</b>
+<b class="nc">&nbsp;			return new FileSourceNCol();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.tlp&quot;)) {</b>
+<b class="nc">&nbsp;			return new FileSourceTLP();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.xml&quot;)) {</b>
+<b class="nc">&nbsp;			String root = getXMLRootElement(fileName);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (root.equalsIgnoreCase(&quot;gexf&quot;))</b>
+<b class="nc">&nbsp;				return new FileSourceGEXF();</b>
+&nbsp;
+<b class="nc">&nbsp;			return new FileSourceGraphML();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		if (flc.endsWith(&quot;.gexf&quot;)) {</b>
+<b class="nc">&nbsp;			return new FileSourceGEXF();</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static String getXMLRootElement(String fileName) throws IOException {
+<b class="nc">&nbsp;		FileReader stream = new FileReader(fileName);</b>
+&nbsp;		XMLEventReader reader;
+&nbsp;		XMLEvent e;
+&nbsp;		String root;
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			reader = XMLInputFactory.newInstance().createXMLEventReader(stream);</b>
+&nbsp;
+&nbsp;			do {
+<b class="nc">&nbsp;				e = reader.nextEvent();</b>
+<b class="nc">&nbsp;			} while (!e.isStartElement() &amp;&amp; !e.isEndDocument());</b>
+&nbsp;
+<b class="nc">&nbsp;			if (e.isEndDocument())</b>
+<b class="nc">&nbsp;				throw new IOException(&quot;document ended before catching root element&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			root = e.asStartElement().getName().getLocalPart();</b>
+<b class="nc">&nbsp;			reader.close();</b>
+<b class="nc">&nbsp;			stream.close();</b>
+&nbsp;
+<b class="nc">&nbsp;			return root;</b>
+<b class="nc">&nbsp;		} catch (XMLStreamException ex) {</b>
+<b class="nc">&nbsp;			throw new IOException(ex);</b>
+<b class="nc">&nbsp;		} catch (FactoryConfigurationError ex) {</b>
+<b class="nc">&nbsp;			throw new IOException(ex);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

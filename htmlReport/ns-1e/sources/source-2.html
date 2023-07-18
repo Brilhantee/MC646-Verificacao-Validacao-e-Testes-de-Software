@@ -1,0 +1,831 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Environment</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.util</a>
+</div>
+
+<h1>Coverage Summary for Class: Environment (org.graphstream.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Environment</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/198)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2011-07-22
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Richard O. Legendi &lt;richard.legendi@gmail.com&gt;
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.util;
+&nbsp;
+&nbsp;import java.io.BufferedReader;
+&nbsp;import java.io.BufferedWriter;
+&nbsp;import java.io.FileNotFoundException;
+&nbsp;import java.io.FileReader;
+&nbsp;import java.io.FileWriter;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.PrintStream;
+&nbsp;import java.lang.reflect.InvocationTargetException;
+&nbsp;import java.lang.reflect.Method;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Hashtable;
+&nbsp;import java.util.Set;
+&nbsp;import java.util.logging.Level;
+&nbsp;import java.util.logging.Logger;
+&nbsp;
+&nbsp;/**
+&nbsp; * Representation of a set of parameters.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The environment class mimics the environment variables available in any shell
+&nbsp; * using a hash map of keys/values, the key being the variables names, excepted
+&nbsp; * here they are called parameters.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * In addition, this class provides facilities to:
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;Read a parameter file and set the parameters from this file;&lt;/li&gt;
+&nbsp; * &lt;li&gt;Write a parameter file from the parameter of this environment;&lt;/li&gt;
+&nbsp; * &lt;li&gt;Parse the command line and get parameters from it;&lt;/li&gt;
+&nbsp; * &lt;li&gt;Take a class as argument and set all its fields having the same name as
+&nbsp; * parameters in this class;&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * As in any shell, most of the time, the environment is global and accessible
+&nbsp; * from any part of the system. Here a singleton instance of this class is
+&nbsp; * created and accessible from anywhere in the JVM using the
+&nbsp; * {@link #getGlobalEnvironment()} method (indeed the singleton instance is
+&nbsp; * created at its first access). However, it is still possible to create a
+&nbsp; * private instance of this class for use in a specific part of a program.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * To read a file of parameters, simply call the
+&nbsp; * {@link #readParameterFile(String)} method. In the same way, to write a set of
+&nbsp; * parameters to a file, call the {@link #writeParameterFile(String)} method.
+&nbsp; * The format of the parameter file is given in the description of these
+&nbsp; * methods.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * To read parameters from he command line, call the
+&nbsp; * {@link #readCommandLine(String[])} or
+&nbsp; * {@link #readCommandLine(String[], Collection)} methods. These methods expect
+&nbsp; * a format for the command line that is described in there respective
+&nbsp; * documentations.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * It is also possible to setup automatically the fields of an arbitrary object,
+&nbsp; * provided these fields have name that match parameters in this environment. To
+&nbsp; * do this call the {@link #initializeFieldsOf(Object)} method passing the
+&nbsp; * object to initialise as argument. The object to setup must provide methods of
+&nbsp; * the form &quot;setThing(Type)&quot; where &quot;Thing&quot; or &quot;thing&quot; is the name of the field
+&nbsp; * to set and &quot;Type&quot; is one of &quot;int&quot;, &quot;long&quot;, &quot;float&quot;, &quot;double&quot;, &quot;String&quot; and
+&nbsp; * &quot;boolean&quot;. For the boolean type, the accepted values meaning true are &quot;true&quot;,
+&nbsp; * &quot;on&quot;, &quot;1&quot;, and &quot;yes&quot;, all other value are considered as false.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * TODO: how (or when) does the default configuration file is read? TODO: how to
+&nbsp; * handle parameters that cannot be setup in the
+&nbsp; * {@link #initializeFieldsOf(Object)}?
+&nbsp; * 
+&nbsp; * @author Frédéric Guinand
+&nbsp; * @author Yoann Pigné
+&nbsp; * @author Antoine Dutot
+&nbsp; * @version 1.0 (jdk 1.5)
+&nbsp; */
+<b class="nc">&nbsp;public class Environment implements Cloneable {</b>
+<b class="nc">&nbsp;	private static final Logger logger = Logger.getLogger(Environment.class.getSimpleName());</b>
+&nbsp;
+&nbsp;	// ---------- Attributes -----------
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Name of the configuration file. Default is &quot;config&quot;
+&nbsp;	 */
+<b class="nc">&nbsp;	protected String configFileName = &quot;config&quot;;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Has the configuration file been read yet?.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected boolean configFileRead = false;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set of parameters. This is a hash table and not a hashmap since several
+&nbsp;	 * thread may access this class at once.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected Hashtable&lt;String, String&gt; parameters = new Hashtable&lt;String, String&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * When locked the environment parameters value still can be changed but it is
+&nbsp;	 * no more possible to add new parameters.
+&nbsp;	 */
+&nbsp;	protected boolean locked;
+&nbsp;
+&nbsp;	// --------- Static attributes ---------
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Global environment for the whole JVM. This global environment is available
+&nbsp;	 * &lt;b&gt;and editable&lt;/b&gt; from everywhere. It is create as soon as the
+&nbsp;	 * {@link #getGlobalEnvironment()} static method is called if this field was not
+&nbsp;	 * yet initialized by any other mean.
+&nbsp;	 * 
+&nbsp;	 * @see #getGlobalEnvironment()
+&nbsp;	 */
+&nbsp;	public static Environment GLOBAL_ENV;
+&nbsp;
+&nbsp;	// --------- Static methods -----------
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Access to the global shared environment for the whole JVM. This method allows
+&nbsp;	 * to access a shared environment, that can be read and written from anywhere.
+&nbsp;	 * 
+&nbsp;	 * @return A singleton instance of the global environment.
+&nbsp;	 */
+&nbsp;	public static Environment getGlobalEnvironment() {
+<b class="nc">&nbsp;		if (GLOBAL_ENV == null)</b>
+<b class="nc">&nbsp;			GLOBAL_ENV = new Environment();</b>
+&nbsp;
+<b class="nc">&nbsp;		return GLOBAL_ENV;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// --------- Methods -------------
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Is the environment locked?.
+&nbsp;	 * 
+&nbsp;	 * @return True if the environment is locked.
+&nbsp;	 * @see #lockEnvironment(boolean)
+&nbsp;	 */
+&nbsp;	public boolean isLocked() {
+<b class="nc">&nbsp;		return locked;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Access to a parameter in the environment.
+&nbsp;	 * 
+&nbsp;	 * @param parameter
+&nbsp;	 *            The parameter name.
+&nbsp;	 * @return The parameter value (empty string if not set).
+&nbsp;	 */
+&nbsp;	public String getParameter(String parameter) {
+<b class="nc">&nbsp;		String p = parameters.get(parameter);</b>
+&nbsp;
+<b class="nc">&nbsp;		return (p == null) ? &quot;&quot; : p;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the given paramter exist.
+&nbsp;	 * 
+&nbsp;	 * @param parameter
+&nbsp;	 *            The parameter name.
+&nbsp;	 * @return True if the given paramter name points to a value.
+&nbsp;	 */
+&nbsp;	public boolean hasParameter(String parameter) {
+<b class="nc">&nbsp;		return (parameters.get(parameter) != null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Check a parameter expected to be of boolean type. This method returns &quot;true&quot;
+&nbsp;	 * if the parameter exists and has a value that is &quot;1&quot;, &quot;true&quot;, &quot;on&quot; or &quot;yes&quot;
+&nbsp;	 * (with any possible combination of upper or lower-case letters). For any other
+&nbsp;	 * values of the parameter or if the parameter does not exist in the
+&nbsp;	 * environment, &quot;false&quot; is returned.
+&nbsp;	 * 
+&nbsp;	 * @param parameter
+&nbsp;	 *            The parameter name.
+&nbsp;	 * @return True if the parameter value means &quot;true&quot;, false for any other value
+&nbsp;	 *         or if the parameter does not exist.
+&nbsp;	 * @see #getBooleanParameteri(String)
+&nbsp;	 */
+&nbsp;	public boolean getBooleanParameter(String parameter) {
+<b class="nc">&nbsp;		int val = getBooleanParameteri(parameter);</b>
+&nbsp;
+<b class="nc">&nbsp;		return (val == 1);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Check a parameter expected to be of boolean type. This method returns the
+&nbsp;	 * value 1 if the parameter has value &quot;1&quot;, &quot;true&quot;, &quot;on&quot;, &quot;yes&quot; (the case does
+&nbsp;	 * not matter). Else it returns 0. To account the case of non-existing
+&nbsp;	 * parameters, this method returns -1 if the given parameter does not exist.
+&nbsp;	 * 
+&nbsp;	 * @param parameter
+&nbsp;	 *            The parameter name.
+&nbsp;	 * @return 1 if the parameter value means &quot;true&quot;, 0 if it has any other value,
+&nbsp;	 *         or -1 if it does not exist.
+&nbsp;	 * @see #getBooleanParameter(String)
+&nbsp;	 */
+&nbsp;	public int getBooleanParameteri(String parameter) {
+<b class="nc">&nbsp;		String p = parameters.get(parameter);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (p != null) {</b>
+<b class="nc">&nbsp;			p = p.toLowerCase();</b>
+&nbsp;
+<b class="nc">&nbsp;			if (p.equals(&quot;1&quot;))</b>
+<b class="nc">&nbsp;				return 1;</b>
+<b class="nc">&nbsp;			if (p.equals(&quot;true&quot;))</b>
+<b class="nc">&nbsp;				return 1;</b>
+<b class="nc">&nbsp;			if (p.equals(&quot;on&quot;))</b>
+<b class="nc">&nbsp;				return 1;</b>
+<b class="nc">&nbsp;			if (p.equals(&quot;yes&quot;))</b>
+<b class="nc">&nbsp;				return 1;</b>
+&nbsp;
+<b class="nc">&nbsp;			return 0;</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return -1;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Get the value of a parameter that is expected to be a number. If the
+&nbsp;	 * parameter does not exist or is not a number, 0 is returned.
+&nbsp;	 * 
+&nbsp;	 * @param parameter
+&nbsp;	 *            The parameter name.
+&nbsp;	 * @return The numeric value of the parameter. 0 if the parameter does not exist
+&nbsp;	 *         or is not a number.
+&nbsp;	 */
+&nbsp;	public double getNumberParameter(String parameter) {
+<b class="nc">&nbsp;		String p = parameters.get(parameter);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (p != null) {</b>
+&nbsp;			try {
+<b class="nc">&nbsp;				return Double.parseDouble(p);</b>
+<b class="nc">&nbsp;			} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;				return 0;</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return 0;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Returns the number of parameters found in the configuration file.
+&nbsp;	 * 
+&nbsp;	 * @return The number of parameters found in the configuration file.
+&nbsp;	 */
+&nbsp;	public int getParameterCount() {
+<b class="nc">&nbsp;		return parameters.size();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set of all parameter names.
+&nbsp;	 * 
+&nbsp;	 * @return A set of all the names identifying parameters in this environment.
+&nbsp;	 */
+&nbsp;	public Set&lt;String&gt; getParametersKeySet() {
+<b class="nc">&nbsp;		return parameters.keySet();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Generate a new Environment object with a deep copy of the elements this
+&nbsp;	 * object.
+&nbsp;	 * 
+&nbsp;	 * @return An Environment object identical to this one
+&nbsp;	 */
+&nbsp;	@Override
+&nbsp;	public Environment clone() {
+<b class="nc">&nbsp;		Environment e = new Environment();</b>
+<b class="nc">&nbsp;		e.configFileName = configFileName;</b>
+<b class="nc">&nbsp;		e.configFileRead = configFileRead;</b>
+<b class="nc">&nbsp;		e.locked = locked;</b>
+<b class="nc">&nbsp;		for (String key : parameters.keySet()) {</b>
+<b class="nc">&nbsp;			e.parameters.put(key, parameters.get(key));</b>
+<b class="nc">&nbsp;		}</b>
+<b class="nc">&nbsp;		return e;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the value of a parameter. If the parameter already exists its old value
+&nbsp;	 * is overwritten. This works only if the environment is not locked.
+&nbsp;	 * 
+&nbsp;	 * @param parameter
+&nbsp;	 *            The parameter name.
+&nbsp;	 * @param value
+&nbsp;	 *            The new parameter value.
+&nbsp;	 * @see #isLocked()
+&nbsp;	 * @see #lockEnvironment(boolean)
+&nbsp;	 */
+&nbsp;	public void setParameter(String parameter, String value) {
+<b class="nc">&nbsp;		if (!locked) {</b>
+<b class="nc">&nbsp;			parameters.put(parameter, value);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			if (parameters.get(parameter) != null)</b>
+<b class="nc">&nbsp;				parameters.put(parameter, value);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Disallow the addition of new parameters. The already declared parameters are
+&nbsp;	 * still modifiable, but no new parameter can be added.
+&nbsp;	 * 
+&nbsp;	 * @param on
+&nbsp;	 *            If true the environment is locked.
+&nbsp;	 */
+&nbsp;	public void lockEnvironment(boolean on) {
+<b class="nc">&nbsp;		locked = on;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Initialize all the fields of the given object whose name correspond to
+&nbsp;	 * parameters of this environment. This works only if the object to initialize
+&nbsp;	 * provides methods that begins by &quot;set&quot;. For example if the object provides a
+&nbsp;	 * method named &quot;setThing(int value)&quot;, and if there is a parameter named &quot;thing&quot;
+&nbsp;	 * in this environment and its value is convertible to an integer, then the
+&nbsp;	 * method &quot;setThing()&quot; will be invoked on the object with the correct value.
+&nbsp;	 * 
+&nbsp;	 * @see #initializeFieldsOf(Object, String[])
+&nbsp;	 * @see #initializeFieldsOf(Object, Collection)
+&nbsp;	 * @param object
+&nbsp;	 *            The object to initialize.
+&nbsp;	 */
+&nbsp;	public void initializeFieldsOf(Object object) {
+<b class="nc">&nbsp;		Method[] methods = object.getClass().getMethods();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (Method method : methods) {</b>
+<b class="nc">&nbsp;			if (method.getName().startsWith(&quot;set&quot;)) {</b>
+<b class="nc">&nbsp;				Class&lt;?&gt; types[] = method.getParameterTypes();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (types.length == 1) {</b>
+<b class="nc">&nbsp;					String name = method.getName().substring(3, 4).toLowerCase() + method.getName().substring(4);</b>
+<b class="nc">&nbsp;					String value = parameters.get(name);</b>
+&nbsp;
+<b class="nc">&nbsp;					if (value != null) {</b>
+<b class="nc">&nbsp;						invokeSetMethod(object, method, types, name, value);</b>
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Initialize all the fields of the given object that both appear in the given
+&nbsp;	 * field list and whose name correspond to parameters of this environment. See
+&nbsp;	 * the {@link #initializeFieldsOf(Object)} method description.
+&nbsp;	 * 
+&nbsp;	 * @see #initializeFieldsOf(Object)
+&nbsp;	 * @see #initializeFieldsOf(Object, Collection)
+&nbsp;	 * @param object
+&nbsp;	 *            The object to initialize.
+&nbsp;	 * @param fieldList
+&nbsp;	 *            The name of the fields to initialize in the object.
+&nbsp;	 */
+&nbsp;	public void initializeFieldsOf(Object object, String... fieldList) {
+<b class="nc">&nbsp;		Method[] methods = object.getClass().getMethods();</b>
+<b class="nc">&nbsp;		HashSet&lt;String&gt; names = new HashSet&lt;String&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String s : fieldList)</b>
+<b class="nc">&nbsp;			names.add(s);</b>
+&nbsp;
+<b class="nc">&nbsp;		for (Method method : methods) {</b>
+<b class="nc">&nbsp;			if (method.getName().startsWith(&quot;set&quot;)) {</b>
+<b class="nc">&nbsp;				Class&lt;?&gt; types[] = method.getParameterTypes();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (types.length == 1) {</b>
+<b class="nc">&nbsp;					String name = method.getName().substring(3, 4).toLowerCase() + method.getName().substring(4);</b>
+&nbsp;
+<b class="nc">&nbsp;					if (names.contains(name)) {</b>
+<b class="nc">&nbsp;						String value = parameters.get(name);</b>
+&nbsp;
+<b class="nc">&nbsp;						if (value != null) {</b>
+<b class="nc">&nbsp;							invokeSetMethod(object, method, types, name, value);</b>
+&nbsp;						}
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Initialize all the fields of the given object that both appear in the given
+&nbsp;	 * field list and whose name correspond to parameters of this environment. See
+&nbsp;	 * the {@link #initializeFieldsOf(Object)} method description.
+&nbsp;	 * 
+&nbsp;	 * @see #initializeFieldsOf(Object)
+&nbsp;	 * @see #initializeFieldsOf(Object, String[])
+&nbsp;	 * @param object
+&nbsp;	 *            The object to initialize.
+&nbsp;	 * @param fieldList
+&nbsp;	 *            The name of the fields to initialize in the object.
+&nbsp;	 */
+&nbsp;	protected void initializeFieldsOf(Object object, Collection&lt;String&gt; fieldList) {
+<b class="nc">&nbsp;		Method[] methods = object.getClass().getMethods();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (Method method : methods) {</b>
+<b class="nc">&nbsp;			if (method.getName().startsWith(&quot;set&quot;)) {</b>
+<b class="nc">&nbsp;				Class&lt;?&gt; types[] = method.getParameterTypes();</b>
+&nbsp;
+<b class="nc">&nbsp;				if (types.length == 1) {</b>
+<b class="nc">&nbsp;					String name = method.getName().substring(3).toLowerCase();</b>
+&nbsp;
+<b class="nc">&nbsp;					if (fieldList.contains(name)) {</b>
+<b class="nc">&nbsp;						String value = parameters.get(name);</b>
+&nbsp;
+<b class="nc">&nbsp;						if (value != null) {</b>
+<b class="nc">&nbsp;							invokeSetMethod(object, method, types, name, value);</b>
+&nbsp;						}
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void invokeSetMethod(Object object, Method method, Class&lt;?&gt; types[], String name, String value) {
+&nbsp;		try {
+&nbsp;			// XXX a way to avoid this overlong and repetitive
+&nbsp;			// list of setters ?
+&nbsp;
+<b class="nc">&nbsp;			if (types[0] == Long.TYPE) {</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					long val = Long.parseLong(value);</b>
+<b class="nc">&nbsp;					method.invoke(object, new Long(val));</b>
+<b class="nc">&nbsp;				} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;					logger.warning(String.format(&quot;cannot set &#39;%s&#39; to the value &#39;%s&#39;, values is not a long%n&quot;,</b>
+<b class="nc">&nbsp;							method.toString(), value));</b>
+<b class="nc">&nbsp;				}</b>
+<b class="nc">&nbsp;			} else if (types[0] == Integer.TYPE) {</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					int val = (int) Double.parseDouble(value);</b>
+<b class="nc">&nbsp;					method.invoke(object, new Integer(val));</b>
+<b class="nc">&nbsp;				} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;					logger.warning(String.format(&quot;cannot set &#39;%s&#39; to the value &#39;%s&#39;, values is not a int%n&quot;,</b>
+<b class="nc">&nbsp;							method.toString(), value));</b>
+<b class="nc">&nbsp;				}</b>
+<b class="nc">&nbsp;			} else if (types[0] == Double.TYPE) {</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					double val = Double.parseDouble(value);</b>
+<b class="nc">&nbsp;					method.invoke(object, new Double(val));</b>
+<b class="nc">&nbsp;				} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;					logger.warning(String.format(&quot;cannot set &#39;%s&#39; to the value &#39;%s&#39;, values is not a double%n&quot;,</b>
+<b class="nc">&nbsp;							method.toString(), value));</b>
+<b class="nc">&nbsp;				}</b>
+<b class="nc">&nbsp;			} else if (types[0] == Float.TYPE) {</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					float val = Float.parseFloat(value);</b>
+<b class="nc">&nbsp;					method.invoke(object, new Float(val));</b>
+<b class="nc">&nbsp;				} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;					logger.warning(String.format(&quot;cannot set &#39;%s&#39; to the value &#39;%s&#39;, values is not a float%n&quot;,</b>
+<b class="nc">&nbsp;							method.toString(), value));</b>
+<b class="nc">&nbsp;				}</b>
+<b class="nc">&nbsp;			} else if (types[0] == Boolean.TYPE) {</b>
+&nbsp;				try {
+<b class="nc">&nbsp;					boolean val = false;</b>
+<b class="nc">&nbsp;					value = value.toLowerCase();</b>
+&nbsp;
+<b class="nc">&nbsp;					if (value.equals(&quot;1&quot;) || value.equals(&quot;true&quot;) || value.equals(&quot;yes&quot;) || value.equals(&quot;on&quot;))</b>
+<b class="nc">&nbsp;						val = true;</b>
+&nbsp;
+<b class="nc">&nbsp;					method.invoke(object, new Boolean(val));</b>
+<b class="nc">&nbsp;				} catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;					logger.warning(String.format(&quot;cannot set &#39;%s&#39; to the value &#39;%s&#39;, values is not a boolean%n&quot;,</b>
+<b class="nc">&nbsp;							method.toString(), value));</b>
+<b class="nc">&nbsp;				}</b>
+<b class="nc">&nbsp;			} else if (types[0] == String.class) {</b>
+<b class="nc">&nbsp;				method.invoke(object, value);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				logger.warning(</b>
+<b class="nc">&nbsp;						String.format(&quot;cannot match parameter &#39;%s&#39; and the method &#39;%s&#39;%n&quot;, value, method.toString()));</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} catch (InvocationTargetException ite) {</b>
+<b class="nc">&nbsp;			logger.warning(String.format(&quot;cannot invoke method &#39;%s&#39; : invocation targer error : %s%n&quot;,</b>
+<b class="nc">&nbsp;					method.toString(), ite.getMessage()));</b>
+<b class="nc">&nbsp;		} catch (IllegalAccessException iae) {</b>
+<b class="nc">&nbsp;			logger.warning(String.format(&quot;cannot invoke method &#39;%s&#39; : illegal access error : %s%n&quot;, method.toString(),</b>
+<b class="nc">&nbsp;					iae.getMessage()));</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Print all parameters to the given stream.
+&nbsp;	 * 
+&nbsp;	 * @param out
+&nbsp;	 *            The output stream to use.
+&nbsp;	 */
+&nbsp;	public void printParameters(PrintStream out) {
+<b class="nc">&nbsp;		out.println(toString());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Print all parameters the stdout.
+&nbsp;	 */
+&nbsp;	public void printParameters() {
+<b class="nc">&nbsp;		printParameters(System.out);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		return parameters.toString();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read the parameters from the given command line array. See the more complete
+&nbsp;	 * {@link #readCommandLine(String[], Collection)} method.
+&nbsp;	 * 
+&nbsp;	 * @param args
+&nbsp;	 *            The command line.
+&nbsp;	 */
+&nbsp;	public void readCommandLine(String[] args) {
+<b class="nc">&nbsp;		readCommandLine(args, null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read the parameters from the given command line array. The expected format of
+&nbsp;	 * this array is the following:
+&nbsp;	 * &lt;ul&gt;
+&nbsp;	 * &lt;li&gt;a word beginning by a &quot;-&quot; is the parameter name (for example
+&nbsp;	 * &quot;-param&quot;);&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;if this word is immediately followed by a &quot;=&quot; and another word, this word
+&nbsp;	 * is considered as its string value (for example &quot;-param=aValue&quot;);&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;If the parameter name is not followed by &quot;=&quot;, it is considered a boolean
+&nbsp;	 * option and its value is set to the string &quot;true&quot; (to set this to false simply
+&nbsp;	 * give the string &quot;-param=false&quot;);&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;If a word is found on the command line without any preceding &quot;-&quot; but is
+&nbsp;	 * followed by a &quot;=&quot; and by another word, then it is considered as a key,value
+&nbsp;	 * brace&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;If a word is found on the command line without any preceding &quot;-&quot; and is
+&nbsp;	 * not followed by any &quot;=&quot;, the it is considered to be a filename for a
+&nbsp;	 * configuration file. The method will try to open this file for reading. A
+&nbsp;	 * configuration file is composed of lines. Each line is composed of a brace
+&nbsp;	 * key/value separated by a &quot;=&quot;. If a line starts with a &quot;#&quot;, then it is
+&nbsp;	 * considered as a comment. Finally if no format is recognized the line is
+&nbsp;	 * inserted to the &lt;code&gt;trashcan&lt;/code&gt;.&lt;/li&gt;
+&nbsp;	 * &lt;/ul&gt;
+&nbsp;	 * 
+&nbsp;	 * @param args
+&nbsp;	 *            The command line.
+&nbsp;	 * @param trashcan
+&nbsp;	 *            Will be filled by the set of unparsed strings (can be null if
+&nbsp;	 *            these strings can be ignored).
+&nbsp;	 */
+&nbsp;	public void readCommandLine(String[] args, Collection&lt;String&gt; trashcan) {
+<b class="nc">&nbsp;		for (String arg : args) {</b>
+<b class="nc">&nbsp;			boolean startsWithMinus = arg.startsWith(&quot;-&quot;);</b>
+<b class="nc">&nbsp;			int equalPos = arg.indexOf(&#39;=&#39;);</b>
+<b class="nc">&nbsp;			String value = &quot;true&quot;;</b>
+<b class="nc">&nbsp;			if (equalPos &gt;= 0) {</b>
+<b class="nc">&nbsp;				value = arg.substring(equalPos + 1);</b>
+<b class="nc">&nbsp;				if (startsWithMinus) {</b>
+<b class="nc">&nbsp;					arg = arg.substring(1, equalPos);</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					arg = arg.substring(0, equalPos);</b>
+&nbsp;				}
+<b class="nc">&nbsp;				parameters.put(arg, value);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				if (startsWithMinus) {</b>
+<b class="nc">&nbsp;					arg = arg.substring(1);</b>
+<b class="nc">&nbsp;					parameters.put(arg, value);</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					readConfigFile(arg, trashcan);</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Internal method that reads a configuration file.
+&nbsp;	 */
+&nbsp;	protected void readConfigFile(String filename, Collection&lt;String&gt; trashcan) {
+&nbsp;		BufferedReader br;
+<b class="nc">&nbsp;		int count = 0;</b>
+&nbsp;		try {
+<b class="nc">&nbsp;			br = new BufferedReader(new FileReader(filename));</b>
+&nbsp;			String str;
+<b class="nc">&nbsp;			while ((str = br.readLine()) != null) {</b>
+<b class="nc">&nbsp;				count++;</b>
+<b class="nc">&nbsp;				if (str.length() &gt; 0 &amp;&amp; !str.substring(0, 1).equals(&quot;#&quot;)) {</b>
+<b class="nc">&nbsp;					String[] val = str.split(&quot;=&quot;);</b>
+<b class="nc">&nbsp;					if (val.length != 2) {</b>
+<b class="nc">&nbsp;						if (val.length == 1) {</b>
+<b class="nc">&nbsp;							parameters.put(val[0].trim(), &quot;true&quot;);</b>
+&nbsp;						} else {
+<b class="nc">&nbsp;							logger.warning(String.format(</b>
+&nbsp;									&quot;Something is wrong with the configuration file \&quot;%s\&quot;near line %d :\n %s&quot;,
+<b class="nc">&nbsp;									filename, count, str));</b>
+<b class="nc">&nbsp;							if (trashcan != null) {</b>
+<b class="nc">&nbsp;								trashcan.add(str);</b>
+&nbsp;							}
+&nbsp;						}
+&nbsp;					} else {
+<b class="nc">&nbsp;						String s0 = val[0].trim();</b>
+<b class="nc">&nbsp;						String s1 = val[1].trim();</b>
+<b class="nc">&nbsp;						parameters.put(s0, s1);</b>
+&nbsp;					}
+<b class="nc">&nbsp;				}</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;		} catch (FileNotFoundException fnfe) {</b>
+<b class="nc">&nbsp;			System.err.printf(&quot;Tried to open \&quot;%s\&quot; as a config file: file not found.%n&quot;, filename);</b>
+<b class="nc">&nbsp;			if (trashcan != null) {</b>
+<b class="nc">&nbsp;				trashcan.add(filename);</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} catch (IOException ioe) {</b>
+<b class="nc">&nbsp;			ioe.printStackTrace();</b>
+<b class="nc">&nbsp;			System.exit(0);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Save the curent parameters to a file.
+&nbsp;	 * 
+&nbsp;	 * @param fileName
+&nbsp;	 *            Name of the file to save the config in.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             For any output error on the given file name.
+&nbsp;	 */
+&nbsp;	public void writeParameterFile(String fileName) throws IOException {
+<b class="nc">&nbsp;		BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));</b>
+<b class="nc">&nbsp;		Set&lt;String&gt; ks = parameters.keySet();</b>
+&nbsp;
+<b class="nc">&nbsp;		for (String key : ks) {</b>
+<b class="nc">&nbsp;			bw.write(key + &quot; = &quot; + parameters.get(key));</b>
+<b class="nc">&nbsp;			bw.newLine();</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		bw.close();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read the default configuration file. Once this file has been correctly
+&nbsp;	 * parsed, the {@link #configFileRead} boolean is set to true.
+&nbsp;	 * 
+&nbsp;	 * @see #configFileName
+&nbsp;	 */
+&nbsp;	protected void readConfigurationFile() {
+&nbsp;		try {
+<b class="nc">&nbsp;			readParameterFile(configFileName);</b>
+<b class="nc">&nbsp;			configFileRead = true;</b>
+<b class="nc">&nbsp;		} catch (IOException ioe) {</b>
+<b class="nc">&nbsp;			logger.log(Level.WARNING, String.format(&quot;%-5s : %s : %s\n&quot;, &quot;Warning&quot;, &quot;Environment&quot;,</b>
+&nbsp;					&quot;Something wrong while reading the configuration file.&quot;), ioe);
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read a parameter file. The format of this file is as follows:
+&nbsp;	 * &lt;ul&gt;
+&nbsp;	 * &lt;li&gt;Each line contains a parameter setting or a comment;&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;Lines beginning by a &quot;#&quot; are considered comments (be careful, a &quot;#&quot; in
+&nbsp;	 * the middle of a line &lt;b&gt;is not&lt;/b&gt; a comment);&lt;/li&gt;
+&nbsp;	 * &lt;li&gt;parameters settings are of the form &quot;name=value&quot;, spaces are allowed, but
+&nbsp;	 * space before and after the parameter name of value will be stripped.&lt;/li&gt;
+&nbsp;	 * &lt;/ul&gt;
+&nbsp;	 * 
+&nbsp;	 * @param fileName
+&nbsp;	 *            Name of the parameter file to read.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             For any error with the given parameter file name.
+&nbsp;	 */
+&nbsp;	public void readParameterFile(String fileName) throws IOException {
+&nbsp;		BufferedReader br;
+<b class="nc">&nbsp;		int count = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;		br = new BufferedReader(new FileReader(fileName));</b>
+&nbsp;
+&nbsp;		String str;
+&nbsp;
+<b class="nc">&nbsp;		while ((str = br.readLine()) != null) {</b>
+<b class="nc">&nbsp;			count++;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (str.length() &gt; 0 &amp;&amp; !str.startsWith(&quot;#&quot;)) {</b>
+<b class="nc">&nbsp;				String[] val = str.split(&quot;=&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (val.length != 2) {</b>
+<b class="nc">&nbsp;					logger.warning(String.format(&quot;%-5s : %s : %s\n&quot;, &quot;Warn&quot;, &quot;Environment&quot;,</b>
+&nbsp;							&quot;Something is wrong in your configuration file near line &quot; + count + &quot; : \n&quot;
+<b class="nc">&nbsp;									+ Arrays.toString(val)));</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					String s0 = val[0].trim();</b>
+<b class="nc">&nbsp;					String s1 = val[1].trim();</b>
+&nbsp;
+<b class="nc">&nbsp;					setParameter(s0, s1);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			}</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		br.close();</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,337 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Layout</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.layout</a>
+</div>
+
+<h1>Coverage Summary for Class: Layout (org.graphstream.ui.layout)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Layout</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-02-19
+&nbsp; * 
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.layout;
+&nbsp;
+&nbsp;import org.graphstream.stream.Pipe;
+&nbsp;import org.graphstream.ui.geom.Point3;
+&nbsp;
+&nbsp;/**
+&nbsp; * Layout algorithm interface.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The layout algorithm role is to compute the best possible positions of nodes
+&nbsp; * in a given space (2D or 3D) and eventually break points for edges if
+&nbsp; * supported using either aesthetic constraints, hierarchical constraints or
+&nbsp; * grouping constraints. As there are many such algorithms with distinct
+&nbsp; * qualities and uses, this interface defines what is awaited from a general
+&nbsp; * layout algorithm.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * This algorithm is a {@link Pipe} that receives notifications on the graph
+&nbsp; * eventually maintain an internal representation of it (or for some of them
+&nbsp; * work directly on the graph), and in return send graph events to give each
+&nbsp; * node a position via &quot;xyz&quot; attributes. Some algorithms may also export more
+&nbsp; * information for nodes and edges. For example some algorithms are also able to
+&nbsp; * work on the shape of an edge or the shape of a node.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The layout algorithm described by this interface may be iterative. Some
+&nbsp; * algorithm will compute directly their final representation of the graph in
+&nbsp; * one pass. However most algorithms will probably work step by step until a
+&nbsp; * global quality function is satisfied. This is the best way to handle evolving
+&nbsp; * graphs.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * This behavior has been chosen because this algorithm is often run aside the
+&nbsp; * main thread that works on the graph. We want a thread to be able to compute a
+&nbsp; * new layout on its side, without disturbing the main algorithm run on the
+&nbsp; * graph. See the {@link org.graphstream.ui.layout.LayoutRunner} for an helper
+&nbsp; * class allowing to create such a thread.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * To be notified of the layout changes dynamically, you must register as a sink
+&nbsp; * of the layout.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The graph viewers in the UI package often use a layout algorithm to present
+&nbsp; * graphs on screen.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * @since 20050706
+&nbsp; */
+&nbsp;public interface Layout extends Pipe {
+&nbsp;	/**
+&nbsp;	 * Name of the layout algorithm.
+&nbsp;	 */
+&nbsp;	String getLayoutAlgorithmName();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * How many nodes moved during the last step?. When this method returns zero,
+&nbsp;	 * the layout stabilized.
+&nbsp;	 */
+&nbsp;	int getNodeMovedCount();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Estimate of how close to stabilization the layout algorithm is.
+&nbsp;	 * 
+&nbsp;	 * @return a value between 0 and 1. 1 means fully stabilized.
+&nbsp;	 */
+&nbsp;	double getStabilization();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Above which value a correct stabilization is achieved?
+&nbsp;	 * 
+&nbsp;	 * @return The stabilization limit.
+&nbsp;	 */
+&nbsp;	double getStabilizationLimit();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Smallest point in space of the layout bounding box.
+&nbsp;	 */
+&nbsp;	Point3 getLowPoint();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Largest point in space of the layout bounding box.
+&nbsp;	 */
+&nbsp;	Point3 getHiPoint();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Number of calls made to step() so far.
+&nbsp;	 */
+&nbsp;	int getSteps();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Time in nanoseconds used by the last call to step().
+&nbsp;	 */
+&nbsp;	long getLastStepTime();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The current layout algorithm quality. A number between 0 and 1 with 1 the
+&nbsp;	 * highest (but probably slowest) quality.
+&nbsp;	 * 
+&nbsp;	 * @return A number between 0 and 1.
+&nbsp;	 */
+&nbsp;	double getQuality();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The current layout force.
+&nbsp;	 * 
+&nbsp;	 * @return A real number.
+&nbsp;	 */
+&nbsp;	double getForce();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Clears the whole nodes and edges structures
+&nbsp;	 */
+&nbsp;	void clear();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The general &quot;speed&quot; of the algorithm. For some algorithm this will have no
+&nbsp;	 * effect. For most &quot;dynamic&quot; algorithms, this change the way iterations toward
+&nbsp;	 * stabilization are done.
+&nbsp;	 * 
+&nbsp;	 * @param value
+&nbsp;	 *            A number in [0..1].
+&nbsp;	 */
+&nbsp;	void setForce(double value);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Change the stabilization limit for this layout algorithm.
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The stabilization is a number between 0 and 1 that indicates how close to
+&nbsp;	 * stabilization (no nodes need to move) the layout is. The value 1 means the
+&nbsp;	 * layout is fully stabilized. Naturally this is often only an indication only,
+&nbsp;	 * for some algorithms, it is difficult to determine if the layout is correct or
+&nbsp;	 * acceptable enough. You can get the actual stabilization limit using
+&nbsp;	 * {@link #getStabilizationLimit()}. You can get the actual stabilization using
+&nbsp;	 * {@link #getStabilization()}.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * Be careful, most layout classes do not use the stabilization limit, this
+&nbsp;	 * number is mostly used the process that control the layout, like the
+&nbsp;	 * {@link LayoutRunner} for example. The stabilization limit is only an
+&nbsp;	 * indication with a default set for each layout algorithm. However this default
+&nbsp;	 * can be changed using this method, or by storing on the graph an attribute
+&nbsp;	 * &quot;layout.stabilization-limit&quot; (or &quot;layout.stabilisation-limit&quot;).
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The convention is that the value 0 means that the process controlling the
+&nbsp;	 * layout will not stop the layout (will therefore not consider the
+&nbsp;	 * stabilization limit). In other words the layout will compute endlessly.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * @param value
+&nbsp;	 *            The new stabilization limit, 0 means no need to stabilize. Else a
+&nbsp;	 *            value larger than zero or equal to 1 is accepted.
+&nbsp;	 */
+&nbsp;	void setStabilizationLimit(double value);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Set the overall quality level, a number between 0 and 1 with 1 the highest
+&nbsp;	 * quality available, but often with a slower computation.
+&nbsp;	 * 
+&nbsp;	 * @param qualityLevel
+&nbsp;	 *            The quality level, a number between 0 and 1.
+&nbsp;	 */
+&nbsp;	void setQuality(double qualityLevel);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If true, node informations messages are sent for every node. This is mainly
+&nbsp;	 * for debugging and slows down the process a lot. The contents of the node
+&nbsp;	 * information is specific to the algorithm, and sent via a specific
+&nbsp;	 * &quot;layout.info&quot; attribute.
+&nbsp;	 * 
+&nbsp;	 * @param send
+&nbsp;	 *            If true, send node informations to a &quot;layout.info&quot; attribute.
+&nbsp;	 */
+&nbsp;	void setSendNodeInfos(boolean send);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a random vector whose length is 10% of the size of the graph to all node
+&nbsp;	 * positions.
+&nbsp;	 */
+&nbsp;	void shake();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Move a node by force to a new location. It is preferable to first freeze the
+&nbsp;	 * node before moving it by force, and then un-freeze it.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 * @param x
+&nbsp;	 *            The node new X.
+&nbsp;	 * @param y
+&nbsp;	 *            The node new Y.
+&nbsp;	 * @param z
+&nbsp;	 *            The node new Z.
+&nbsp;	 */
+&nbsp;	void moveNode(String id, double x, double y, double z);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Freeze or un-freeze a node. The freezed node position will not be changed by
+&nbsp;	 * the algorithm until un-freezed.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 * @param frozen
+&nbsp;	 *            If true the node is frozen.
+&nbsp;	 */
+&nbsp;	void freezeNode(String id, boolean frozen);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Method to call repeatedly to compute the layout.
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * This method implements the layout algorithm proper. It must be called in a
+&nbsp;	 * loop, until the layout stabilizes. You can know if the layout is stable by
+&nbsp;	 * using the {@link #getNodeMovedCount()} method that returns the number of node
+&nbsp;	 * that have moved during the last call to step().
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 * 
+&nbsp;	 * &lt;p&gt;
+&nbsp;	 * The listener is called by this method, therefore each call to step() will
+&nbsp;	 * also trigger layout events, allowing to reproduce the layout process
+&nbsp;	 * graphically for example. You can insert the listener only when the layout
+&nbsp;	 * stabilized, and then call step() anew if you do not want to observe the
+&nbsp;	 * layout process.
+&nbsp;	 * &lt;/p&gt;
+&nbsp;	 */
+&nbsp;	void compute();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

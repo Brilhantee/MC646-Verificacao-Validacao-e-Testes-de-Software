@@ -1,0 +1,637 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Viewer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.view</a>
+</div>
+
+<h1>Coverage Summary for Class: Viewer (org.graphstream.ui.view)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Viewer</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/25)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/88)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Viewer$CloseFramePolicy</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Viewer$ThreadingModel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/92)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-07-26
+&nbsp; * 
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author lucaslugao &lt;lucaslugaoguimaraes@gmail.com&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.view;
+&nbsp;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.TreeMap;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.stream.ProxyPipe;
+&nbsp;import org.graphstream.stream.Source;
+&nbsp;import org.graphstream.stream.thread.ThreadProxyPipe;
+&nbsp;import org.graphstream.ui.geom.Point3;
+&nbsp;import org.graphstream.ui.graphicGraph.GraphicGraph;
+&nbsp;import org.graphstream.ui.layout.Layout;
+&nbsp;import org.graphstream.ui.layout.LayoutRunner;
+&nbsp;import org.graphstream.ui.layout.Layouts;
+&nbsp;import org.graphstream.ui.view.camera.Camera;
+&nbsp;
+&nbsp;/**
+&nbsp; * Set of views on a graphic graph.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The viewer class is in charge of maintaining :
+&nbsp; * &lt;ul&gt;
+&nbsp; * &lt;li&gt;A &quot;graphic graph&quot; (a special graph that internally stores the graph under
+&nbsp; * the form of style sets of &quot;graphic&quot; elements, suitable to draw the graph, but
+&nbsp; * not to adapted to used it as a general graph),&lt;/li&gt;
+&nbsp; * &lt;li&gt;The eventual proxy pipe from which the events come from (but graph events
+&nbsp; * can come from any kind of source),&lt;/li&gt;
+&nbsp; * &lt;li&gt;A default view, and eventually more views on the graphic graph.&lt;/li&gt;
+&nbsp; * &lt;li&gt;A flag that allows to repaint the view only if the graphic graph changed.
+&nbsp; * &lt;li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The graphic graph can be created by the viewer or given at construction (to
+&nbsp; * share it with another viewer).
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * &lt;u&gt;Once created, the viewer runs in a loop inside the UI thread. You cannot
+&nbsp; * call methods on it directly if you are not in this thread&lt;/u&gt;. The only
+&nbsp; * operation that you can use in other threads is the constructor, the
+&nbsp; * {@link #addView(View)}, {@link #removeView(String)} and the {@link #close()}
+&nbsp; * methods. Other methods are not protected from concurrent accesses.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Some constructors allow a {@link ProxyPipe} as argument. If given, the
+&nbsp; * graphic graph is made listener of this pipe and the pipe is &quot;pumped&quot; during
+&nbsp; * the view loop. This allows to run algorithms on a graph in the main thread
+&nbsp; * (or any other thread) while letting the viewer run in the ui thread.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Be very careful: due to the nature of graph events in GraphStream, the viewer
+&nbsp; * is not aware of events that occured on the graph &lt;u&gt;before&lt;/u&gt; its creation.
+&nbsp; * There is a special mechanism that replay the graph if you use a proxy pipe or
+&nbsp; * if you pass the graph directly. However, when you create the viewer by
+&nbsp; * yourself and only pass a {@link Source}, the viewer &lt;u&gt;will not&lt;/u&gt; display
+&nbsp; * the events that occured on the source before it is connected to it.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+<b class="nc">&nbsp;public abstract class Viewer {</b>
+&nbsp;
+&nbsp;	// Attributes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * How does the viewer synchronise its internal graphic graph with the graph
+&nbsp;	 * displayed. The graph we display can be in the Swing thread (as will be the
+&nbsp;	 * viewer, therefore in the same thread as the viewer), in another thread, or on
+&nbsp;	 * a distant machine.
+&nbsp;	 */
+<b class="nc">&nbsp;	public enum ThreadingModel {</b>
+<b class="nc">&nbsp;		GRAPH_IN_GUI_THREAD, GRAPH_IN_ANOTHER_THREAD, GRAPH_ON_NETWORK</b>
+&nbsp;	};
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Name of the default view.
+&nbsp;	 */
+&nbsp;	public abstract String getDefaultID();
+&nbsp;
+&nbsp;	// Attribute
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If true the graph we display is in another thread, the synchronisation
+&nbsp;	 * between the graph and the graphic graph must therefore use thread proxies.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected boolean graphInAnotherThread = true;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The graph observed by the views.
+&nbsp;	 */
+&nbsp;	protected GraphicGraph graph;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If we have to pump events by ourself.
+&nbsp;	 */
+&nbsp;	protected ProxyPipe pumpPipe;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If we take graph events from a source in this thread.
+&nbsp;	 */
+&nbsp;	protected Source sourceInSameThread;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The set of views.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected final Map&lt;String, View&gt; views = new TreeMap&lt;String, View&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * What to do when a view frame is closed.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected CloseFramePolicy closeFramePolicy = CloseFramePolicy.EXIT;</b>
+&nbsp;
+&nbsp;	// Attribute
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Optional layout algorithm running in another thread.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected LayoutRunner optLayout = null;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * If there is a layout in another thread, this is the pipe coming from it.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected ProxyPipe layoutPipeIn = null;</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * What to do when a view frame is closed.
+&nbsp;	 */
+<b class="nc">&nbsp;	public static enum CloseFramePolicy {</b>
+<b class="nc">&nbsp;		CLOSE_VIEWER, HIDE_ONLY, EXIT</b>
+&nbsp;	};
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a new unique identifier for a graph.
+&nbsp;	 * 
+&nbsp;	 * @return The new identifier.
+&nbsp;	 */
+&nbsp;	public String newGGId() {
+<b class="nc">&nbsp;		return String.format(&quot;GraphicGraph_%d&quot;, (int) (Math.random() * 10000));</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Initialise the viewer.
+&nbsp;	 * 
+&nbsp;	 * @param graph
+&nbsp;	 *            The graphic graph.
+&nbsp;	 * @param ppipe
+&nbsp;	 *            The source of events from another thread or machine (null if
+&nbsp;	 *            source != null).
+&nbsp;	 * @param source
+&nbsp;	 *            The source of events from this thread (null if ppipe != null).
+&nbsp;	 */
+&nbsp;	public abstract void init(GraphicGraph graph, ProxyPipe ppipe, Source source);
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Close definitively this viewer and all its views.
+&nbsp;	 */
+&nbsp;	public abstract void close();
+&nbsp;	// Access
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * What to do when a frame is closed.
+&nbsp;	 */
+&nbsp;	public CloseFramePolicy getCloseFramePolicy() {
+<b class="nc">&nbsp;		return closeFramePolicy;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New proxy pipe on events coming from the viewer through a thread.
+&nbsp;	 * 
+&nbsp;	 * @return The new proxy pipe.
+&nbsp;	 */
+&nbsp;	public ProxyPipe newThreadProxyOnGraphicGraph() {
+<b class="nc">&nbsp;		ThreadProxyPipe tpp = new ThreadProxyPipe();</b>
+<b class="nc">&nbsp;		tpp.init(graph);</b>
+<b class="nc">&nbsp;		return tpp;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * New viewer pipe on the events coming from the viewer through a thread.
+&nbsp;	 * 
+&nbsp;	 * @return The new viewer pipe.
+&nbsp;	 */
+&nbsp;	public ViewerPipe newViewerPipe() {
+<b class="nc">&nbsp;		ThreadProxyPipe tpp = new ThreadProxyPipe();</b>
+<b class="nc">&nbsp;		tpp.init(graph, false);</b>
+&nbsp;
+<b class="nc">&nbsp;		enableXYZfeedback(true);</b>
+&nbsp;
+<b class="nc">&nbsp;		return new ViewerPipe(String.format(&quot;viewer_%d&quot;, (int) (Math.random() * 10000)), tpp);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The underlying graphic graph. Caution : Use the returned graph only in the UI
+&nbsp;	 * thread !!
+&nbsp;	 */
+&nbsp;	public GraphicGraph getGraphicGraph() {
+<b class="nc">&nbsp;		return graph;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The view that correspond to the given identifier.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The view identifier.
+&nbsp;	 * @return A view or null if not found.
+&nbsp;	 */
+&nbsp;	public View getView(String id) {
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			return views.get(id);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The default view. This is a shortcut to a call to {@link #getView(String)}
+&nbsp;	 * with {@link #DEFAULT_VIEW_ID} as parameter.
+&nbsp;	 * 
+&nbsp;	 * @return The default view or null if no default view has been installed.
+&nbsp;	 */
+&nbsp;	public View getDefaultView() {
+<b class="nc">&nbsp;		return getView(getDefaultID());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Command
+&nbsp;	/**
+&nbsp;	 * Create a new instance of the default graph renderer.
+&nbsp;	 */
+&nbsp;	public abstract GraphRenderer&lt;?, ?&gt; newDefaultGraphRenderer();
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Build the default graph view and insert it. The view identifier is
+&nbsp;	 * {@link #DEFAULT_VIEW_ID}. You can request the view to be open in its own
+&nbsp;	 * frame.
+&nbsp;	 * 
+&nbsp;	 * @param openInAFrame
+&nbsp;	 *            It true, the view is placed in a frame, else the view is only
+&nbsp;	 *            created and you must embed it yourself in your application.
+&nbsp;	 */
+&nbsp;	public View addDefaultView(boolean openInAFrame) {
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			GraphRenderer&lt;?, ?&gt; renderer = newDefaultGraphRenderer();</b>
+<b class="nc">&nbsp;			View view = renderer.createDefaultView(this, getDefaultID());</b>
+&nbsp;
+<b class="nc">&nbsp;			addView(view);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (openInAFrame)</b>
+<b class="nc">&nbsp;				view.openInAFrame(true);</b>
+&nbsp;
+<b class="nc">&nbsp;			return view;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a view using its identifier. If there was already a view with this
+&nbsp;	 * identifier, it is closed and returned (if different of the one added).
+&nbsp;	 * 
+&nbsp;	 * @param view
+&nbsp;	 *            The view to add.
+&nbsp;	 * @return The old view that was at the given identifier, if any, else null.
+&nbsp;	 */
+&nbsp;	public View addView(View view) {
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			View old = views.put(view.getIdView(), view);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (old != null &amp;&amp; old != view)</b>
+<b class="nc">&nbsp;				old.close(graph);</b>
+&nbsp;
+<b class="nc">&nbsp;			return old;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a new default view with a specific renderer. If a view with the same id
+&nbsp;	 * exists, it is removed and closed. By default the view is open in a frame.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The new view identifier.
+&nbsp;	 * @param renderer
+&nbsp;	 *            The renderer to use.
+&nbsp;	 * @return The created view.
+&nbsp;	 */
+&nbsp;	public View addView(String id, GraphRenderer&lt;?, ?&gt; renderer) {
+<b class="nc">&nbsp;		return addView(id, renderer, true);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Same as {@link #addView(String, GraphRenderer)} but allows to specify that
+&nbsp;	 * the view uses a frame or not.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The new view identifier.
+&nbsp;	 * @param renderer
+&nbsp;	 *            The renderer to use.
+&nbsp;	 * @param openInAFrame
+&nbsp;	 *            If true the view is open in a frame, else the returned view is a
+&nbsp;	 *            JPanel that can be inserted in a GUI.
+&nbsp;	 * @return The created view.
+&nbsp;	 */
+&nbsp;	public View addView(String id, GraphRenderer&lt;?, ?&gt; renderer, boolean openInAFrame) {
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			View view = renderer.createDefaultView(this, id);</b>
+<b class="nc">&nbsp;			addView(view);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (openInAFrame)</b>
+<b class="nc">&nbsp;				view.openInAFrame(true);</b>
+&nbsp;
+<b class="nc">&nbsp;			return view;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove a view. The view is not closed.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The view identifier.
+&nbsp;	 */
+&nbsp;	public void removeView(String id) {
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			views.remove(id);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the overall bounds of the graphic graph according to the nodes and
+&nbsp;	 * sprites positions. We can only compute the graph bounds from the nodes and
+&nbsp;	 * sprites centres since the node and graph bounds may in certain circumstances
+&nbsp;	 * be computed according to the graph bounds. The bounds are stored in the graph
+&nbsp;	 * metrics.
+&nbsp;	 */
+&nbsp;	public void computeGraphMetrics() {
+<b class="nc">&nbsp;		graph.computeBounds();</b>
+&nbsp;
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			Point3 lo = graph.getMinPos();</b>
+<b class="nc">&nbsp;			Point3 hi = graph.getMaxPos();</b>
+<b class="nc">&nbsp;			for (final View view : views.values()) {</b>
+<b class="nc">&nbsp;				Camera camera = view.getCamera();</b>
+<b class="nc">&nbsp;				if (camera != null) {</b>
+<b class="nc">&nbsp;					camera.setBounds(lo.x, lo.y, lo.z, hi.x, hi.y, hi.z);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			}</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * What to do when the frame containing one or more views is closed.
+&nbsp;	 * 
+&nbsp;	 * @param policy
+&nbsp;	 *            The close frame policy.
+&nbsp;	 */
+&nbsp;	public void setCloseFramePolicy(CloseFramePolicy policy) {
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			closeFramePolicy = policy;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Optional layout algorithm
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Enable or disable the &quot;xyz&quot; attribute change when a node is moved in the
+&nbsp;	 * views. By default the &quot;xyz&quot; attribute is changed.
+&nbsp;	 * 
+&nbsp;	 * By default, each time a node of the graphic graph is moved, its &quot;xyz&quot;
+&nbsp;	 * attribute is reset to follow the node position. This is useful only if
+&nbsp;	 * someone listen at the graphic graph or use the graphic graph directly. But
+&nbsp;	 * this operation is quite costly. Therefore by default if this viewer runs in
+&nbsp;	 * its own thread, and the main graph is in another thread, xyz attribute change
+&nbsp;	 * will be disabled until a listener is added.
+&nbsp;	 * 
+&nbsp;	 * When the viewer is created to be used only in the ui thread, this feature is
+&nbsp;	 * always on.
+&nbsp;	 */
+&nbsp;	public void enableXYZfeedback(boolean on) {
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			graph.feedbackXYZ(on);</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Launch an automatic layout process that will position nodes in the
+&nbsp;	 * background.
+&nbsp;	 */
+&nbsp;	public void enableAutoLayout() {
+<b class="nc">&nbsp;		enableAutoLayout(Layouts.newLayoutAlgorithm());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Launch an automatic layout process that will position nodes in the
+&nbsp;	 * background.
+&nbsp;	 * 
+&nbsp;	 * @param layoutAlgorithm
+&nbsp;	 *            The algorithm to use (see Layouts.newLayoutAlgorithm() for the
+&nbsp;	 *            default algorithm).
+&nbsp;	 */
+&nbsp;	public void enableAutoLayout(Layout layoutAlgorithm) {
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			if (optLayout == null) {</b>
+&nbsp;				// optLayout = new LayoutRunner(graph, layoutAlgorithm, true,
+&nbsp;				// true);
+<b class="nc">&nbsp;				optLayout = new LayoutRunner(graph, layoutAlgorithm, true, false);</b>
+<b class="nc">&nbsp;				graph.replay();</b>
+<b class="nc">&nbsp;				layoutPipeIn = optLayout.newLayoutPipe();</b>
+<b class="nc">&nbsp;				layoutPipeIn.addAttributeSink(graph);</b>
+&nbsp;			}
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Disable the running automatic layout process, if any.
+&nbsp;	 */
+&nbsp;	public void disableAutoLayout() {
+<b class="nc">&nbsp;		synchronized (views) {</b>
+<b class="nc">&nbsp;			if (optLayout != null) {</b>
+<b class="nc">&nbsp;				((ThreadProxyPipe) layoutPipeIn).unregisterFromSource();</b>
+<b class="nc">&nbsp;				layoutPipeIn.removeSink(graph);</b>
+<b class="nc">&nbsp;				layoutPipeIn = null;</b>
+<b class="nc">&nbsp;				optLayout.release();</b>
+<b class="nc">&nbsp;				optLayout = null;</b>
+&nbsp;			}
+<b class="nc">&nbsp;		}</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/** Dirty replay of the graph. */
+&nbsp;	public void replayGraph(Graph graph) {
+&nbsp;		// Replay all graph attributes.
+&nbsp;
+<b class="nc">&nbsp;		graph.attributeKeys().forEach(key -&gt; {</b>
+<b class="nc">&nbsp;			this.graph.setAttribute(key, graph.getAttribute(key));</b>
+&nbsp;		});
+&nbsp;
+&nbsp;		// Replay all nodes and their attributes.
+&nbsp;
+<b class="nc">&nbsp;		graph.nodes().forEach(node -&gt; {</b>
+<b class="nc">&nbsp;			Node n = this.graph.addNode(node.getId());</b>
+&nbsp;
+<b class="nc">&nbsp;			node.attributeKeys().forEach(key -&gt; {</b>
+<b class="nc">&nbsp;				n.setAttribute(key, node.getAttribute(key));</b>
+&nbsp;			});
+&nbsp;		});
+&nbsp;
+&nbsp;		// Replay all edges and their attributes.
+&nbsp;
+<b class="nc">&nbsp;		graph.edges().forEach(edge -&gt; {</b>
+<b class="nc">&nbsp;			Edge e = this.graph.addEdge(edge.getId(), edge.getSourceNode().getId(), edge.getTargetNode().getId(),</b>
+<b class="nc">&nbsp;					edge.isDirected());</b>
+&nbsp;
+<b class="nc">&nbsp;			edge.attributeKeys().forEach(key -&gt; {</b>
+<b class="nc">&nbsp;				e.setAttribute(key, edge.getAttribute(key));</b>
+&nbsp;			});
+&nbsp;		});
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

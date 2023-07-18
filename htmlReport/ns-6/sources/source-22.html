@@ -1,0 +1,272 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FileSource</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.stream.file</a>
+</div>
+
+<h1>Coverage Summary for Class: FileSource (org.graphstream.stream.file)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">FileSource</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-04-17
+&nbsp; * 
+&nbsp; * @author Yoann Pigné &lt;yoann.pigne@graphstream-project.org&gt;
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.stream.file;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.Reader;
+&nbsp;import java.net.URL;
+&nbsp;
+&nbsp;import org.graphstream.stream.Source;
+&nbsp;
+&nbsp;/**
+&nbsp; * Source of graph events coming from a file.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The file input interface is an input with specific methods that deals with
+&nbsp; * files. File inputs are designed to handle graphs stored under the form of a
+&nbsp; * textual or binary file either under the form of a file name or a Java input
+&nbsp; * stream. If the file comes from an URL, convert the URL to an input stream.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The file package is designed under the idea that it provides graph inputs
+&nbsp; * from files that store the graph under a given file format and encoding. The
+&nbsp; * package provides decoders for all these formats.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Do not confuse the file package with the net package that can also read from
+&nbsp; * URLs, but build graph not from encoded description of a graph, but from web
+&nbsp; * services like Flickr or Amazon, or simply networks of web pages tied by web
+&nbsp; * links. The graph construction task is entirely different.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Although not all graph format handle dynamic graphs, all file inputs must
+&nbsp; * provide both the readAll() and begin()/nextEvents()/end() methods. The later
+&nbsp; * must read one graph modification at a time.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public interface FileSource extends Source {
+&nbsp;	/**
+&nbsp;	 * Read the whole file in one big non-interruptible operation.
+&nbsp;	 * 
+&nbsp;	 * @param fileName
+&nbsp;	 *            Name of the file to read.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	void readAll(String fileName) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read the whole file in one big non-interruptible operation.
+&nbsp;	 * 
+&nbsp;	 * @param url
+&nbsp;	 *            The URL of the file to read.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	void readAll(URL url) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read the whole file in one big non-interruptible operation.
+&nbsp;	 * 
+&nbsp;	 * @param stream
+&nbsp;	 *            The input stream to use for reading.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	void readAll(InputStream stream) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Read the whole file in one big non-interruptible operation.
+&nbsp;	 * 
+&nbsp;	 * @param reader
+&nbsp;	 *            The reader to use.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	void readAll(Reader reader) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Begin reading the file stopping as soon as possible. Next graph events stored
+&nbsp;	 * in the file will be sent by calling {@link #nextEvents()} or
+&nbsp;	 * {@link #nextStep()}. Once begin() has been called, you must finish the
+&nbsp;	 * reading process using {@link #end()}. You cannot call begin() twice without
+&nbsp;	 * having called {@link #end()} in between.
+&nbsp;	 * 
+&nbsp;	 * @param fileName
+&nbsp;	 *            Name of the file to read.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	void begin(String fileName) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Begin reading the file stopping as soon as possible. Next graph events stored
+&nbsp;	 * in the file will be sent by calling {@link #nextEvents()} or
+&nbsp;	 * {@link #nextStep()}. Once begin() has been called, you must finish the
+&nbsp;	 * reading process using {@link #end()}. You cannot call begin() twice without
+&nbsp;	 * having called {@link #end()} in between.
+&nbsp;	 * 
+&nbsp;	 * @param url
+&nbsp;	 *            The URL of the file to read.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	void begin(URL url) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Begin reading the file stopping as soon as possible. Next graph events stored
+&nbsp;	 * in the file will be sent by calling {@link #nextEvents()} or
+&nbsp;	 * {@link #nextStep()}. Once begin() has been called, you must finish the
+&nbsp;	 * reading process using {@link #end()}. You cannot call begin() twice without
+&nbsp;	 * having called {@link #end()} in between.
+&nbsp;	 * 
+&nbsp;	 * @param stream
+&nbsp;	 *            The input stream to use for reading.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	void begin(InputStream stream) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Begin reading the file stopping as soon as possible. Next graph events stored
+&nbsp;	 * in the file will be sent by calling {@link #nextEvents()} or
+&nbsp;	 * {@link #nextStep()}. Once begin() has been called, you must finish the
+&nbsp;	 * reading process using {@link #end()}. You cannot call begin() twice without
+&nbsp;	 * having called {@link #end()} in between.
+&nbsp;	 * 
+&nbsp;	 * @param reader
+&nbsp;	 *            The file reader to use.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	void begin(Reader reader) throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Try to process one graph event, or as few as possible, if more must be read
+&nbsp;	 * at once. For this method to work, you must have called
+&nbsp;	 * {@link #begin(InputStream)} or {@link #begin(String)} before. This method
+&nbsp;	 * return true while there are still events to read.
+&nbsp;	 * 
+&nbsp;	 * @return true if there are still events to read, false as soon as the file is
+&nbsp;	 *         finished.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	boolean nextEvents() throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Try to process all the events occurring during one time step. In GraphStream,
+&nbsp;	 * a time step is a group of events that are considered occurring at the same
+&nbsp;	 * time. Most file formats do not have this notion of step. The DGS format
+&nbsp;	 * designed for GraphStream handles steps. This method return true while there
+&nbsp;	 * are still events to read.
+&nbsp;	 * 
+&nbsp;	 * @return true if there are still events to read, false as soon as the file is
+&nbsp;	 *         finished.
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while reading.
+&nbsp;	 */
+&nbsp;	boolean nextStep() throws IOException;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Finish the reading process (even if {@link #nextEvents()} or
+&nbsp;	 * {@link #nextStep()} did not returned false). You must call this method after
+&nbsp;	 * reading.
+&nbsp;	 * 
+&nbsp;	 * @throws IOException
+&nbsp;	 *             If an I/O error occurs while closing the file.
+&nbsp;	 */
+&nbsp;	void end() throws IOException;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

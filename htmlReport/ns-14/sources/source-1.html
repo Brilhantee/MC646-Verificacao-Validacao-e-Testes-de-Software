@@ -1,0 +1,565 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GraphPosLengthUtils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.graphicGraph</a>
+</div>
+
+<h1>Coverage Summary for Class: GraphPosLengthUtils (org.graphstream.ui.graphicGraph)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GraphPosLengthUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/217)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-07-14
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author kitskub &lt;kitskub@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.graphicGraph;
+&nbsp;
+&nbsp;import org.graphstream.graph.Edge;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.graph.Node;
+&nbsp;import org.graphstream.ui.geom.Point2;
+&nbsp;import org.graphstream.ui.geom.Point3;
+&nbsp;
+&nbsp;import java.util.logging.Logger;
+&nbsp;
+&nbsp;/**
+&nbsp; * Lots of small often used measuring algorithms on graphs.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * Use this class with a static import.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+<b class="nc">&nbsp;public class GraphPosLengthUtils {</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * class level logger
+&nbsp;	 */
+<b class="nc">&nbsp;	private static final Logger logger = Logger.getLogger(GraphPosLengthUtils.class.getSimpleName());</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Retrieve a node position from its attributes (&quot;x&quot;, &quot;y&quot;, &quot;z&quot;, or &quot;xy&quot;, or
+&nbsp;	 * &quot;xyz&quot;).
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 * @return A newly allocated array of three floats containing the (x,y,z)
+&nbsp;	 *         position of the node, or null if the node is not part of the graph.
+&nbsp;	 */
+&nbsp;	public static double[] nodePosition(Graph graph, String id) {
+<b class="nc">&nbsp;		Node node = graph.getNode(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (node != null)</b>
+<b class="nc">&nbsp;			return nodePosition(node);</b>
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Retrieve a node position from its attributes (&quot;x&quot;, &quot;y&quot;, &quot;z&quot;, or &quot;xy&quot;, or
+&nbsp;	 * &quot;xyz&quot;).
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 * @return A newly allocated point containing the (x,y,z) position of the node,
+&nbsp;	 *         or null if the node is not part of the graph.
+&nbsp;	 */
+&nbsp;	public static Point3 nodePointPosition(Graph graph, String id) {
+<b class="nc">&nbsp;		Node node = graph.getNode(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (node != null)</b>
+<b class="nc">&nbsp;			return nodePointPosition(node);</b>
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like {@link #nodePosition(Graph,String)} but use an existing node as
+&nbsp;	 * argument.
+&nbsp;	 * 
+&nbsp;	 * @param node
+&nbsp;	 *            The node to consider.
+&nbsp;	 * @return A newly allocated array of three floats containing the (x,y,z)
+&nbsp;	 *         position of the node.
+&nbsp;	 */
+&nbsp;	public static double[] nodePosition(Node node) {
+<b class="nc">&nbsp;		double xyz[] = new double[3];</b>
+&nbsp;
+<b class="nc">&nbsp;		nodePosition(node, xyz);</b>
+&nbsp;
+<b class="nc">&nbsp;		return xyz;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like {@link #nodePointPosition(Graph,String)} but use an existing node as
+&nbsp;	 * argument.
+&nbsp;	 * 
+&nbsp;	 * @param node
+&nbsp;	 *            The node to consider.
+&nbsp;	 * @return A newly allocated point containing the (x,y,z) position of the node.
+&nbsp;	 */
+&nbsp;	public static Point3 nodePointPosition(Node node) {
+<b class="nc">&nbsp;		return nodePosition(node, new Point3());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like {@link #nodePosition(Graph,String)}, but instead of returning a newly
+&nbsp;	 * allocated array, fill up the array given as parameter. This array must have
+&nbsp;	 * at least three cells.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 * @param xyz
+&nbsp;	 *            An array of at least three cells.
+&nbsp;	 * @throws RuntimeException
+&nbsp;	 *             If the node with the given identifier does not exist.
+&nbsp;	 */
+&nbsp;	public static void nodePosition(Graph graph, String id, double xyz[]) {
+<b class="nc">&nbsp;		Node node = graph.getNode(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (node != null)</b>
+<b class="nc">&nbsp;			nodePosition(node, xyz);</b>
+&nbsp;
+<b class="nc">&nbsp;		throw new RuntimeException(&quot;node &#39;&quot; + id + &quot;&#39; does not exist&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like {@link #nodePointPosition(Graph,String)}, but instead of returning a
+&nbsp;	 * newly allocated array, fill up the array given as parameter. This array must
+&nbsp;	 * have at least three cells.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The node identifier.
+&nbsp;	 * @param pos
+&nbsp;	 *            A point that will receive the node position.
+&nbsp;	 * @throws RuntimeException
+&nbsp;	 *             If the node with the given identifier does not exist.
+&nbsp;	 */
+&nbsp;	public static Point3 nodePosition(Graph graph, String id, Point3 pos) {
+<b class="nc">&nbsp;		Node node = graph.getNode(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (node != null)</b>
+<b class="nc">&nbsp;			return nodePosition(node, pos);</b>
+&nbsp;
+<b class="nc">&nbsp;		throw new RuntimeException(&quot;node &#39;&quot; + id + &quot;&#39; does not exist&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like {@link #nodePosition(Graph,String,double[])} but use an existing node as
+&nbsp;	 * argument.
+&nbsp;	 * 
+&nbsp;	 * @param node
+&nbsp;	 *            The node to consider.
+&nbsp;	 * @param xyz
+&nbsp;	 *            An array of at least three cells.
+&nbsp;	 */
+&nbsp;	public static void nodePosition(Node node, double xyz[]) {
+<b class="nc">&nbsp;		if (xyz.length &lt; 3)</b>
+&nbsp;			return;
+&nbsp;
+<b class="nc">&nbsp;		if (node.hasAttribute(&quot;xyz&quot;) || node.hasAttribute(&quot;xy&quot;)) {</b>
+<b class="nc">&nbsp;			Object o = node.getAttribute(&quot;xyz&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o == null)</b>
+<b class="nc">&nbsp;				o = node.getAttribute(&quot;xy&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o != null) {</b>
+<b class="nc">&nbsp;				positionFromObject(o, xyz);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;		} else if (node.hasAttribute(&quot;x&quot;)) {</b>
+<b class="nc">&nbsp;			xyz[0] = (double) node.getNumber(&quot;x&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (node.hasAttribute(&quot;y&quot;))</b>
+<b class="nc">&nbsp;				xyz[1] = (double) node.getNumber(&quot;y&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (node.hasAttribute(&quot;z&quot;))</b>
+<b class="nc">&nbsp;				xyz[2] = (double) node.getNumber(&quot;z&quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like {@link #nodePosition(Graph,String,Point3)} but use an existing node as
+&nbsp;	 * argument.
+&nbsp;	 * 
+&nbsp;	 * @param node
+&nbsp;	 *            The node to consider.
+&nbsp;	 * @param pos
+&nbsp;	 *            A point that will serve as the default position if node doesn&#39;t
+&nbsp;	 *            have position
+&nbsp;	 */
+&nbsp;	public static Point3 nodePosition(Node node, Point3 pos) {
+<b class="nc">&nbsp;		if (node.hasAttribute(&quot;xyz&quot;) || node.hasAttribute(&quot;xy&quot;)) {</b>
+<b class="nc">&nbsp;			Object o = node.getAttribute(&quot;xyz&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o == null)</b>
+<b class="nc">&nbsp;				o = node.getAttribute(&quot;xy&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (o != null) {</b>
+<b class="nc">&nbsp;				return positionFromObject(o, pos);</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (node.hasAttribute(&quot;x&quot;)) {</b>
+<b class="nc">&nbsp;			double x = node.getNumber(&quot;x&quot;);</b>
+&nbsp;			double y;
+&nbsp;			double z;
+&nbsp;
+<b class="nc">&nbsp;			if (node.hasAttribute(&quot;y&quot;))</b>
+<b class="nc">&nbsp;				y = node.getNumber(&quot;y&quot;);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				y = pos.y;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (node.hasAttribute(&quot;z&quot;))</b>
+<b class="nc">&nbsp;				z = node.getNumber(&quot;z&quot;);</b>
+&nbsp;			else
+<b class="nc">&nbsp;				z = pos.z;</b>
+&nbsp;
+<b class="nc">&nbsp;			return new Point3(x, y, z);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return pos;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Try to convert an object to a position. The object can be an array of
+&nbsp;	 * numbers, an array of base numeric types or their object counterparts.
+&nbsp;	 * 
+&nbsp;	 * @param o
+&nbsp;	 *            The object to try to convert.
+&nbsp;	 * @param xyz
+&nbsp;	 *            The result.
+&nbsp;	 */
+&nbsp;	public static void positionFromObject(Object o, double xyz[]) {
+<b class="nc">&nbsp;		if (o instanceof Object[]) {</b>
+<b class="nc">&nbsp;			Object oo[] = (Object[]) o;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (oo.length &gt; 0 &amp;&amp; oo[0] instanceof Number) {</b>
+<b class="nc">&nbsp;				xyz[0] = ((Number) oo[0]).doubleValue();</b>
+<b class="nc">&nbsp;				if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;					xyz[1] = ((Number) oo[1]).doubleValue();</b>
+<b class="nc">&nbsp;				if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;					xyz[2] = ((Number) oo[2]).doubleValue();</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (o instanceof Double[]) {</b>
+<b class="nc">&nbsp;			Double oo[] = (Double[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				xyz[0] = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				xyz[1] = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				xyz[2] = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof Float[]) {</b>
+<b class="nc">&nbsp;			Float oo[] = (Float[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				xyz[0] = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				xyz[1] = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				xyz[2] = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof Integer[]) {</b>
+<b class="nc">&nbsp;			Integer oo[] = (Integer[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				xyz[0] = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				xyz[1] = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				xyz[2] = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof double[]) {</b>
+<b class="nc">&nbsp;			double oo[] = (double[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				xyz[0] = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				xyz[1] = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				xyz[2] = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof float[]) {</b>
+<b class="nc">&nbsp;			float oo[] = (float[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				xyz[0] = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				xyz[1] = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				xyz[2] = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof int[]) {</b>
+<b class="nc">&nbsp;			int oo[] = (int[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				xyz[0] = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				xyz[1] = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				xyz[2] = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof Number[]) {</b>
+<b class="nc">&nbsp;			Number oo[] = (Number[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				xyz[0] = oo[0].doubleValue();</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				xyz[1] = oo[1].doubleValue();</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				xyz[2] = oo[2].doubleValue();</b>
+<b class="nc">&nbsp;		} else if (o instanceof Point3) {</b>
+<b class="nc">&nbsp;			Point3 oo = (Point3) o;</b>
+<b class="nc">&nbsp;			xyz[0] = oo.x;</b>
+<b class="nc">&nbsp;			xyz[1] = oo.y;</b>
+<b class="nc">&nbsp;			xyz[2] = oo.z;</b>
+<b class="nc">&nbsp;		} else if (o instanceof Point2) {</b>
+<b class="nc">&nbsp;			Point2 oo = (Point2) o;</b>
+<b class="nc">&nbsp;			xyz[0] = oo.x;</b>
+<b class="nc">&nbsp;			xyz[1] = oo.y;</b>
+<b class="nc">&nbsp;			xyz[2] = 0;</b>
+<b class="nc">&nbsp;		} else {</b>
+<b class="nc">&nbsp;			logger.warning(String.format(&quot;Do not know how to handle xyz attribute %s.&quot;, o.getClass().getName()));</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Try to convert an object to a position. The object can be an array of
+&nbsp;	 * numbers, an array of base numeric types or their object counterparts.
+&nbsp;	 * 
+&nbsp;	 * @param o
+&nbsp;	 *            The object to try to convert.
+&nbsp;	 * @param pos
+&nbsp;	 *            The default position if object doesn&#39;t have position data.
+&nbsp;	 */
+&nbsp;	public static Point3 positionFromObject(Object o, Point3 pos) {
+<b class="nc">&nbsp;		double x = pos.x, y = pos.y, z = pos.z;</b>
+<b class="nc">&nbsp;		if (o instanceof Object[]) {</b>
+<b class="nc">&nbsp;			Object oo[] = (Object[]) o;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (oo.length &gt; 0 &amp;&amp; oo[0] instanceof Number) {</b>
+<b class="nc">&nbsp;				x = ((Number) oo[0]).doubleValue();</b>
+<b class="nc">&nbsp;				if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;					y = ((Number) oo[1]).doubleValue();</b>
+<b class="nc">&nbsp;				if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;					z = ((Number) oo[2]).doubleValue();</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (o instanceof Double[]) {</b>
+<b class="nc">&nbsp;			Double oo[] = (Double[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				x = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				y = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				z = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof Float[]) {</b>
+<b class="nc">&nbsp;			Float oo[] = (Float[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				x = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				y = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				z = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof Integer[]) {</b>
+<b class="nc">&nbsp;			Integer oo[] = (Integer[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				x = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				y = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				z = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof double[]) {</b>
+<b class="nc">&nbsp;			double oo[] = (double[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				x = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				y = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				z = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof float[]) {</b>
+<b class="nc">&nbsp;			float oo[] = (float[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				x = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				y = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				z = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof int[]) {</b>
+<b class="nc">&nbsp;			int oo[] = (int[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				x = oo[0];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				y = oo[1];</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				z = oo[2];</b>
+<b class="nc">&nbsp;		} else if (o instanceof Number[]) {</b>
+<b class="nc">&nbsp;			Number oo[] = (Number[]) o;</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 0)</b>
+<b class="nc">&nbsp;				x = oo[0].doubleValue();</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 1)</b>
+<b class="nc">&nbsp;				y = oo[1].doubleValue();</b>
+<b class="nc">&nbsp;			if (oo.length &gt; 2)</b>
+<b class="nc">&nbsp;				z = oo[2].doubleValue();</b>
+<b class="nc">&nbsp;		} else if (o instanceof Point3) {</b>
+<b class="nc">&nbsp;			Point3 oo = (Point3) o;</b>
+<b class="nc">&nbsp;			x = oo.x;</b>
+<b class="nc">&nbsp;			y = oo.y;</b>
+<b class="nc">&nbsp;			z = oo.z;</b>
+<b class="nc">&nbsp;		} else if (o instanceof Point2) {</b>
+<b class="nc">&nbsp;			Point2 oo = (Point2) o;</b>
+<b class="nc">&nbsp;			x = oo.x;</b>
+<b class="nc">&nbsp;			y = oo.y;</b>
+<b class="nc">&nbsp;			z = 0;</b>
+<b class="nc">&nbsp;		} else {</b>
+<b class="nc">&nbsp;			logger.warning(String.format(&quot;Do not know how to handle xyz attribute %s%n&quot;, o.getClass().getName()));</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return new Point3(x, y, z);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Compute the edge length of the given edge according to its two nodes
+&nbsp;	 * positions.
+&nbsp;	 * 
+&nbsp;	 * @param id
+&nbsp;	 *            The identifier of the edge.
+&nbsp;	 * @return The edge length or -1 if the nodes of the edge have no positions.
+&nbsp;	 * @throws RuntimeException
+&nbsp;	 *             If the edge cannot be found.
+&nbsp;	 */
+&nbsp;	public static double edgeLength(Graph graph, String id) {
+<b class="nc">&nbsp;		Edge edge = graph.getEdge(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (edge != null)</b>
+<b class="nc">&nbsp;			return edgeLength(edge);</b>
+&nbsp;
+<b class="nc">&nbsp;		throw new RuntimeException(&quot;edge &#39;&quot; + id + &quot;&#39; cannot be found&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Like {@link #edgeLength(Graph,String)} but use an existing edge as argument.
+&nbsp;	 * 
+&nbsp;	 * @param edge
+&nbsp;	 * @return The edge length or -1 if the nodes of the edge have no positions.
+&nbsp;	 */
+&nbsp;	public static double edgeLength(Edge edge) {
+<b class="nc">&nbsp;		double xyz0[] = nodePosition(edge.getNode0());</b>
+<b class="nc">&nbsp;		double xyz1[] = nodePosition(edge.getNode1());</b>
+&nbsp;
+<b class="nc">&nbsp;		if (xyz0 == null || xyz1 == null)</b>
+<b class="nc">&nbsp;			return -1;</b>
+&nbsp;
+<b class="nc">&nbsp;		xyz0[0] = xyz1[0] - xyz0[0];</b>
+<b class="nc">&nbsp;		xyz0[1] = xyz1[1] - xyz0[1];</b>
+<b class="nc">&nbsp;		xyz0[2] = xyz1[2] - xyz0[2];</b>
+&nbsp;
+<b class="nc">&nbsp;		return Math.sqrt(xyz0[0] * xyz0[0] + xyz0[1] * xyz0[1] + xyz0[2] * xyz0[2]);</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>

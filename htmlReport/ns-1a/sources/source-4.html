@@ -1,0 +1,603 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SpriteManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.graphstream.ui.spriteManager</a>
+</div>
+
+<h1>Coverage Summary for Class: SpriteManager (org.graphstream.ui.spriteManager)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SpriteManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/29)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/122)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * This file is part of GraphStream &lt;http://graphstream-project.org&gt;.
+&nbsp; * 
+&nbsp; * GraphStream is a library whose purpose is to handle static or dynamic
+&nbsp; * graph, create them from scratch, file or any source and display them.
+&nbsp; * 
+&nbsp; * This program is free software distributed under the terms of two licenses, the
+&nbsp; * CeCILL-C license that fits European law, and the GNU Lesser General Public
+&nbsp; * License. You can  use, modify and/ or redistribute the software under the terms
+&nbsp; * of the CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
+&nbsp; * URL &lt;http://www.cecill.info&gt; or under the terms of the GNU LGPL as published by
+&nbsp; * the Free Software Foundation, either version 3 of the License, or (at your
+&nbsp; * option) any later version.
+&nbsp; * 
+&nbsp; * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+&nbsp; * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+&nbsp; * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+&nbsp; * 
+&nbsp; * You should have received a copy of the GNU Lesser General Public License
+&nbsp; * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+&nbsp; * 
+&nbsp; * The fact that you are presently reading this means that you have had
+&nbsp; * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
+&nbsp; */
+&nbsp;
+&nbsp;/**
+&nbsp; * @since 2009-04-17
+&nbsp; * 
+&nbsp; * @author Antoine Dutot &lt;antoine.dutot@graphstream-project.org&gt;
+&nbsp; * @author Guilhelm Savin &lt;guilhelm.savin@graphstream-project.org&gt;
+&nbsp; * @author Richard O. Legendi &lt;richard.legendi@gmail.com&gt;
+&nbsp; * @author Alex Bowen &lt;bowen.a@gmail.com&gt;
+&nbsp; * @author Hicham Brahimi &lt;hicham.brahimi@graphstream-project.org&gt;
+&nbsp; */
+&nbsp;package org.graphstream.ui.spriteManager;
+&nbsp;
+&nbsp;import org.graphstream.graph.Graph;
+&nbsp;import org.graphstream.stream.AttributeSink;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Style;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.Units;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Value;
+&nbsp;import org.graphstream.ui.graphicGraph.stylesheet.Values;
+&nbsp;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Iterator;
+&nbsp;import java.util.logging.Level;
+&nbsp;import java.util.logging.Logger;
+&nbsp;
+&nbsp;/**
+&nbsp; * Set of sprites associated with a graph.
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * The sprite manager acts as a set of sprite elements that are associated with
+&nbsp; * a graph. There can be only one sprite manager per graph. The sprite manager
+&nbsp; * only role is to allow to create, destroy and enumerate sprites of a graph.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * See the {@link Sprite} class for an explanation of what are sprites and how
+&nbsp; * to use them.
+&nbsp; * &lt;/p&gt;
+&nbsp; * 
+&nbsp; * &lt;p&gt;
+&nbsp; * In case you need to refine the Sprite class, you can change the
+&nbsp; * {@link SpriteFactory} of this manager so that it creates specific instances
+&nbsp; * of sprites instead of the default ones. This is mostly useful when all
+&nbsp; * sprites will pertain to the same subclass. If you need to create several
+&nbsp; * sprites of distinct subclasses, you can use the
+&nbsp; * {@link #addSprite(String, Class)} and
+&nbsp; * {@link #addSprite(String, Class, Values)} methods.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;public class SpriteManager implements Iterable&lt;Sprite&gt;, AttributeSink {
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * class level logger
+&nbsp;	 */
+<b class="nc">&nbsp;	private static final Logger logger = Logger.getLogger(SpriteManager.class.getName());</b>
+&nbsp;
+&nbsp;	// Attribute
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The graph to add sprites to.
+&nbsp;	 */
+&nbsp;	protected Graph graph;
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The set of sprites.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected HashMap&lt;String, Sprite&gt; sprites = new HashMap&lt;String, Sprite&gt;();</b>
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Factory to create new sprites.
+&nbsp;	 */
+<b class="nc">&nbsp;	protected SpriteFactory factory = new SpriteFactory();</b>
+&nbsp;
+&nbsp;	// Attributes
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * this acts as a lock when we are adding a sprite since we are also listener of
+&nbsp;	 * the graph, and when we receive an &quot;add&quot; event, we automatically create a
+&nbsp;	 * sprite. We can want to avoid listening at ourself.
+&nbsp;	 */
+<b class="nc">&nbsp;	boolean attributeLock = false;</b>
+&nbsp;
+&nbsp;	// Construction
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Create a new manager for sprite and bind it to the given graph. If the graph
+&nbsp;	 * already contains attributes describing sprites, the manager is automatically
+&nbsp;	 * filled with the existing sprites.
+&nbsp;	 * 
+&nbsp;	 * @param graph
+&nbsp;	 *            The graph to associate with this manager;
+&nbsp;	 */
+<b class="nc">&nbsp;	public SpriteManager(Graph graph) throws InvalidSpriteIDException {</b>
+<b class="nc">&nbsp;		this.graph = graph;</b>
+&nbsp;
+<b class="nc">&nbsp;		lookForExistingSprites();</b>
+<b class="nc">&nbsp;		graph.addAttributeSink(this);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	protected void lookForExistingSprites() throws InvalidSpriteIDException {
+<b class="nc">&nbsp;		if (graph.getAttributeCount() &gt; 0) {</b>
+<b class="nc">&nbsp;			graph.attributeKeys().filter(key -&gt; key.startsWith(&quot;ui.sprite.&quot;)).forEach(key -&gt; {</b>
+<b class="nc">&nbsp;				String id = key.substring(10);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (id.indexOf(&#39;.&#39;) &lt; 0) {</b>
+<b class="nc">&nbsp;					addSprite(id);</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					String sattr = id.substring(id.indexOf(&#39;.&#39;) + 1);</b>
+<b class="nc">&nbsp;					id = id.substring(0, id.indexOf(&#39;.&#39;));</b>
+&nbsp;
+<b class="nc">&nbsp;					Sprite s = getSprite(id);</b>
+&nbsp;
+<b class="nc">&nbsp;					if (s == null)</b>
+<b class="nc">&nbsp;						s = addSprite(id);</b>
+&nbsp;
+<b class="nc">&nbsp;					s.setAttribute(sattr, graph.getAttribute(key));</b>
+&nbsp;				}
+&nbsp;			});
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Access
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Number of sprites in the manager.
+&nbsp;	 * 
+&nbsp;	 * @return The sprite count.
+&nbsp;	 */
+&nbsp;	public int getSpriteCount() {
+<b class="nc">&nbsp;		return sprites.size();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * True if the manager contains a sprite corresponding to the given identifier.
+&nbsp;	 * 
+&nbsp;	 * @param identifier
+&nbsp;	 *            The sprite identifier to search for.
+&nbsp;	 */
+&nbsp;	public boolean hasSprite(String identifier) {
+<b class="nc">&nbsp;		return (sprites.get(identifier) != null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Sprite corresponding to the given identifier or null if no sprite is
+&nbsp;	 * associated with the given identifier.
+&nbsp;	 * 
+&nbsp;	 * @param identifier
+&nbsp;	 *            The sprite identifier.
+&nbsp;	 */
+&nbsp;	public Sprite getSprite(String identifier) {
+<b class="nc">&nbsp;		return sprites.get(identifier);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Iterable set of sprites in no particular order.
+&nbsp;	 * 
+&nbsp;	 * @return The set of sprites.
+&nbsp;	 */
+&nbsp;	public Iterable&lt;? extends Sprite&gt; sprites() {
+<b class="nc">&nbsp;		return sprites.values();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Iterator on the set of sprites.
+&nbsp;	 * 
+&nbsp;	 * @return An iterator on sprites.
+&nbsp;	 */
+&nbsp;	public Iterator&lt;? extends Sprite&gt; spriteIterator() {
+<b class="nc">&nbsp;		return sprites.values().iterator();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Iterator on the set of sprites.
+&nbsp;	 * 
+&nbsp;	 * @return An iterator on sprites.
+&nbsp;	 */
+&nbsp;	public Iterator&lt;Sprite&gt; iterator() {
+<b class="nc">&nbsp;		return sprites.values().iterator();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * The current sprite factory.
+&nbsp;	 * 
+&nbsp;	 * @return A Sprite factory.
+&nbsp;	 */
+&nbsp;	public SpriteFactory getSpriteFactory() {
+<b class="nc">&nbsp;		return factory;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Command
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Detach this manager from its graph. This manager will no more be usable to
+&nbsp;	 * create or remove sprites. However sprites not yet removed are still present
+&nbsp;	 * as attributes in the graph and binding another sprite manager to this graph
+&nbsp;	 * will retrieve all sprites.
+&nbsp;	 */
+&nbsp;	public void detach() {
+<b class="nc">&nbsp;		graph.removeAttributeSink(this);</b>
+<b class="nc">&nbsp;		sprites.clear();</b>
+&nbsp;
+<b class="nc">&nbsp;		graph = null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Specify the sprite factory to use. This allows to use specific sprite classes
+&nbsp;	 * (descendants of Sprite).
+&nbsp;	 * 
+&nbsp;	 * @param factory
+&nbsp;	 *            The new factory to use.
+&nbsp;	 */
+&nbsp;	public void setSpriteFactory(SpriteFactory factory) {
+<b class="nc">&nbsp;		this.factory = factory;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Reset the sprite factory to defaults.
+&nbsp;	 */
+&nbsp;	public void resetSpriteFactory() {
+<b class="nc">&nbsp;		factory = new SpriteFactory();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a sprite with the given identifier. If the sprite already exists, nothing
+&nbsp;	 * is done. The sprite identifier cannot actually contain dots. This character
+&nbsp;	 * use is reserved by the sprite mechanism.
+&nbsp;	 * 
+&nbsp;	 * @param identifier
+&nbsp;	 *            The identifier of the new sprite to add.
+&nbsp;	 * @return The created sprite.
+&nbsp;	 * @throws InvalidSpriteIDException
+&nbsp;	 *             If the given identifier contains a dot.
+&nbsp;	 */
+&nbsp;	public Sprite addSprite(String identifier) throws InvalidSpriteIDException {
+<b class="nc">&nbsp;		return addSprite(identifier, (Values) null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a sprite with the given identifier and position. If the sprite already
+&nbsp;	 * exists, nothing is done, excepted if the position is not null in which case
+&nbsp;	 * it is repositioned. If the sprite does not exists, it is added and if
+&nbsp;	 * position is not null, it is used as the initial position of the sprite. The
+&nbsp;	 * sprite identifier cannot actually contain dots. This character use is
+&nbsp;	 * reserved by the sprite mechanism.
+&nbsp;	 * 
+&nbsp;	 * @param identifier
+&nbsp;	 *            The sprite identifier.
+&nbsp;	 * @param position
+&nbsp;	 *            The sprite position (or null for (0,0,0)).
+&nbsp;	 * @return The created sprite.
+&nbsp;	 * @throws InvalidSpriteIDException
+&nbsp;	 *             If the given identifier contains a dot.
+&nbsp;	 */
+&nbsp;	protected Sprite addSprite(String identifier, Values position) throws InvalidSpriteIDException {
+<b class="nc">&nbsp;		if (identifier.indexOf(&#39;.&#39;) &gt;= 0)</b>
+<b class="nc">&nbsp;			throw new InvalidSpriteIDException(&quot;Sprite identifiers cannot contain dots.&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;		Sprite sprite = sprites.get(identifier);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (sprite == null) {</b>
+<b class="nc">&nbsp;			attributeLock = true;</b>
+<b class="nc">&nbsp;			sprite = factory.newSprite(identifier, this, position);</b>
+<b class="nc">&nbsp;			sprites.put(identifier, sprite);</b>
+<b class="nc">&nbsp;			attributeLock = false;</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			if (position != null)</b>
+<b class="nc">&nbsp;				sprite.setPosition(position);</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return sprite;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Add a sprite of a given subclass of Sprite with the given identifier. If the
+&nbsp;	 * sprite already exists, nothing is done. This method allows to add a sprite of
+&nbsp;	 * a chosen subclass of Sprite, without using a {@link SpriteFactory}. Most
+&nbsp;	 * often you use a sprite factory when all sprites will pertain to the same
+&nbsp;	 * subclass. If some sprites pertain to distinct subclasses, you can use this
+&nbsp;	 * method.
+&nbsp;	 * 
+&nbsp;	 * @param identifier
+&nbsp;	 *            The identifier of the new sprite to add.
+&nbsp;	 * @param spriteClass
+&nbsp;	 *            The class of the new sprite to add.
+&nbsp;	 * @return The created sprite.
+&nbsp;	 */
+&nbsp;	public &lt;T extends Sprite&gt; T addSprite(String identifier, Class&lt;T&gt; spriteClass) {
+<b class="nc">&nbsp;		return addSprite(identifier, spriteClass, null);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Same as {@link #addSprite(String, Class)} but also allows to specify an
+&nbsp;	 * initial position.
+&nbsp;	 * 
+&nbsp;	 * @param identifier
+&nbsp;	 *            The identifier of the new sprite to add.
+&nbsp;	 * @param spriteClass
+&nbsp;	 *            The class of the new sprite to add.
+&nbsp;	 * @param position
+&nbsp;	 *            The sprite position, or null for position (0, 0, 0).
+&nbsp;	 * @return The created sprite.
+&nbsp;	 */
+&nbsp;	public &lt;T extends Sprite&gt; T addSprite(String identifier, Class&lt;T&gt; spriteClass, Values position) {
+&nbsp;		try {
+<b class="nc">&nbsp;			T sprite = spriteClass.newInstance();</b>
+<b class="nc">&nbsp;			sprite.init(identifier, this, position);</b>
+<b class="nc">&nbsp;			return sprite;</b>
+<b class="nc">&nbsp;		} catch (Exception e) {</b>
+<b class="nc">&nbsp;			logger.log(Level.WARNING,</b>
+<b class="nc">&nbsp;					String.format(&quot;Error while trying to instantiate class %s.&quot;, spriteClass.getName()), e);</b>
+&nbsp;		}
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	/**
+&nbsp;	 * Remove a sprite knowing its identifier. If no such sprite exists, this fails
+&nbsp;	 * silently.
+&nbsp;	 * 
+&nbsp;	 * @param identifier
+&nbsp;	 *            The identifier of the sprite to remove.
+&nbsp;	 */
+&nbsp;	public void removeSprite(String identifier) {
+<b class="nc">&nbsp;		Sprite sprite = sprites.get(identifier);</b>
+&nbsp;
+<b class="nc">&nbsp;		if (sprite != null) {</b>
+<b class="nc">&nbsp;			attributeLock = true;</b>
+<b class="nc">&nbsp;			sprites.remove(identifier);</b>
+<b class="nc">&nbsp;			sprite.removed();</b>
+<b class="nc">&nbsp;			attributeLock = false;</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Utility
+&nbsp;
+&nbsp;	protected static Values getPositionValue(Object value) {
+<b class="nc">&nbsp;		if (value instanceof Object[]) {</b>
+<b class="nc">&nbsp;			Object[] values = (Object[]) value;</b>
+&nbsp;
+<b class="nc">&nbsp;			if (values.length == 4) {</b>
+<b class="nc">&nbsp;				if (values[0] instanceof Number &amp;&amp; values[1] instanceof Number &amp;&amp; values[2] instanceof Number</b>
+&nbsp;						&amp;&amp; values[3] instanceof Style.Units) {
+<b class="nc">&nbsp;					return new Values((Style.Units) values[3], ((Number) values[0]).floatValue(),</b>
+<b class="nc">&nbsp;							((Number) values[1]).floatValue(), ((Number) values[2]).floatValue());</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					logger.warning(&quot;Cannot parse values[4] for sprite position.&quot;);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			} else if (values.length == 3) {</b>
+<b class="nc">&nbsp;				if (values[0] instanceof Number &amp;&amp; values[1] instanceof Number &amp;&amp; values[2] instanceof Number) {</b>
+<b class="nc">&nbsp;					return new Values(Units.GU, ((Number) values[0]).floatValue(), ((Number) values[1]).floatValue(),</b>
+<b class="nc">&nbsp;							((Number) values[2]).floatValue());</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					logger.warning(&quot;Cannot parse values[3] for sprite position.&quot;);</b>
+&nbsp;				}
+<b class="nc">&nbsp;			} else if (values.length == 1) {</b>
+<b class="nc">&nbsp;				if (values[0] instanceof Number) {</b>
+<b class="nc">&nbsp;					return new Values(Units.GU, ((Number) values[0]).floatValue());</b>
+&nbsp;				} else {
+<b class="nc">&nbsp;					logger.warning(String.format(&quot;Sprite position percent is not a number.&quot;));</b>
+&nbsp;				}
+&nbsp;			} else {
+<b class="nc">&nbsp;				logger.warning(String.format(&quot;Cannot transform value &#39;%s&#39; (length=%d) into a position.&quot;,</b>
+<b class="nc">&nbsp;						Arrays.toString(values), values.length));</b>
+&nbsp;			}
+<b class="nc">&nbsp;		} else if (value instanceof Number) {</b>
+<b class="nc">&nbsp;			return new Values(Units.GU, ((Number) value).floatValue());</b>
+<b class="nc">&nbsp;		} else if (value instanceof Value) {</b>
+<b class="nc">&nbsp;			return new Values((Value) value);</b>
+<b class="nc">&nbsp;		} else if (value instanceof Values) {</b>
+<b class="nc">&nbsp;			return new Values((Values) value);</b>
+&nbsp;		} else {
+<b class="nc">&nbsp;			System.err.printf(&quot;GraphicGraph : cannot place sprite with posiiton &#39;%s&#39; (instance of %s)%n&quot;, value,</b>
+<b class="nc">&nbsp;					value.getClass().getName());</b>
+&nbsp;		}
+&nbsp;
+<b class="nc">&nbsp;		return null;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// GraphAttributesListener
+&nbsp;
+&nbsp;	public void graphAttributeAdded(String graphId, long time, String attribute, Object value) {
+<b class="nc">&nbsp;		if (attributeLock)</b>
+&nbsp;			return; // We want to avoid listening at ourselves.
+&nbsp;
+<b class="nc">&nbsp;		if (attribute.startsWith(&quot;ui.sprite.&quot;)) {</b>
+<b class="nc">&nbsp;			String spriteId = attribute.substring(10);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (spriteId.indexOf(&#39;.&#39;) &lt; 0) {</b>
+<b class="nc">&nbsp;				if (getSprite(spriteId) == null) {</b>
+&nbsp;					// A sprite has been created by another entity.
+&nbsp;					// Synchronise this manager.
+&nbsp;
+<b class="nc">&nbsp;					Values position = null;</b>
+&nbsp;
+<b class="nc">&nbsp;					if (value != null)</b>
+<b class="nc">&nbsp;						position = getPositionValue(value);</b>
+&nbsp;
+&nbsp;					try {
+<b class="nc">&nbsp;						addSprite(spriteId, position);</b>
+<b class="nc">&nbsp;					} catch (InvalidSpriteIDException e) {</b>
+<b class="nc">&nbsp;						e.printStackTrace();</b>
+<b class="nc">&nbsp;						throw new RuntimeException(e);</b>
+&nbsp;						// Ho !! Dirty !!
+<b class="nc">&nbsp;					}</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphAttributeChanged(String graphId, long time, String attribute, Object oldValue, Object newValue) {
+<b class="nc">&nbsp;		if (attributeLock)</b>
+&nbsp;			return; // We want to avoid listening at ourselves.
+&nbsp;
+<b class="nc">&nbsp;		if (attribute.startsWith(&quot;ui.sprite.&quot;)) {</b>
+<b class="nc">&nbsp;			String spriteId = attribute.substring(10);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (spriteId.indexOf(&#39;.&#39;) &lt; 0) {</b>
+<b class="nc">&nbsp;				Sprite s = getSprite(spriteId);</b>
+&nbsp;
+<b class="nc">&nbsp;				if (s != null) {</b>
+&nbsp;					// The sprite has been moved by another entity.
+&nbsp;					// Update its position.
+&nbsp;
+<b class="nc">&nbsp;					if (newValue != null) {</b>
+<b class="nc">&nbsp;						Values position = getPositionValue(newValue);</b>
+<b class="nc">&nbsp;						s.setPosition(position);</b>
+<b class="nc">&nbsp;					} else {</b>
+<b class="nc">&nbsp;						logger.warning(</b>
+<b class="nc">&nbsp;								String.format(&quot;%s changed but newValue == null ! (old=%s).&quot;, spriteId, oldValue));</b>
+&nbsp;					}
+&nbsp;				} else {
+<b class="nc">&nbsp;					throw new IllegalStateException(&quot;Sprite changed, but not added.&quot;);</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public void graphAttributeRemoved(String graphId, long time, String attribute) {
+<b class="nc">&nbsp;		if (attributeLock)</b>
+&nbsp;			return; // We want to avoid listening at ourselves.
+&nbsp;
+<b class="nc">&nbsp;		if (attribute.startsWith(&quot;ui.sprite.&quot;)) {</b>
+<b class="nc">&nbsp;			String spriteId = attribute.substring(10);</b>
+&nbsp;
+<b class="nc">&nbsp;			if (spriteId.indexOf(&#39;.&#39;) &lt; 0) {</b>
+<b class="nc">&nbsp;				if (getSprite(spriteId) != null) {</b>
+&nbsp;					// A sprite has been removed by another entity.
+&nbsp;					// Synchronise this manager.
+&nbsp;
+<b class="nc">&nbsp;					removeSprite(spriteId);</b>
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	// Unused.
+&nbsp;
+&nbsp;	public void edgeAttributeAdded(String graphId, long time, String edgeId, String attribute, Object value) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void edgeAttributeChanged(String graphId, long time, String edgeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void edgeAttributeRemoved(String graphId, long time, String edgeId, String attribute) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void nodeAttributeAdded(String graphId, long time, String nodeId, String attribute, Object value) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void nodeAttributeChanged(String graphId, long time, String nodeId, String attribute, Object oldValue,
+&nbsp;			Object newValue) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;
+&nbsp;	public void nodeAttributeRemoved(String graphId, long time, String nodeId, String attribute) {
+<b class="nc">&nbsp;	}</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-08 16:57</div>
+</div>
+</body>
+</html>
